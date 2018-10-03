@@ -39,9 +39,10 @@ Explore how to configure liveness and readiness probes in your Kubernetes cluste
 // =================================================================================================
 
 == What you'll learn
-The https://openliberty.io/guides/microprofile-config.html[Configuring microservices guide] teaches you how to externalize configuration from your application. It may not be immediately clear why this is beneficial to you when developing your microservices, but {kube} provides some tools that allow you to conveniently configure your microservices with a setup such as the one described. You will learn how to externalize your configuration, and provide the configuration values by creating environment variables. By using MicroProfile Config to handle your configuration, it provides useful annotations that you may use to inject configured values into your code. These values can come from environment variables or elsewhere.
 
-Furthermore, you'll learn how to set these environment variables using ConfigMaps and Secrets. These resources are provided by {kube} that act as a data source for your environment variables. By creating a ConfigMap or Secret, they can be used to set environment variables for any number of containers as you see fit.
+You will learn how to create a health check endpoint for your microservices that you can configure {kube} to leverage to keep your microservices running smoothly.
+
+{kube} provides liveness and readiness probes that are used to check the health of your containers. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes a health endpoint on your microservices which allows {kube} to probe your microservice via HTTP.
 
 // =================================================================================================
 // Prerequisites
@@ -115,6 +116,14 @@ Use the following command to view the status of the pods.
 kubectl get pods
 ```
 
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-5f868854bf-2rhdq   1/1       Running   0          28s
+name-deployment-5f868854bf-ckhlf   1/1       Running   0          28s
+ping-deployment-649d5564f9-f7lh2   1/1       Running   0          28s
+----
+
 When the pods are in the ready state, navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-6bd97d9bf6-qbhbc`. The readiness probe ensures that the status will not be updated until the container is available to accept requests. Without a readiness probe you may notice an unsuccessful response from the server. This is because the container has started, but Open Liberty may not have fully initialized. With the readiness probe it is guaranteed that the pod will only begin accepting traffic once the microservice has fully started.
 
 Similarly, navigate to `{ping-api}/name-service` and observe a response with the content `pong`.
@@ -127,11 +136,66 @@ An endpoint has been provided under the name microservice to "kill" it by settin
 kubectl get pods
 ```
 
-You will notice that one of the two name pods is no longer in the ready state and it will shortly be terminated. Navigate to `{name-api}` to observe that due to having two replicas where one is still healthy, your request will still be successful.
+[source, role="no_copy"]
+----
+
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-5f868854bf-2rhdq   1/1       Running   0          1m
+name-deployment-5f868854bf-ckhlf   0/1       Running   0          1m
+ping-deployment-649d5564f9-f7lh2   1/1       Running   0          1m
+----
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-5f868854bf-2rhdq   1/1       Running   0          1m
+name-deployment-5f868854bf-ckhlf   0/1       Running   1          1m
+ping-deployment-649d5564f9-f7lh2   1/1       Running   0          1m
+----
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-5f868854bf-2rhdq   1/1       Running   0          1m
+name-deployment-5f868854bf-ckhlf   1/1       Running   1          1m
+ping-deployment-649d5564f9-f7lh2   1/1       Running   0          1m
+----
+
+You will notice that one of the two name pods is no longer in the ready state and it will shortly be restarted. Navigate to `{name-api}` to observe that due to having two replicas where one is still healthy, your request will still be successful.
 
 == Trigger restart in name microservice and observe effects on ping microservice
 
-Make two POST requests to `{name-api}/kill` and continue to observe the output of `kubectl get pods`. You will see that both pods are no longer ready and will soon be restarted. During this process the readiness probe for the `ping` microservice will also fail and you will observe that it is no longer in the ready state either.
+Make two POST requests to `{name-api}/kill`. If you see the same pod name twice make the request again until you see that the second pod has been made unhealthy. This is because there is a delay between a pod becoming unhealthy and the readiness probe noticing. Therefore, traffic may still be routed to the unhealthy service for approximately five seconds. Continue to observe the output of `kubectl get pods`. You will see that both pods are no longer ready and will soon be restarted. During this process the readiness probe for the `ping` microservice will also fail and you will observe that it is no longer in the ready state either.
+
+First, both name pods will be restarted because the readiness and liveness probes failed.
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-5f868854bf-2rhdq   0/1       Running   1          4m
+name-deployment-5f868854bf-ckhlf   0/1       Running   2          4m
+ping-deployment-649d5564f9-f7lh2   1/1       Running   0          4m
+----
+
+Next, you will see the pods start to become ready again. You will also noticed that the ping pod is no longer ready, this is because the readiness probe failed since it could no longer reach the service `name-service`.
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-5f868854bf-2rhdq   1/1       Running   1          4m
+name-deployment-5f868854bf-ckhlf   0/1       Running   2          4m
+ping-deployment-649d5564f9-f7lh2   0/1       Running   0          4m
+----
+
+Finally, you will see that all of the pods have recovered. Note that the ping pod is not restarted because it was not down long enough for the liveness probe's failure threshold to be exceeded.
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-5f868854bf-2rhdq   1/1       Running   1          4m
+name-deployment-5f868854bf-ckhlf   1/1       Running   2          4m
+ping-deployment-649d5564f9-f7lh2   1/1       Running   0          4m
+----
 
 // ================================================================================================================================
 // ================================================================================================================================
@@ -188,7 +252,7 @@ kubectl delete -f kubernetes.yaml
 
 == Great work! You're done!
 
-You have used MicroProfile Config to externalize the configuration of two microservices, and then you configured them by creating a ConfigMap and Secret in your {kube} cluster.
+You have used MicroProfile Health to create an endpoint that reports on your microservice's current status. Then you observed how {kube} leverages the `/health` endpoint to keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
 include::{common-includes}/finish.adoc[]
