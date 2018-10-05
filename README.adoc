@@ -124,7 +124,7 @@ name-deployment-5f868854bf-ckhlf   1/1       Running   0          28s
 ping-deployment-649d5564f9-f7lh2   1/1       Running   0          28s
 ----
 
-When the pods are in the ready state, navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-6bd97d9bf6-qbhbc`. The readiness probe ensures that the status will not be updated until the container is available to accept requests. Without a readiness probe you may notice an unsuccessful response from the server. This is because the container has started, but Open Liberty may not have fully initialized. With the readiness probe it is guaranteed that the pod will only begin accepting traffic once the microservice has fully started.
+When the pods are in the ready state, navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. The readiness probe ensures that the status will not be updated until the container is available to accept requests. Without a readiness probe you may notice an unsuccessful response from the server. This is because the container has started, but Open Liberty may not have fully initialized. With the readiness probe it is guaranteed that the pod will only begin accepting traffic once the microservice has fully started.
 
 Similarly, navigate to `{ping-api}/name-service` and observe a response with the content `pong`.
 
