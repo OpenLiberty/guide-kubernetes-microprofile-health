@@ -130,7 +130,7 @@ Similarly, navigate to `{ping-api}/name-service` and observe a response with the
 
 == Trigger restart in name microservice
 
-An endpoint has been provided under the name microservice to "kill" it by setting an unhealthy state in the health check. The unhealthy state will cause the readiness and liveness probe to fail. Invoke this endpoint by making a POST request to `{name-api}/kill`. Run the following command to view the state of the pods:
+An endpoint has been provided under the `name` microservice to "kill" it by setting an unhealthy state in the health check. The unhealthy state will cause the readiness and liveness probe to fail. Invoke this endpoint by making a POST request to `{name-api}/kill`. Run the following command to view the state of the pods:
 
 ```
 kubectl get pods
@@ -161,13 +161,13 @@ name-deployment-5f868854bf-ckhlf   1/1       Running   1          1m
 ping-deployment-649d5564f9-f7lh2   1/1       Running   0          1m
 ----
 
-You will notice that one of the two name pods is no longer in the ready state. As a result, the pod will shortly be restarted. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
+You will notice that one of the two `name` pods is no longer in the ready state. As a result, the pod will shortly be restarted. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
 
 == Trigger restart in name microservice and observe effects on ping microservice
 
 Make two POST requests to `{name-api}/kill`. If you see the same pod name twice, make the request again until you see the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
 
-First, both name pods will be restarted because the readiness and liveness probes failed.
+First, both `name` pods will be restarted because the readiness and liveness probes failed.
 
 [source, role="no_copy"]
 ----
