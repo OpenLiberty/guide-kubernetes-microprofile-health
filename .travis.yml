@@ -18,7 +18,9 @@ before_script:
 script:
 - mvn package
 - kubectl apply -f kubernetes.yaml
-- sleep 120
+- "kubectl patch deployment name-deployment --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/livenessProbe/failureThreshold\", \"value\": 10}]'"
+- "kubectl patch deployment ping-deployment --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/livenessProbe/failureThreshold\", \"value\": 10}]'"
+- sleep 180
 - kubectl get pods
 - echo `minikube ip`
 - mvn verify -Ddockerfile.skip=true -Dcluster.ip=`minikube ip`
