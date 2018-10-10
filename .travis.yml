@@ -24,7 +24,7 @@ script:
 - kubectl get pods
 - echo `minikube ip`
 - mvn verify -Ddockerfile.skip=true -Dcluster.ip=`minikube ip`
-- "for pod in $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{\"\\n\"}' | grep name); do; echo \"======== $pod ========\"; kubectl logs $pod; done"
+- "for pod in $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{\"\\\\n\"}' | grep name); do; echo \"======== $pod ========\"; kubectl logs $pod; done"
 - kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep ping)
 notifications:
   slack:
