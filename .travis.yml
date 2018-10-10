@@ -17,12 +17,15 @@ before_script:
 - sudo minikube start --vm-driver=none --bootstrapper=localkube
 script:
 - mvn package
-- kubectl apply -f kubernetes.yaml
+- "kubectl apply -f <(sed '1,$s/initialDelaySeconds: 15/initialDelaySeconds: 90/g' kubernetes.yaml | sed '1,$s/initialDelaySeconds: 20/initialDelaySeconds: 120/g')"
+# - "kubectl patch deployment name-deployment --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/livenessProbe/failureThreshold\", \"value\": 10}]'"
+# - "kubectl patch deployment ping-deployment --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/livenessProbe/failureThreshold\", \"value\": 10}]'"
 - sleep 120
 - kubectl get pods
 - echo `minikube ip`
 - mvn verify -Ddockerfile.skip=true -Dcluster.ip=`minikube ip`
-- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep name)
+- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep name | head -1)
+- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep name | tail -1)
 - kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep ping)
 notifications:
   slack:
