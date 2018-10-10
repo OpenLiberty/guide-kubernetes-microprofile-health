@@ -17,7 +17,7 @@ before_script:
 - sudo minikube start --vm-driver=none --bootstrapper=localkube
 script:
 - mvn package
-- "sed '1,$s/initialDelaySeconds: 15/initialDelaySeconds: 90/g' finish/kubernetes.yaml | sed '1,$s/initialDelaySeconds: 20/initialDelaySeconds: 120/g' > kubernetes.yaml"
+- "sed '1,$s/initialDelaySeconds: 15/initialDelaySeconds: 90/g' kubernetes.yaml | sed '1,$s/initialDelaySeconds: 20/initialDelaySeconds: 120/g' > kubernetes.yaml"
 - kubectl apply -f kubernetes.yaml
 # - "kubectl patch deployment name-deployment --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/livenessProbe/failureThreshold\", \"value\": 10}]'"
 # - "kubectl patch deployment ping-deployment --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/livenessProbe/failureThreshold\", \"value\": 10}]'"
