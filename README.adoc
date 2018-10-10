@@ -79,7 +79,7 @@ Create the `PingHealth` class in `ping/src/main/java/io/openliberty/guides/ping/
 include::finish/ping/src/main/java/io/openliberty/guides/ping/PingHealth.java[tags=**;]
 ----
 
-This health check verifies that the `name` microservice is available at `http://name-service:9080/api`. If it is available then it returns an `UP` status. Similarly, if it is unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
+This health check verifies that the `name` microservice is available at `\http://name-service:9080/api`. The `name-service` hostname is only accessible from inside the cluster, you will not be able to navigate to it yourself. If it is available then it returns an `UP` status. Similarly, if it is unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
 
 == Configure readiness and liveness probes
 
