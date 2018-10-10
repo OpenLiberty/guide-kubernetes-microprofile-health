@@ -3,11 +3,11 @@ package io.openliberty.guides.name;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-@Path("kill")
-public class KillResource {
+@Path("unhealthy")
+public class UnhealthyResource {
     @POST
-    public String kill() {
-        NameHealth.kill();
+    public String unhealthy() {
+        NameHealth.setUnhealthy();
         return System.getenv("HOSTNAME") + " is now unhealthy...";
     }
 }

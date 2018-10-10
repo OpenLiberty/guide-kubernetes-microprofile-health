@@ -20,7 +20,7 @@ public class NameHealth implements HealthCheck {
         return HealthCheckResponse.named("isAlive").down().build();
     }
     
-    public static void kill() {
+    public static void setUnhealthy() {
         isAlive = false;
     }
 }
