@@ -177,7 +177,7 @@ name-deployment-5f868854bf-ckhlf   0/1       Running   2          4m
 ping-deployment-649d5564f9-f7lh2   1/1       Running   0          4m
 ----
 
-Next, you will see the pods start to become ready again. You will also notice the `ping` pod is no longer ready, since the readiness probe failed since it might no longer reach the service `name-service`.
+Next, you will see the pods start to become ready again. You will also notice the `ping` pod is no longer ready because the readiness probe failed. The probe failed because `name-service` is now unavailable.
 
 [source, role="no_copy"]
 ----
