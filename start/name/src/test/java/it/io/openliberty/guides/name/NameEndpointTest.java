@@ -95,6 +95,11 @@ public class NameEndpointTest {
 
         response = this.getResponse(healthUrl);
         assertEquals("Expected 503 response code from  " + healthUrl, 503, response.getStatus());
+
+        // Sleep for ten seconds to give the pods a chance
+        // to come back up so this test does not interfere
+        // with other test cases.
+        Thread.sleep(10000);
     }
 
     /**
