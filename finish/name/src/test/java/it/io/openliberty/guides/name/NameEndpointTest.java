@@ -13,11 +13,10 @@
 package it.io.openliberty.guides.name;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
@@ -30,6 +29,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import io.kubernetes.client.ApiClient;
+import io.kubernetes.client.ApiException;
+import io.kubernetes.client.Configuration;
+import io.kubernetes.client.apis.CoreV1Api;
+import io.kubernetes.client.models.V1Pod;
+import io.kubernetes.client.util.Config;
+
 public class NameEndpointTest {
 
     private static String clusterUrl;
@@ -39,13 +45,16 @@ public class NameEndpointTest {
     private Response response;
 
     @BeforeClass
-    public static void oneTimeSetup() {
+    public static void oneTimeSetup() throws IOException {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("name.node.port");
 
         String baseUrl = "http://" + clusterIp + ":" + nodePort;
         clusterUrl = baseUrl + "/api/name/";
         healthUrl = baseUrl + "/health";
+
+        ApiClient apiClient = Config.defaultClient();
+        Configuration.setDefaultApiClient(apiClient);
     }
     
     @Before
@@ -85,10 +94,10 @@ public class NameEndpointTest {
     }
 
     @Test
-    public void testNotReady() throws InterruptedException, IOException {
+    public void testNotReady() throws InterruptedException, IOException, ApiException {
         String unhealthyUrl = clusterUrl + "unhealthy";
 
-        // Make both pods unhealthy
+        // Make pod unhealthy
         response = client.target(unhealthyUrl).request().post(null);
         this.assertResponse(unhealthyUrl, response);
 
@@ -98,17 +107,18 @@ public class NameEndpointTest {
         // Check that the pod is no longer READY
         String responseText = response.readEntity(String.class);
         String podName = responseText.substring(0, responseText.indexOf(' '));
-        String command = String.format(
-            "kubectl get pod %s -o jsonpath=\"{.status.containerStatuses[0].ready}\"",
-            podName);
 
-        Process process = Runtime.getRuntime().exec(command);
-        BufferedReader stdOut = new BufferedReader(
-            new InputStreamReader(process.getInputStream()));
+        CoreV1Api kubeApi = new CoreV1Api();
+        V1Pod pod = kubeApi.readNamespacedPod(podName, "default", null, null, null);
 
-        String expected = "false";
-        String actual = stdOut.readLine().trim().replaceAll("[^A-Za-z]+", "");
-        assertEquals("Expected " + podName + " not to be READY", expected, actual);
+        Boolean isReady = pod.getStatus().getContainerStatuses().get(0).isReady();
+        assertFalse(
+            String.format(
+                "Expected: %s is not ready. Actual: %s is %s.",
+                podName,
+                podName,
+                isReady ?  "ready" : "not ready"),
+            isReady);
 
         Thread.sleep(10000);
     }
