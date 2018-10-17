@@ -98,14 +98,19 @@ public class NameEndpointTest {
         // Check that the pod is no longer READY
         String responseText = response.readEntity(String.class);
         String podName = responseText.substring(0, responseText.indexOf(' '));
-        String command = String.format("kubectl get pod %s -o jsonpath=\"{.status.containerStatuses[0].ready}\"", podName);
+        String command = String.format(
+            "kubectl get pod %s -o jsonpath=\"{.status.containerStatuses[0].ready}\"",
+            podName);
 
         Process process = Runtime.getRuntime().exec(command);
-        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader stdOut = new BufferedReader(
+            new InputStreamReader(process.getInputStream()));
 
         String expected = "false";
         String actual = stdOut.readLine().trim().replaceAll("[^A-Za-z]+", "");
         assertEquals("Expected " + podName + " not to be READY", expected, actual);
+
+        Thread.sleep(10000);
     }
 
     /**
