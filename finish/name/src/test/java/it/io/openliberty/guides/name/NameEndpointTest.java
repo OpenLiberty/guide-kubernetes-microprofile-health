@@ -84,6 +84,7 @@ public class NameEndpointTest {
     public void testUnhealthyService() throws InterruptedException {
         String unhealthyUrl = clusterUrl + "unhealthy";
 
+        // Make both pods unhealthy
         response = client.target(unhealthyUrl).request().post(null);
         this.assertResponse(unhealthyUrl, response);
 
@@ -92,7 +93,7 @@ public class NameEndpointTest {
         response = client.target(unhealthyUrl).request().post(null);
         this.assertResponse(unhealthyUrl, response);
 
-
+        // Check that the name-service is no longer healthy
         response = this.getResponse(healthUrl);
         assertEquals("Expected 503 response code from  " + healthUrl, 503, response.getStatus());
 
@@ -100,6 +101,10 @@ public class NameEndpointTest {
         // to come back up so this test does not interfere
         // with other test cases.
         Thread.sleep(10000);
+
+        // Ensure that name-service is back up
+        response = this.getResponse(healthUrl);
+        this.assertResponse(healthUrl, response);
     }
 
     /**
