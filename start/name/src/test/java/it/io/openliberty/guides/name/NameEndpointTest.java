@@ -15,6 +15,10 @@ package it.io.openliberty.guides.name;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
@@ -77,34 +81,31 @@ public class NameEndpointTest {
     @Test
     public void testHealthEndpoint() {
         response = this.getResponse(healthUrl);
-        this.assertResponse(clusterUrl, response);
+        this.assertResponse(healthUrl, response);
     }
 
     @Test
-    public void testUnhealthyService() throws InterruptedException {
+    public void testNotReady() throws InterruptedException, IOException {
         String unhealthyUrl = clusterUrl + "unhealthy";
 
         // Make both pods unhealthy
         response = client.target(unhealthyUrl).request().post(null);
         this.assertResponse(unhealthyUrl, response);
 
-        Thread.sleep(5500);
+        // Wait for the readiness probe to pick up the change in status
+        Thread.sleep(6000);
 
-        response = client.target(unhealthyUrl).request().post(null);
-        this.assertResponse(unhealthyUrl, response);
+        // Check that the pod is no longer READY
+        String responseText = response.readEntity(String.class);
+        String podName = responseText.substring(0, responseText.indexOf(' '));
+        String command = String.format("kubectl get pod %s -o jsonpath=\"{.status.containerStatuses[0].ready}\"", podName);
 
-        // Check that the name-service is no longer healthy
-        response = this.getResponse(healthUrl);
-        assertEquals("Expected 503 response code from  " + healthUrl, 503, response.getStatus());
+        Process process = Runtime.getRuntime().exec(command);
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-        // Sleep for ten seconds to give the pods a chance
-        // to come back up so this test does not interfere
-        // with other test cases.
-        Thread.sleep(10000);
-
-        // Ensure that name-service is back up
-        response = this.getResponse(healthUrl);
-        this.assertResponse(healthUrl, response);
+        String expected = "false";
+        String actual = stdOut.readLine().trim().replaceAll("[^A-Za-z]+", "");
+        assertEquals("Expected " + podName + " not to be READY", expected, actual);
     }
 
     /**
