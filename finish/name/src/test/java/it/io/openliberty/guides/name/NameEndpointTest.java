@@ -97,10 +97,10 @@ public class NameEndpointTest {
         response = this.getResponse(healthUrl);
         assertEquals("Expected 503 response code from  " + healthUrl, 503, response.getStatus());
 
-        // Sleep for ten seconds to give the pods a chance
+        // Sleep for thirty seconds to give the pods a chance
         // to come back up so this test does not interfere
         // with other test cases.
-        Thread.sleep(10000);
+        Thread.sleep(30000);
 
         // Ensure that name-service is back up
         response = this.getResponse(healthUrl);
