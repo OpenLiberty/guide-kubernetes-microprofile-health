@@ -94,7 +94,7 @@ public class NameEndpointTest {
     }
 
     @Test
-    public void testNotReady() throws InterruptedException, IOException, ApiException {
+    public void testNotReady() throws InterruptedException, ApiException {
         String unhealthyUrl = clusterUrl + "unhealthy";
 
         // Make pod unhealthy

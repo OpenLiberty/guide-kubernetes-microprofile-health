@@ -13,6 +13,11 @@
 package it.io.openliberty.guides.ping;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.Optional;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
@@ -25,21 +30,35 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import io.kubernetes.client.ApiClient;
+import io.kubernetes.client.ApiException;
+import io.kubernetes.client.Configuration;
+import io.kubernetes.client.apis.CoreV1Api;
+import io.kubernetes.client.models.V1Pod;
+import io.kubernetes.client.models.V1PodList;
+import io.kubernetes.client.util.Config;
+
 public class PingEndpointTest {
 
     private static String clusterUrl;
+    private static String nameUnhealthyUrl;
     private static String nameKubeService;
 
     private Client client;
     private Response response;
 
     @BeforeClass
-    public static void oneTimeSetup() {
+    public static void oneTimeSetup() throws IOException {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("ping.node.port");
+        String nameNodePort = System.getProperty("name.node.port");
         
         nameKubeService = System.getProperty("name.kube.service");
         clusterUrl = "http://" + clusterIp + ":" + nodePort + "/api/ping/";
+        nameUnhealthyUrl = "http://" + clusterIp + ":" + nameNodePort + "/api/name/unhealthy";
+
+        ApiClient apiClient = Config.defaultClient();
+        Configuration.setDefaultApiClient(apiClient);
     }
 
     @Before
@@ -88,6 +107,57 @@ public class PingEndpointTest {
             + invalidServiceName
             + " a running Kuberentes service?",
             expected, actual);
+    }
+
+    @Test
+    public void testNotReady() throws InterruptedException, ApiException {
+        // Make both name pods unhealthy
+        response = client.target(nameUnhealthyUrl).request().post(null);
+        this.assertResponse(nameUnhealthyUrl, response);
+
+        Thread.sleep(6000);
+
+        response = client.target(nameUnhealthyUrl).request().post(null);
+        this.assertResponse(nameUnhealthyUrl, response);
+
+        Thread.sleep(6000);
+
+        // Check status of ping pod
+        CoreV1Api kubeApi = new CoreV1Api();
+
+        V1Pod pod = getPingPod(kubeApi);
+        String podName = pod.getMetadata().getName();
+
+        Boolean isReady = pod.getStatus().getContainerStatuses().get(0).isReady();
+        for (int i = 0; i < 24 && isReady; i++) {
+            // Repeatedly check if pod is ready, as long as it is not ready
+            // at least then the test should pass.
+            pod = getPingPod(kubeApi);
+            isReady = pod.getStatus().getContainerStatuses().get(0).isReady();
+            Thread.sleep(500);
+        }
+
+        assertFalse(
+            String.format(
+                "Expected: %s is not ready. Actual: %s is %s.",
+                podName,
+                podName,
+                isReady ?  "ready" : "not ready"),
+            isReady);
+
+        Thread.sleep(10000);
+    }
+
+    private V1Pod getPingPod(CoreV1Api api) throws ApiException {
+        V1PodList pods = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null);
+        Optional<V1Pod> pod = pods
+            .getItems()
+            .stream()
+            .filter(p -> p.getMetadata().getName().startsWith("ping-"))
+            .findFirst();
+
+        assertTrue(pod.isPresent());
+        return pod.get();
     }
 
     /**
