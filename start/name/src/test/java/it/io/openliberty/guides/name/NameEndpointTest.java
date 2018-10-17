@@ -29,6 +29,7 @@ import org.junit.Test;
 public class NameEndpointTest {
 
     private static String clusterUrl;
+    private static String healthUrl;
 
     private Client client;
     private Response response;
@@ -37,7 +38,10 @@ public class NameEndpointTest {
     public static void oneTimeSetup() {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("name.node.port");
-        clusterUrl = "http://" + clusterIp + ":" + nodePort + "/api/name/";
+
+        String baseUrl = "http://" + clusterIp + ":" + nodePort;
+        clusterUrl = baseUrl + "/api/name/";
+        healthUrl = baseUrl + "/health";
     }
     
     @Before
@@ -68,6 +72,29 @@ public class NameEndpointTest {
         containerName = (containerName.equals("null")) ? null : containerName;
         assertNotNull("Container name should not be null but it was. The service is robably not running inside a container",
             containerName);
+    }
+
+    @Test
+    public void testHealthEndpoint() {
+        response = this.getResponse(healthUrl);
+        this.assertResponse(clusterUrl, response);
+    }
+
+    @Test
+    public void testUnhealthyService() throws InterruptedException {
+        String unhealthyUrl = clusterUrl + "unhealthy";
+
+        response = client.target(unhealthyUrl).request().post(null);
+        this.assertResponse(unhealthyUrl, response);
+
+        Thread.sleep(5500);
+
+        response = client.target(unhealthyUrl).request().post(null);
+        this.assertResponse(unhealthyUrl, response);
+
+
+        response = this.getResponse(healthUrl);
+        assertEquals("Expected 503 response code from  " + healthUrl, 503, response.getStatus());
     }
 
     /**
