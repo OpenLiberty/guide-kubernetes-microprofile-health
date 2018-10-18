@@ -49,7 +49,8 @@ public class NameEndpointTest {
     public static void oneTimeSetup() throws IOException {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("name.node.port");
-        sleepTime = Integer.parseInt(System.getProperty("test.sleep.time"));
+        String strSleepTime = System.getProperty("test.sleep.time", "10000");
+        sleepTime = Integer.parseInt(strSleepTime);
 
         String baseUrl = "http://" + clusterIp + ":" + nodePort;
         clusterUrl = baseUrl + "/api/name/";

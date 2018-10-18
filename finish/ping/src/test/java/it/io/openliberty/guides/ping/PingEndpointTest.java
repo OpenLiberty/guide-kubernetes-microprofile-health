@@ -53,7 +53,8 @@ public class PingEndpointTest {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("ping.node.port");
         String nameNodePort = System.getProperty("name.node.port");
-        sleepTime = Integer.parseInt(System.getProperty("test.sleep.time"));
+        String strSleepTime = System.getProperty("test.sleep.time", "10000");
+        sleepTime = Integer.parseInt(strSleepTime);
         
         nameKubeService = System.getProperty("name.kube.service");
         clusterUrl = "http://" + clusterIp + ":" + nodePort + "/api/ping/";
