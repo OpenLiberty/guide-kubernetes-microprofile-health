@@ -30,6 +30,7 @@
         <name.kube.service>name-service</name.kube.service>
         <name.node.port>31000</name.node.port>
         <ping.node.port>32000</ping.node.port>
+        <test.sleep.time>10000</test.sleep.time>
     </properties>
 
     <dependencyManagement>

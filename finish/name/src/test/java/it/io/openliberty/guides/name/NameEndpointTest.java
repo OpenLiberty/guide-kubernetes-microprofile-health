@@ -40,6 +40,7 @@ public class NameEndpointTest {
 
     private static String clusterUrl;
     private static String healthUrl;
+    private static int sleepTime;
 
     private Client client;
     private Response response;
@@ -48,6 +49,7 @@ public class NameEndpointTest {
     public static void oneTimeSetup() throws IOException {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("name.node.port");
+        sleepTime = Integer.parseInt(System.getProperty("test.sleep.time"));
 
         String baseUrl = "http://" + clusterIp + ":" + nodePort;
         clusterUrl = baseUrl + "/api/name/";
@@ -120,7 +122,7 @@ public class NameEndpointTest {
                 isReady ?  "ready" : "not ready"),
             isReady);
 
-        Thread.sleep(16000);
+        Thread.sleep(sleepTime);
     }
 
     /**

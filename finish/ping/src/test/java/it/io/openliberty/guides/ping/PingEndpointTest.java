@@ -43,6 +43,7 @@ public class PingEndpointTest {
     private static String clusterUrl;
     private static String nameUnhealthyUrl;
     private static String nameKubeService;
+    private static int sleepTime;
 
     private Client client;
     private Response response;
@@ -52,6 +53,7 @@ public class PingEndpointTest {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("ping.node.port");
         String nameNodePort = System.getProperty("name.node.port");
+        sleepTime = Integer.parseInt(System.getProperty("test.sleep.time"));
         
         nameKubeService = System.getProperty("name.kube.service");
         clusterUrl = "http://" + clusterIp + ":" + nodePort + "/api/ping/";
@@ -145,7 +147,7 @@ public class PingEndpointTest {
                 isReady ?  "ready" : "not ready"),
             isReady);
 
-        Thread.sleep(16000);
+        Thread.sleep(sleepTime);
     }
 
     private V1Pod getPingPod(CoreV1Api api) throws ApiException {
