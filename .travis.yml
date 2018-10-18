@@ -21,7 +21,7 @@ script:
 - sleep 120
 - kubectl get pods
 - echo `minikube ip`
-- mvn verify -Ddockerfile.skip=true -Dcluster.ip=`minikube ip` -Dtest.sleep.time=60000
+- mvn verify -Ddockerfile.skip=true -Dcluster.ip=`minikube ip` -Dtest.sleep.time=130000
 - kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep name | head -1)
 - kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep name | tail -1)
 - kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep ping)
