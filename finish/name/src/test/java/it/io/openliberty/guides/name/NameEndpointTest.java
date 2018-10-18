@@ -120,7 +120,7 @@ public class NameEndpointTest {
                 isReady ?  "ready" : "not ready"),
             isReady);
 
-        Thread.sleep(10000);
+        Thread.sleep(16000);
     }
 
     /**

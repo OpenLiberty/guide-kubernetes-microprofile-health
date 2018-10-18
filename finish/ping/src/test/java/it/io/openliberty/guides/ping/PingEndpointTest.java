@@ -145,7 +145,7 @@ public class PingEndpointTest {
                 isReady ?  "ready" : "not ready"),
             isReady);
 
-        Thread.sleep(10000);
+        Thread.sleep(16000);
     }
 
     private V1Pod getPingPod(CoreV1Api api) throws ApiException {
