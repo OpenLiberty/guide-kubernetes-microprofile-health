@@ -13,10 +13,7 @@
 package it.io.openliberty.guides.name;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
@@ -29,35 +26,21 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.ApiException;
-import io.kubernetes.client.Configuration;
-import io.kubernetes.client.apis.CoreV1Api;
-import io.kubernetes.client.models.V1Pod;
-import io.kubernetes.client.util.Config;
-
 public class NameEndpointTest {
 
     private static String clusterUrl;
     private static String healthUrl;
-    private static int sleepTime;
 
     private Client client;
     private Response response;
 
     @BeforeClass
-    public static void oneTimeSetup() throws IOException {
+    public static void oneTimeSetup() {
         String clusterIp = System.getProperty("cluster.ip");
         String nodePort = System.getProperty("name.node.port");
-        String strSleepTime = System.getProperty("test.sleep.time", "10000");
-        sleepTime = Integer.parseInt(strSleepTime);
-
         String baseUrl = "http://" + clusterIp + ":" + nodePort;
         clusterUrl = baseUrl + "/api/name/";
         healthUrl = baseUrl + "/health";
-
-        ApiClient apiClient = Config.defaultClient();
-        Configuration.setDefaultApiClient(apiClient);
     }
     
     @Before
@@ -91,39 +74,9 @@ public class NameEndpointTest {
     }
 
     @Test
-    public void testHealthEndpoint() {
+    public void testHealth() {
         response = this.getResponse(healthUrl);
         this.assertResponse(healthUrl, response);
-    }
-
-    @Test
-    public void testNotReady() throws InterruptedException, ApiException {
-        String unhealthyUrl = clusterUrl + "unhealthy";
-
-        // Make pod unhealthy
-        response = client.target(unhealthyUrl).request().post(null);
-        this.assertResponse(unhealthyUrl, response);
-
-        // Wait for the readiness probe to pick up the change in status
-        Thread.sleep(6000);
-
-        // Check that the pod is no longer READY
-        String responseText = response.readEntity(String.class);
-        String podName = responseText.substring(0, responseText.indexOf(' '));
-
-        CoreV1Api kubeApi = new CoreV1Api();
-        V1Pod pod = kubeApi.readNamespacedPod(podName, "default", null, null, null);
-
-        Boolean isReady = pod.getStatus().getContainerStatuses().get(0).isReady();
-        assertFalse(
-            String.format(
-                "Expected: %s is not ready. Actual: %s is %s.",
-                podName,
-                podName,
-                isReady ?  "ready" : "not ready"),
-            isReady);
-
-        Thread.sleep(sleepTime);
     }
 
     /**

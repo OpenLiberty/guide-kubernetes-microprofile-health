@@ -30,7 +30,6 @@
         <name.kube.service>name-service</name.kube.service>
         <name.node.port>31000</name.node.port>
         <ping.node.port>32000</ping.node.port>
-        <test.sleep.time>10000</test.sleep.time>
     </properties>
 
     <dependencyManagement>
@@ -70,12 +69,6 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-client</artifactId>
                 <version>3.1.11</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.kubernetes</groupId>
-                <artifactId>client-java</artifactId>
-                <version>2.0.0</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
