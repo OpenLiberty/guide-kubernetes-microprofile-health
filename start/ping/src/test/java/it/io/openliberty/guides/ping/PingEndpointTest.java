@@ -28,6 +28,7 @@ import org.junit.Test;
 public class PingEndpointTest {
 
     private static String clusterUrl;
+    private static String healthUrl;
     private static String nameKubeService;
 
     private Client client;
@@ -39,7 +40,10 @@ public class PingEndpointTest {
         String nodePort = System.getProperty("ping.node.port");
         
         nameKubeService = System.getProperty("name.kube.service");
-        clusterUrl = "http://" + clusterIp + ":" + nodePort + "/api/ping/";
+
+        String baseUrl = "http://" + clusterIp + ":" + nodePort;
+        clusterUrl = baseUrl + "/api/ping/";
+        healthUrl = baseUrl + "/health";
     }
 
     @Before
@@ -88,6 +92,12 @@ public class PingEndpointTest {
             + invalidServiceName
             + " a running Kuberentes service?",
             expected, actual);
+    }
+    
+    @Test
+    public void testHealth() {
+        response = this.getResponse(healthUrl);
+        this.assertResponse(healthUrl, response);
     }
 
     /**

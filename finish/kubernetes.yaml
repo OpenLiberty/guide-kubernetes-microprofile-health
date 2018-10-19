@@ -54,6 +54,9 @@ spec:
         image: ping:1.0-SNAPSHOT
         ports:
         - containerPort: 9080
+        env:
+        - name: NAME_HOSTNAME
+          value: name-service
         # ping probes
         readinessProbe:
           httpGet:

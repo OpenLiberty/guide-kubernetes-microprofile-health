@@ -3,7 +3,9 @@ package io.openliberty.guides.ping;
 import java.net.URL;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.Health;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -16,10 +18,12 @@ import io.openliberty.guides.ping.client.UnknownUrlException;
 @Health
 @ApplicationScoped
 public class PingHealth implements HealthCheck {
-    private final String HOSTNAME = "name-service";
+    @Inject
+    @ConfigProperty(name = "NAME_HOSTNAME")
+    private String hostname;
 
     public HealthCheckResponse call() {
-        HealthCheckResponseBuilder builder = HealthCheckResponse.named(HOSTNAME);
+        HealthCheckResponseBuilder builder = HealthCheckResponse.named(hostname);
         if (isNameServiceReachable()) {
             builder = builder.up();
         } else {
@@ -33,7 +37,7 @@ public class PingHealth implements HealthCheck {
         try {
             NameClient client = RestClientBuilder
                 .newBuilder()
-                .baseUrl(new URL("http://name-service:9080/api"))
+                .baseUrl(new URL("http://" + hostname + ":9080/api"))
                 .register(UnknownUrlException.class)
                 .build(NameClient.class);
 
