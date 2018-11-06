@@ -87,6 +87,8 @@ The health check for the `name` microservice has already been implemented. It ha
 
 == Configure readiness and liveness probes
 
+You will configure to different {kube} probes. The first type of probe is called a readiness probe. The readiness probe is responsible for determining that your application is ready to accept requests. If it is not ready, traffic will not be routed to the container. The second probe is called a liveness probe. The liveness probe is responsible for determining if your container is working correctly. If it is not working correctly then {kube} will automatically restart the unhealthy pod.
+
 Create the `kubernetes.yaml` file:
 
 [source, yaml]
