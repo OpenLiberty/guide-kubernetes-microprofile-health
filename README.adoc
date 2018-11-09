@@ -11,7 +11,7 @@
 //
 :projectid: kubernetes-microprofile-health
 :page-layout: guide
-:page-duration: 15 minutes
+:page-duration: 30 minutes
 :page-releasedate: 2018-09-27
 :page-description: Explore how to configure liveness and readiness probes in your Kubernetes cluster
 :page-tags: ['microservices', 'Kubernetes', 'Docker', 'containers', 'kubectl', 'Minikube', 'MicroProfile', 'mpHealth', 'probe']
@@ -87,6 +87,8 @@ The health check for the `name` microservice has already been implemented. It ha
 
 == Configure readiness and liveness probes
 
+You will configure two different {kube} probes. The first type of probe is called a readiness probe. The readiness probe is responsible for determining that your application is ready to accept requests. If it is not ready, traffic will not be routed to the container. The second probe is called a liveness probe. The liveness probe is responsible for determining if your container is working correctly. If it is not working correctly then {kube} will automatically restart the unhealthy pod.
+
 Create the `kubernetes.yaml` file:
 
 [source, yaml]
@@ -96,9 +98,11 @@ include::finish/kubernetes.yaml[tags=**;]
 
 The readiness and liveness probes are configured for the containers running the `name` and `ping` microservices.
 
-The readiness probe is configured to poll the `/health` endpoint. If a GET request on the `/health` endpoint has a status code of at least `200` and less than `400`, then the pod will be ready, otherwise the pod won't be ready. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll. This property is useful because you can time the readiness and liveness polls so they don't interfere with each other. For example, the liveness probe might restart the pod before it's even in the ready state. The `periodSeconds` option defines how often the probe should poll the given endpoint. The `failureThreshold` option defines how many times the probe should fail before the state should be changed from ready to not ready. By default this value is set to 3 if you don't set it.
+The readiness probe is configured to poll the `/health` endpoint. The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll so the probe does not start making requests before the server has started. The `failureThreshold` option defines how many times the probe should fail before the state should be changed from ready to not ready.
 
-The liveness probe is similar, but instead of changing states the liveness probe restarts the pod if the failure threshold is exceeded. Restarting the pod is useful because there may be something wrong causing the pod not to behave correctly. Spinning up a new instance may solve the issue.
+The liveness probe is configured to poll the `/health` endpoint. If a GET request on the `/health` endpoint has a status code of at least `200` and less than `400`, then the pod will be considered alive. If the request fails enough times to exceed your `failureThreshold` then the pod will be automatically restarted. The `failureThreshold` option defines how many times the probe should fail before the pod is restarted. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll. This property is useful because you can time the readiness and liveness polls so they don't interfere with each other. For example, the liveness probe might restart the pod before it's even in the ready state.
+
+For both probes, the `periodSeconds` option defines how often the probe should poll the given endpoint.
 
 == Deploying the microservices
 
@@ -183,7 +187,7 @@ You will notice that one of the two `name` pods is no longer in the ready state.
 
 === Observing effects on ping microservice
 
-Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
+Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
 
 First, both `name` pods will be restarted because the readiness and liveness probes failed.
 
