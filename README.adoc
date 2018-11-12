@@ -11,7 +11,7 @@
 //
 :projectid: kubernetes-microprofile-health
 :page-layout: guide
-:page-duration: 30 minutes
+:page-duration: 20 minutes
 :page-releasedate: 2018-09-27
 :page-description: Explore how to configure liveness and readiness probes in your Kubernetes cluster
 :page-tags: ['microservices', 'Kubernetes', 'Docker', 'containers', 'kubectl', 'Minikube', 'MicroProfile', 'mpHealth', 'probe']
@@ -152,7 +152,14 @@ Similarly, navigate to `{ping-api}/name-service` and observe a response with the
 
 == Triggering restart in name microservice
 
-An endpoint has been provided under the `name` microservice to set it to an unhealthy state in the health check. The unhealthy state will cause the readiness and liveness probe to fail. Use the `curl` command to invoke this endpoint by making a POST request to `{name-api}/unhealthy` -- if `curl` is unavailable then use https://www.getpostman.com/[Postman]. Run the following command to view the state of the pods:
+An endpoint has been provided under the `name` microservice to set it to an unhealthy state in the health check. The unhealthy state will cause the readiness and liveness probe to fail. Use the `curl` command to invoke this endpoint by making a POST request to `{name-api}/unhealthy` -- if `curl` is unavailable then use https://www.getpostman.com/[Postman].
+
+[subs="attributes"]
+```
+curl -X POST {name-api}/unhealthy
+```
+
+Run the following command to view the state of the pods:
 
 ```
 kubectl get pods
