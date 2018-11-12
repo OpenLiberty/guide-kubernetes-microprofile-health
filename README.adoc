@@ -24,7 +24,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Explore how to configure liveness and readiness probes in your Kubernetes cluster to automatically restart unhealthy pods and re-route traffic accordingly.
+Explore how to configure liveness and readiness probes in your Kubernetes cluster to automatically restart unhealthy pods and reroute traffic accordingly.
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
@@ -83,13 +83,13 @@ Create the `PingHealth` class in `ping/src/main/java/io/openliberty/guides/ping/
 include::finish/ping/src/main/java/io/openliberty/guides/ping/PingHealth.java[tags=**;]
 ----
 
-This health check verifies that the `name` microservice is available at `\http://name-service:9080/api`. The `name-service` hostname is only accessible from inside the cluster, you will not be able to navigate to it yourself. If it is available then it returns an `UP` status. Similarly, if it is unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
+This health check verifies that the `name` microservice is available at `\http://name-service:9080/api`. The `name-service` host name is only accessible from inside the cluster, you will not be able to navigate to it yourself. If it is available then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
 
 The health check for the `name` microservice has already been implemented. It has been setup to become unhealthy when a specific endpoint is called. This switch has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
 
 == Configure readiness and liveness probes
 
-You will configure two different {kube} probes. The first type of probe is called a readiness probe. The readiness probe is responsible for determining that your application is ready to accept requests. If it is not ready, traffic will not be routed to the container. The second probe is called a liveness probe. The liveness probe is responsible for determining if your container is working correctly. If it is not working correctly then {kube} will automatically restart the unhealthy pod.
+You will configure two different {kube} probes. The first type of probe is called a readiness probe. The readiness probe is responsible for determining that your application is ready to accept requests. If it's not ready, traffic won't be routed to the container. The second probe is called a liveness probe. The liveness probe is responsible for determining if your container is working correctly. If it's not working correctly, then {kube} will automatically restart the unhealthy pod.
 
 Create the `kubernetes.yaml` file:
 
@@ -139,14 +139,14 @@ After the pods are ready, you will make requests to your services.
 ****
 [system]#*{win} | {mac}*#
 
-The default hostname for Docker Desktop is `localhost`.
+The default host name for Docker Desktop is `localhost`.
 
 [system]#*{linux}*#
 
-The default hostname for minikube is {minikube-ip}. Otherwise it can be found using the `minikube ip` command.
+The default host name for minikube is {minikube-ip}. Otherwise it can be found using the `minikube ip` command.
 ****
 
-Navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the IP address or hostname of your {kube} cluster. By default it will be `{minikube-ip}` for MiniKube and `localhost` for Docker Desktop. The readiness probe ensures the status won't be updated until the container is available to accept requests. Without a readiness probe, you may notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn't fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.
+Navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the IP address or host name of your {kube} cluster. By default it will be `{minikube-ip}` for MiniKube and `localhost` for Docker Desktop. The readiness probe ensures the status won't be updated until the container is available to accept requests. Without a readiness probe, you may notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn't fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.
 
 Similarly, navigate to `{ping-api}/name-service` and observe a response with the content `pong`.
 
