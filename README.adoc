@@ -42,6 +42,8 @@ Explore how to configure liveness and readiness probes in your Kubernetes cluste
 
 You will learn how to create a health check endpoint for your microservices. Then, you will configure {kube} to use this endpoint to keep your microservices running smoothly.
 
+MicroProfile Health allows services to report their health, and it publishes the overall health status to a defined endpoint. A service reports `UP` if it is available and reports `DOWN` if it is unavailable. MicroProfile Health reports an individual service status at the endpoint and indicates the overall status as `UP` if all the services are `UP`. A service orchestrator can then use the health statuses to make decisions.
+
 {kube} provides liveness and readiness probes that are used to check the health of your containers. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes a health endpoint on your microservices. {kube} polls the endpoint as specified by the liveness and readiness probes to react appropriately to any change in the microservice's status. Read the https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices] guide to learn more about MicroProfile Health.
 
 The two microservices you will work with are called `name` and `ping`. The `name` microservice displays a brief greeting and the name of the container that it runs in. The `ping` microservice pings the {kube} Service that encapsulates the pod running the `name` microservice. The `ping` microservice demonstrates how communication can be established between pods inside a cluster.
@@ -117,8 +119,6 @@ When the build succeeds, run the following command to deploy the necessary {kube
 ```
 kubectl apply -f kubernetes.yaml
 ```
-
-// Observe that once ready it can accept requests
 
 Use the following command to view the status of the pods. There will be two `name` pods and one `ping` pod, later you'll observe their behaviour as the `name` pods become unhealthy.
 
