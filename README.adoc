@@ -129,12 +129,12 @@ kubectl get pods
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   1/1       Running   0          28s
-name-deployment-5f868854bf-ckhlf   1/1       Running   0          28s
-ping-deployment-649d5564f9-f7lh2   1/1       Running   0          28s
+name-deployment-5f868854bf-2rhdq   1/1       Running   0          5m
+name-deployment-5f868854bf-ckhlf   1/1       Running   0          5m
+ping-deployment-649d5564f9-f7lh2   1/1       Running   0          5m
 ----
 
-After the pods are ready, you will make requests to your services.
+Wait 3 minutes and the pods should be ready. After the pods are ready, you will make requests to your services.
 
 ****
 [system]#*{win} | {mac}*#
@@ -194,7 +194,7 @@ You will notice that one of the two `name` pods is no longer in the ready state.
 
 === Observing effects on ping microservice
 
-Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
+Wait 3 minutes to ensure the initial delay time has passed since the name pod has started again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
 
 First, both `name` pods will be restarted because the readiness and liveness probes failed.
 

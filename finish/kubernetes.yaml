@@ -31,7 +31,7 @@ spec:
           httpGet:
             path: /health
             port: 9080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 120
           periodSeconds: 5
           failureThreshold: 2
 ---
@@ -70,7 +70,7 @@ spec:
           httpGet:
             path: /health
             port: 9080
-          initialDelaySeconds: 20
+          initialDelaySeconds: 120
           periodSeconds: 5
 ---
 apiVersion: v1
