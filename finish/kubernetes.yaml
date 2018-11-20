@@ -24,14 +24,14 @@ spec:
           httpGet:
             path: /health
             port: 9080
-          initialDelaySeconds: 5
+          initialDelaySeconds: 115
           periodSeconds: 5
           failureThreshold: 1
         livenessProbe:
           httpGet:
             path: /health
             port: 9080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 120
           periodSeconds: 5
           failureThreshold: 2
 ---
@@ -63,14 +63,14 @@ spec:
           httpGet:
             path: /health
             port: 9080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 115
           periodSeconds: 5
           failureThreshold: 1
         livenessProbe:
           httpGet:
             path: /health
             port: 9080
-          initialDelaySeconds: 20
+          initialDelaySeconds: 130
           periodSeconds: 5
 ---
 apiVersion: v1

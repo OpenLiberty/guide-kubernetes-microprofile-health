@@ -8,6 +8,6 @@ public class UnhealthyResource {
     @POST
     public String unhealthy() {
         NameHealth.setUnhealthy();
-        return System.getenv("HOSTNAME") + " is now unhealthy...";
+        return System.getenv("HOSTNAME") + " is now unhealthy...\n";
     }
 }

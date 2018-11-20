@@ -129,12 +129,12 @@ kubectl get pods
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   1/1       Running   0          28s
-name-deployment-5f868854bf-ckhlf   1/1       Running   0          28s
-ping-deployment-649d5564f9-f7lh2   1/1       Running   0          28s
+name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
+name-deployment-8664868cd7-f2jbc   1/1       Running   0          2m
+ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
 ----
 
-After the pods are ready, you will make requests to your services.
+Wait 3 minutes and the pods should be ready. After the pods are ready, you will make requests to your services.
 
 ****
 [system]#*{win} | {mac}*#
@@ -167,63 +167,72 @@ kubectl get pods
 
 [source, role="no_copy"]
 ----
-
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   1/1       Running   0          1m
-name-deployment-5f868854bf-ckhlf   0/1       Running   0          1m
-ping-deployment-649d5564f9-f7lh2   1/1       Running   0          1m
-----
-
-[source, role="no_copy"]
-----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   1/1       Running   0          1m
-name-deployment-5f868854bf-ckhlf   0/1       Running   1          1m
-ping-deployment-649d5564f9-f7lh2   1/1       Running   0          1m
+name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
+name-deployment-8664868cd7-f2jbc   0/1       Running   0          2m
+ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
 ----
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   1/1       Running   0          1m
-name-deployment-5f868854bf-ckhlf   1/1       Running   1          1m
-ping-deployment-649d5564f9-f7lh2   1/1       Running   0          1m
+name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
+name-deployment-8664868cd7-f2jbc   0/1       Running   1          2m
+ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
+----
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-8664868cd7-bwdkl   1/1       Running   0          4m
+name-deployment-8664868cd7-f2jbc   1/1       Running   1          4m
+ping-deployment-55f45bffc4-7njlp   1/1       Running   0          4m
 ----
 
 You will notice that one of the two `name` pods is no longer in the ready state. As a result, the pod will shortly be restarted. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
 
 === Observing effects on ping microservice
 
-Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
+Wait 3 minutes until the restarted `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
 
-First, both `name` pods will be restarted because the readiness and liveness probes failed.
-
-[source, role="no_copy"]
-----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   0/1       Running   1          4m
-name-deployment-5f868854bf-ckhlf   0/1       Running   2          4m
-ping-deployment-649d5564f9-f7lh2   1/1       Running   0          4m
-----
-
-Next, you will see the pods start to become ready again. You will also notice the `ping` pod is no longer ready because the readiness probe failed. The probe failed because `name-service` is now unavailable.
+First, both `name` pods will no longer be ready because the readiness probe failed.
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   1/1       Running   1          4m
-name-deployment-5f868854bf-ckhlf   0/1       Running   2          4m
-ping-deployment-649d5564f9-f7lh2   0/1       Running   0          4m
+name-deployment-8664868cd7-bwdkl   0/1       Running   0          7m
+name-deployment-8664868cd7-f2jbc   0/1       Running   1          7m
+ping-deployment-55f45bffc4-7njlp   1/1       Running   0          7m
 ----
 
-Finally, you will see all of the pods have recovered. Note the `ping` pod isn't restarted because it wasn't down long enough for the liveness probe's failure threshold to be exceeded.
+Next, the `name` pods will be restarted because the liveness probe failed. You will notice the `ping` pod is no longer ready because the readiness probe failed. The probe failed because `name-service` is now unavailable.
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-5f868854bf-2rhdq   1/1       Running   1          4m
-name-deployment-5f868854bf-ckhlf   1/1       Running   2          4m
-ping-deployment-649d5564f9-f7lh2   1/1       Running   0          4m
+name-deployment-8664868cd7-bwdkl   0/1       Running   1          8m
+name-deployment-8664868cd7-f2jbc   0/1       Running   2          8m
+ping-deployment-55f45bffc4-7njlp   0/1       Running   0          8m
+----
+
+Next, the `ping` pod will be restarted because the liveness probe failed.
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-8664868cd7-bwdkl   0/1       Running   1          9m
+name-deployment-8664868cd7-f2jbc   0/1       Running   2          9m
+ping-deployment-55f45bffc4-7njlp   0/1       Running   1          9m
+----
+
+Finally, you will see all of the pods have recovered.
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-8664868cd7-bwdkl   1/1       Running   1          10m
+name-deployment-8664868cd7-f2jbc   1/1       Running   2          10m
+ping-deployment-55f45bffc4-7njlp   1/1       Running   1          10m
 ----
 
 // ================================================================================================================================
@@ -267,13 +276,17 @@ Results :
 Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 ----
 
-== Tearing down the {kube} resources
+== Tearing down the environment
 
 To remove all of the resources created during this guide, run the following command to delete all of the resources that you created.
 
 ```
 kubectl delete -f kubernetes.yaml
 ```
+
+
+include::{common-includes}/kube-minikube-teardown.adoc[]
+
 
 // =================================================================================================
 // finish
