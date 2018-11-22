@@ -19,12 +19,15 @@
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
-= Probing microservices running in Kubernetes
+:page-seo-title: Kubernetes readiness and liveness probe tutorial
+:page-seo-description: How to setup liveness probes and readiness probes in Kubernetes
+
+= Checking the health of microservices on Kubernetes
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Explore how to configure liveness and readiness probes in your Kubernetes cluster to automatically restart unhealthy pods and reroute traffic accordingly.
+Learn how to keep microservices healthy on Kuberenetes by setting up readiness and liveness probes to check MicroProfile Health endpoints.
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
