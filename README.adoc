@@ -20,7 +20,7 @@
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
 :page-seo-title: Checking the health of microservices using Kubernetes readiness and liveness probes
-:page-seo-description: How to check microservice health status using MicroProfile Health with Kubernetes liveness probes and readiness probes
+:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes liveness and readiness probes
 
 = Checking the health of microservices on Kubernetes
 
