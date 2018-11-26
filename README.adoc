@@ -132,7 +132,7 @@ name-deployment-8664868cd7-f2jbc   1/1       Running   0          2m
 ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
 ----
 
-Wait 3 minutes and the pods should be ready. After the pods are ready, you will make requests to your services.
+Wait until the pods are ready. After the pods are ready, you will make requests to your services.
 
 ****
 [system]#*{win} | {mac}*#
