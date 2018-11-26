@@ -166,33 +166,33 @@ kubectl get pods
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
-name-deployment-8664868cd7-f2jbc   0/1       Running   0          2m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          59s
+name-deployment-694c7b74f7-lrlf7   1/1       Running   0          59s
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          59s
 ----
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          4m
-name-deployment-8664868cd7-f2jbc   1/1       Running   0          4m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          4m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          1m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          1m
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          1m
 ----
 
 You will notice that one of the two `name` pods is no longer in the ready state. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
 
 === Observing effects on ping microservice
 
-Wait 3 minutes until the restarted `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
+Wait until the `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
 
 First, both `name` pods will no longer be ready because the readiness probe failed.
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   0/1       Running   0          7m
-name-deployment-8664868cd7-f2jbc   0/1       Running   0          7m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          7m
+name-deployment-694c7b74f7-hcf4q   0/1       Running   0          5m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          5m
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          5m
 ----
 
 Next, the `ping` pod is no longer ready because the readiness probe failed. The probe failed because `name-service` is now unavailable.
@@ -200,9 +200,9 @@ Next, the `ping` pod is no longer ready because the readiness probe failed. The 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   0/1       Running   0          8m
-name-deployment-8664868cd7-f2jbc   0/1       Running   0          8m
-ping-deployment-55f45bffc4-7njlp   0/1       Running   0          8m
+name-deployment-694c7b74f7-hcf4q   0/1       Running   0          6m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          6m
+ping-deployment-cf8f564c6-nctcr    0/1       Running   0          6m
 ----
 
 Next, the `name` pods will start to recover.
@@ -210,9 +210,9 @@ Next, the `name` pods will start to recover.
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   0/1       Running   0          8m
-name-deployment-8664868cd7-f2jbc   0/1       Running   0          8m
-ping-deployment-55f45bffc4-7njlp   0/1       Running   0          8m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          6m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          6m
+ping-deployment-cf8f564c6-nctcr    0/1       Running   0          6m
 ----
 
 Finally, you will see all of the pods have recovered.
@@ -220,9 +220,9 @@ Finally, you will see all of the pods have recovered.
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          10m
-name-deployment-8664868cd7-f2jbc   1/1       Running   0          10m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          10m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          6m
+name-deployment-694c7b74f7-lrlf7   1/1       Running   0          6m
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          6m
 ----
 
 // ================================================================================================================================
