@@ -127,9 +127,9 @@ kubectl get pods
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
-name-deployment-8664868cd7-f2jbc   1/1       Running   0          2m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          59s
+name-deployment-694c7b74f7-lrlf7   1/1       Running   0          59s
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          59s
 ----
 
 Wait until the pods are ready. After the pods are ready, you will make requests to your services.
