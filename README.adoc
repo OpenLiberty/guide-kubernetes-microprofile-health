@@ -87,7 +87,7 @@ include::finish/ping/src/main/java/io/openliberty/guides/ping/PingHealth.java[ta
 
 This health check verifies that the `name` microservice is available at `\http://name-service:9080/api`. The `name-service` host name is only accessible from inside the cluster, you will not be able to navigate to it yourself. If it is available then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
 
-The health check for the `name` microservice has already been implemented. It has been setup to become unhealthy when a specific endpoint is called. This switch has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
+The health check for the `name` microservice has already been implemented. It has been setup to become unhealthy for 60 seconds when a specific endpoint is called. This endpoint has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
 
 == Configure readiness probes
 
