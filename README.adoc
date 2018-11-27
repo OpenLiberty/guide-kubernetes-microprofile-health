@@ -46,7 +46,7 @@ You will learn how to create a health check endpoint for your microservices. The
 
 MicroProfile Health allows services to report their health, and it publishes the overall health status to a defined endpoint. A service reports `UP` if it is available and reports `DOWN` if it is unavailable. MicroProfile Health reports an individual service status at the endpoint and indicates the overall status as `UP` if all the services are `UP`. A service orchestrator can then use the health statuses to make decisions.
 
-{kube} provides liveness and readiness probes that are used to check the health of your containers. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes a health endpoint on your microservices. {kube} polls the endpoint as specified by the probes to react appropriately to any change in the microservice's status. Read the https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices] guide to learn more about MicroProfile Health.
+{kube} provides liveness and readiness probes that are used to check the health of your containers, you will work with readiness probes. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes a health endpoint on your microservices. {kube} polls the endpoint as specified by the probes to react appropriately to any change in the microservice's status. Read the https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices] guide to learn more about MicroProfile Health.
 
 The two microservices you will work with are called `name` and `ping`. The `name` microservice displays a brief greeting and the name of the container that it runs in. The `ping` microservice pings the {kube} Service that encapsulates the pod running the `name` microservice. The `ping` microservice demonstrates how communication can be established between pods inside a cluster.
 
@@ -89,9 +89,9 @@ This health check verifies that the `name` microservice is available at `\http:/
 
 The health check for the `name` microservice has already been implemented. It has been setup to become unhealthy for 60 seconds when a specific endpoint is called. This endpoint has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
 
-== Configure readiness probes
+== Configuring readiness probes
 
-You will configure a {kube} readiness probe. The readiness probe is responsible for determining that your application is ready to accept requests. If it's not ready, traffic won't be routed to the container.
+You will configure {kube} readiness probes. Readiness probes are responsible for determining that your application is ready to accept requests. If it's not ready, traffic won't be routed to the container.
 
 Create the `kubernetes.yaml` file:
 
@@ -102,7 +102,7 @@ include::finish/kubernetes.yaml[tags=**;]
 
 The readiness probes are configured for the containers running the `name` and `ping` microservices.
 
-The readiness probe is configured to poll the `/health` endpoint. The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll so the probe does not start making requests before the server has started. The `failureThreshold` option defines how many times the probe should fail before the state should be changed from ready to not ready. The `periodSeconds` option defines how often the probe should poll the given endpoint.
+The readiness probes are configured to poll the `/health` endpoint. The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll so the probe does not start making requests before the server has started. The `failureThreshold` option defines how many times the probe should fail before the state should be changed from ready to not ready. The `periodSeconds` option defines how often the probe should poll the given endpoint.
 
 == Deploying the microservices
 
@@ -144,7 +144,7 @@ The default host name for Docker Desktop is `localhost`.
 The default host name for minikube is {minikube-ip}. Otherwise it can be found using the `minikube ip` command.
 ****
 
-Navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the IP address or host name of your {kube} cluster. By default it will be `{minikube-ip}` for MiniKube and `localhost` for Docker Desktop. The readiness probe ensures the status won't be updated until the container is available to accept requests. Without a readiness probe, you may notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn't fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.
+Navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the IP address or host name of your {kube} cluster. The readiness probe ensures the READY state won't be `1/1` until the container is available to accept requests. Without a readiness probe, you may notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn't fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.
 
 Similarly, navigate to `{ping-api}/name-service` and observe a response with the content `pong`.
 
@@ -284,7 +284,7 @@ include::{common-includes}/kube-minikube-teardown.adoc[]
 
 == Great work! You're done!
 
-You have used MicroProfile Health to create an endpoint that reports on your microservice's status. Then, you observed how {kube} uses` the `/health` endpoint to keep your microservices running smoothly.
+You have used MicroProfile Health to create an endpoint that reports on your microservice's status. Then, you observed how {kube} uses the `/health` endpoint to keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
 include::{common-includes}/finish.adoc[]
