@@ -13,20 +13,20 @@
 :page-layout: guide
 :page-duration: 20 minutes
 :page-releasedate: 2018-09-27
-:page-description: Learn how to check the health of microservices on Kuberenetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.
+:page-description: Learn how to check the health of microservices on Kuberenetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
 :page-tags: ['microservices', 'Kubernetes', 'Docker', 'containers', 'kubectl', 'Minikube', 'MicroProfile', 'mpHealth', 'probe']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
-:page-seo-title: Checking the health of microservices using Kubernetes readiness and liveness probes
-:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes liveness and readiness probes
+:page-seo-title: Checking the health of microservices using Kubernetes readiness probes
+:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness probes
 = Checking the health of microservices on Kubernetes
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to check the health of microservices on Kuberenetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.
+Learn how to check the health of microservices on Kuberenetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
@@ -46,7 +46,7 @@ You will learn how to create a health check endpoint for your microservices. The
 
 MicroProfile Health allows services to report their health, and it publishes the overall health status to a defined endpoint. A service reports `UP` if it is available and reports `DOWN` if it is unavailable. MicroProfile Health reports an individual service status at the endpoint and indicates the overall status as `UP` if all the services are `UP`. A service orchestrator can then use the health statuses to make decisions.
 
-{kube} provides liveness and readiness probes that are used to check the health of your containers. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes a health endpoint on your microservices. {kube} polls the endpoint as specified by the liveness and readiness probes to react appropriately to any change in the microservice's status. Read the https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices] guide to learn more about MicroProfile Health.
+{kube} provides liveness and readiness probes that are used to check the health of your containers, you will work with readiness probes. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes a health endpoint on your microservices. {kube} polls the endpoint as specified by the probes to react appropriately to any change in the microservice's status. Read the https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices] guide to learn more about MicroProfile Health.
 
 The two microservices you will work with are called `name` and `ping`. The `name` microservice displays a brief greeting and the name of the container that it runs in. The `ping` microservice pings the {kube} Service that encapsulates the pod running the `name` microservice. The `ping` microservice demonstrates how communication can be established between pods inside a cluster.
 
@@ -85,13 +85,13 @@ Create the `PingHealth` class in `ping/src/main/java/io/openliberty/guides/ping/
 include::finish/ping/src/main/java/io/openliberty/guides/ping/PingHealth.java[tags=**;]
 ----
 
-This health check verifies that the `name` microservice is available at `\http://name-service:9080/api`. The `name-service` host name is only accessible from inside the cluster, you will not be able to navigate to it yourself. If it is available then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
+This health check verifies that the `name` microservice is available at `\http://name-service:9080/api`. The `name-service` host name is only accessible from inside the cluster, you can't access it yourself. If it's available, then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
 
-The health check for the `name` microservice has already been implemented. It has been setup to become unhealthy when a specific endpoint is called. This switch has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
+The health check for the `name` microservice has already been implemented. It has been setup to become unhealthy for 60 seconds when a specific endpoint is called. This endpoint has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
 
-== Configure readiness and liveness probes
+== Configuring readiness probes
 
-You will configure two different {kube} probes. The first type of probe is called a readiness probe. The readiness probe is responsible for determining that your application is ready to accept requests. If it's not ready, traffic won't be routed to the container. The second probe is called a liveness probe. The liveness probe is responsible for determining if your container is working correctly. If it's not working correctly, then {kube} will automatically restart the unhealthy pod.
+You will configure {kube} readiness probes. Readiness probes are responsible for determining that your application is ready to accept requests. If it's not ready, traffic won't be routed to the container.
 
 Create the `kubernetes.yaml` file:
 
@@ -100,13 +100,9 @@ Create the `kubernetes.yaml` file:
 include::finish/kubernetes.yaml[tags=**;]
 ----
 
-The readiness and liveness probes are configured for the containers running the `name` and `ping` microservices.
+The readiness probes are configured for the containers running the `name` and `ping` microservices.
 
-The readiness probe is configured to poll the `/health` endpoint. The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll so the probe does not start making requests before the server has started. The `failureThreshold` option defines how many times the probe should fail before the state should be changed from ready to not ready.
-
-The liveness probe is configured to poll the `/health` endpoint. If a GET request on the `/health` endpoint has a status code of at least `200` and less than `400`, then the pod will be considered alive. If the request fails enough times to exceed your `failureThreshold` then the pod will be automatically restarted. The `failureThreshold` option defines how many times the probe should fail before the pod is restarted. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll. This property is useful because you can time the readiness and liveness polls so they don't interfere with each other. For example, the liveness probe might restart the pod before it's even in the ready state.
-
-For both probes, the `periodSeconds` option defines how often the probe should poll the given endpoint.
+The readiness probes are configured to poll the `/health` endpoint. The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll so the probe does not start making requests before the server has started. The `failureThreshold` option defines how many times the probe should fail before the state should be changed from ready to not ready. The `periodSeconds` option defines how often the probe should poll the given endpoint.
 
 == Deploying the microservices
 
@@ -131,12 +127,12 @@ kubectl get pods
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
-name-deployment-8664868cd7-f2jbc   1/1       Running   0          2m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          59s
+name-deployment-694c7b74f7-lrlf7   1/1       Running   0          59s
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          59s
 ----
 
-Wait 3 minutes and the pods should be ready. After the pods are ready, you will make requests to your services.
+Wait until the pods are ready. After the pods are ready, you will make requests to your services.
 
 ****
 [system]#*{win} | {mac}*#
@@ -148,13 +144,13 @@ The default host name for Docker Desktop is `localhost`.
 The default host name for minikube is {minikube-ip}. Otherwise it can be found using the `minikube ip` command.
 ****
 
-Navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the IP address or host name of your {kube} cluster. By default it will be `{minikube-ip}` for MiniKube and `localhost` for Docker Desktop. The readiness probe ensures the status won't be updated until the container is available to accept requests. Without a readiness probe, you may notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn't fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.
+Navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the IP address or host name of your {kube} cluster. The readiness probe ensures the READY state won't be `1/1` until the container is available to accept requests. Without a readiness probe, you may notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn't fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.
 
 Similarly, navigate to `{ping-api}/name-service` and observe a response with the content `pong`.
 
-== Triggering restart in name microservice
+== Changing ready state of name microservice
 
-An endpoint has been provided under the `name` microservice to set it to an unhealthy state in the health check. The unhealthy state will cause the readiness and liveness probe to fail. Use the `curl` command to invoke this endpoint by making a POST request to `{name-api}/unhealthy` -- if `curl` is unavailable then use a tool such as https://www.getpostman.com/[Postman].
+An endpoint has been provided under the `name` microservice to set it to an unhealthy state in the health check. The unhealthy state will cause the readiness probe to fail. Use the `curl` command to invoke this endpoint by making a POST request to `{name-api}/unhealthy` -- if `curl` is unavailable then use a tool such as https://www.getpostman.com/[Postman].
 
 [subs="attributes"]
 ```
@@ -170,61 +166,53 @@ kubectl get pods
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
-name-deployment-8664868cd7-f2jbc   0/1       Running   0          2m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          59s
+name-deployment-694c7b74f7-lrlf7   1/1       Running   0          59s
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          59s
 ----
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          2m
-name-deployment-8664868cd7-f2jbc   0/1       Running   1          2m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          2m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          1m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          1m
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          1m
 ----
 
-[source, role="no_copy"]
-----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   0          4m
-name-deployment-8664868cd7-f2jbc   1/1       Running   1          4m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          4m
-----
-
-You will notice that one of the two `name` pods is no longer in the ready state. As a result, the pod will shortly be restarted. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
+You will notice that one of the two `name` pods is no longer in the ready state. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
 
 === Observing effects on ping microservice
 
-Wait 3 minutes until the restarted `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready and will soon be restarted. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
+Wait until the `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
 
 First, both `name` pods will no longer be ready because the readiness probe failed.
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   0/1       Running   0          7m
-name-deployment-8664868cd7-f2jbc   0/1       Running   1          7m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   0          7m
+name-deployment-694c7b74f7-hcf4q   0/1       Running   0          5m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          5m
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          5m
 ----
 
-Next, the `name` pods will be restarted because the liveness probe failed. You will notice the `ping` pod is no longer ready because the readiness probe failed. The probe failed because `name-service` is now unavailable.
-
-[source, role="no_copy"]
-----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   0/1       Running   1          8m
-name-deployment-8664868cd7-f2jbc   0/1       Running   2          8m
-ping-deployment-55f45bffc4-7njlp   0/1       Running   0          8m
-----
-
-Next, the `ping` pod will be restarted because the liveness probe failed.
+Next, the `ping` pod is no longer ready because the readiness probe failed. The probe failed because `name-service` is now unavailable.
 
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   0/1       Running   1          9m
-name-deployment-8664868cd7-f2jbc   0/1       Running   2          9m
-ping-deployment-55f45bffc4-7njlp   0/1       Running   1          9m
+name-deployment-694c7b74f7-hcf4q   0/1       Running   0          6m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          6m
+ping-deployment-cf8f564c6-nctcr    0/1       Running   0          6m
+----
+
+Next, the `name` pods will start to recover.
+
+[source, role="no_copy"]
+----
+NAME                               READY     STATUS    RESTARTS   AGE
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          6m
+name-deployment-694c7b74f7-lrlf7   0/1       Running   0          6m
+ping-deployment-cf8f564c6-nctcr    0/1       Running   0          6m
 ----
 
 Finally, you will see all of the pods have recovered.
@@ -232,9 +220,9 @@ Finally, you will see all of the pods have recovered.
 [source, role="no_copy"]
 ----
 NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-8664868cd7-bwdkl   1/1       Running   1          10m
-name-deployment-8664868cd7-f2jbc   1/1       Running   2          10m
-ping-deployment-55f45bffc4-7njlp   1/1       Running   1          10m
+name-deployment-694c7b74f7-hcf4q   1/1       Running   0          6m
+name-deployment-694c7b74f7-lrlf7   1/1       Running   0          6m
+ping-deployment-cf8f564c6-nctcr    1/1       Running   0          6m
 ----
 
 // ================================================================================================================================
@@ -296,7 +284,7 @@ include::{common-includes}/kube-minikube-teardown.adoc[]
 
 == Great work! You're done!
 
-You have used MicroProfile Health to create an endpoint that reports on your microservice's status. Then, you observed how {kube} uses` the `/health` endpoint to keep your microservices running smoothly.
+You have used MicroProfile Health to create an endpoint that reports on your microservice's status. Then, you observed how {kube} uses the `/health` endpoint to keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
 include::{common-includes}/finish.adoc[]
