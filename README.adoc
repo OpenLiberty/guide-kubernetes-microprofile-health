@@ -236,7 +236,7 @@ Run the tests by running the following command and appropriately substituting `[
 mvn verify -Ddockerfile.skip=true -Dcluster.ip=[hostname]
 ```
 
-The tests verify that the health endpoints for the `name` and `ping` microservices respond with HTTP status 200 indicating the they are healthy.
+The tests verify that the health endpoints for the `name` and `ping` microservices respond with HTTP status 200 indicating that they are healthy.
 
 When the tests succeed, you should see output similar to the following in your console.
 
