@@ -13,7 +13,7 @@
 :page-layout: guide
 :page-duration: 20 minutes
 :page-releasedate: 2018-09-27
-:page-description: Learn how to check the health of microservices on Kuberenetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
+:page-description: Learn how to check the health of microservices on Kubernetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
 :page-tags: ['microservices', 'Kubernetes', 'Docker', 'containers', 'kubectl', 'Minikube', 'MicroProfile', 'mpHealth', 'probe']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
@@ -26,7 +26,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to check the health of microservices on Kuberenetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
+Learn how to check the health of microservices on Kubernetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
