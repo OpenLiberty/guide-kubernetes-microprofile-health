@@ -148,7 +148,7 @@ Navigate to `{name-api}` and observe a response similar to `Hello! I'm container
 
 Similarly, navigate to `{ping-api}/name-service` and observe a response with the content `pong`.
 
-== Changing ready state of name microservice
+== Changing the ready state of the name microservice
 
 An endpoint has been provided under the `name` microservice to set it to an unhealthy state in the health check. The unhealthy state will cause the readiness probe to fail. Use the `curl` command to invoke this endpoint by making a POST request to `{name-api}/unhealthy` -- if `curl` is unavailable then use a tool such as https://www.getpostman.com/[Postman].
 
@@ -181,7 +181,7 @@ ping-deployment-cf8f564c6-nctcr    1/1       Running   0          1m
 
 You will notice that one of the two `name` pods is no longer in the ready state. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
 
-=== Observing effects on ping microservice
+=== Observing the effects on the ping microservice
 
 Wait until the `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
 
@@ -205,7 +205,7 @@ name-deployment-694c7b74f7-lrlf7   0/1       Running   0          6m
 ping-deployment-cf8f564c6-nctcr    0/1       Running   0          6m
 ----
 
-Next, the `name` pods will start to recover.
+Then, the `name` pods will start to recover.
 
 [source, role="no_copy"]
 ----
