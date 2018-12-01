@@ -12,7 +12,7 @@
 :projectid: kubernetes-microprofile-health
 :page-layout: guide
 :page-duration: 20 minutes
-:page-releasedate: 2018-09-27
+:page-releasedate: 2018-11-30
 :page-description: Learn how to check the health of microservices on Kubernetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
 :page-tags: ['microservices', 'Kubernetes', 'Docker', 'containers', 'kubectl', 'Minikube', 'MicroProfile', 'mpHealth', 'probe']
 :page-permalink: /guides/{projectid}
