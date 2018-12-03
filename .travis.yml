@@ -11,20 +11,25 @@ before_script:
 - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 - chmod +x kubectl
 - sudo ln -s $(pwd)/kubectl /usr/local/bin/kubectl
-- wget https://github.com/kubernetes/minikube/releases/download/v0.28.2/minikube-linux-amd64 -O minikube
+- wget https://github.com/kubernetes/minikube/releases/download/v0.28.2/minikube-linux-amd64
+  -O minikube
 - chmod +x minikube
 - sudo ln -s $(pwd)/minikube /usr/local/bin/minikube
 - sudo minikube start --vm-driver=none --bootstrapper=localkube
 script:
 - mvn package
-- "kubectl apply -f <(sed '1,$s/initialDelaySeconds: 15/initialDelaySeconds: 90/g' kubernetes.yaml | sed '1,$s/initialDelaySeconds: 20/initialDelaySeconds: 120/g')"
+- 'kubectl apply -f <(sed ''1,$s/initialDelaySeconds: 15/initialDelaySeconds: 90/g''
+  kubernetes.yaml | sed ''1,$s/initialDelaySeconds: 20/initialDelaySeconds: 120/g'')'
 - sleep 120
 - kubectl get pods
 - echo `minikube ip`
 - mvn verify -Ddockerfile.skip=true -Dcluster.ip=`minikube ip`
-- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep name | head -1)
-- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep name | tail -1)
-- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep ping)
+- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}'
+  | grep name | head -1)
+- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}'
+  | grep name | tail -1)
+- kubectl logs $(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}'
+  | grep ping)
 notifications:
   slack:
     template:
@@ -34,7 +39,7 @@ notifications:
     - 'Author: %{author}'
     - 'Summary: %{result} in %{duration}'
     rooms:
-      secure: e6hb1sp1y+ZLkwgK7cR++FLrRyM++mB1R+4VM3CI/qYbdN0A+n5swNzSSfb4FUP/n6i/3cbAN+lhJa5+9goUNg6pacjht42gCSchUkW+FPUS+LbKR2MKCBVBBbOrMa+5ZL3/0Yl+/xVzfLRFJVUc8TGMpEvKwnoPkiJhz+uGYDHLKKnRT6zsaSsJzDDCuQihBgKvF8lKooYZHUczglBTN8bqWDhoA7ZFxOf1kf8TBdE3P+BzcbOb+f22uO20sqAPcLkDbNFrJ3NjgZf+w3tZmIH4YNOje4dsWzXSagHelXO8+VGwuH0AIHglIJfp0LpD03ZMU+3dblVgtcDv/56URtPIOQ2pjUjheGtxX2khzP52WIvQtmaYZnEr/mSOY4WRc60z9Kw2GMiGEnD42CjYmbbH4cbXeacgTCPaxMKytdpydIkYFEG5O5sEli4/+tUMjRS1+s23dIqrmmrO53GSbO0RJAVZZqXIaOuqP3BVKksWiq7wN5ZH3jvlvz3/1SuOLOWndMfZx/YE6BCmzfKRGkXHkdMXbdw/wQTwvLDQkztgMkTaZlt47nI7yssZIs9QEvJB0yCcMxweF4dVbkHA+6z/Txam0ETVcZ39gRd2SPHOCgyRKlm7mNpkqY72w08MR8ozEdgF4RzG9MLBHbpPn/QtRzHvdEz5zRBhUa2jiHc=
+      secure: 2T6s9+UXwxqg2O7Sbgw5B+1zViGNylB40a2H0ks3FR91w9EEQ/ly2A34c9XsRhkug14GNVBptnjxOhi93tga2UlilXcqLfS/LUAFcHJM8y2jNrtSQNOCqypwsoibpXDrqG8zXWJC4IlcHjM2451TuFb4qMCkB8LzGTaJ07RvyAVOxrOcLZk6F/4b70/bWmEd5lk2XDtRP1/YYVVrT6OhEAl/tTg8SL/mnnxrzl4MaL/ACP1ABU54fg0yrWEfsEAtuTlWUYukJbNqXzMHmgjrEKjezkvL1cS2rGrYMEYoc2VPS2zYi5wyX/IHquWYIu7jhm6cAAYca+OFWS8NbLCdo0s4eQsSrzSTQC9ysNkkrfdZFCIa6SctaTszoS8/wiK5thI57nR8XuhA8k2Za1oShOhG4MHjtqhsr75QRRzNJaq4qFaSivqx74SpM3V3r4dgka9A830vkUYKK7LNecr0nRy32SozmBEKS7VEbLJ3JX/66VHvoV8Ycrlu0UUYq5rwBuR5dJEec8FTSWApjtLzslZUll+6RFsoMwToAanbFsp89cU48+6Ky4UkuW0dS6OEoJSH589SkaxVCNkGESpStdJC2yNg8En84KPNrJGz/qgxgqoH2+3OWkT1yb5ZeAhA9qroZt5rLdazV+tU6oPmMveYXal6Y0YCziGLH5wwh6c=
     on_success: never
     on_failure: always
 branches:
