@@ -11,15 +11,14 @@ before_script:
 - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 - chmod +x kubectl
 - sudo ln -s $(pwd)/kubectl /usr/local/bin/kubectl
-- wget https://github.com/kubernetes/minikube/releases/download/v0.28.2/minikube-linux-amd64
+- wget https://github.com/kubernetes/minikube/releases/download/v0.28.2/minikube-linux-amd64 -q
   -O minikube
 - chmod +x minikube
 - sudo ln -s $(pwd)/minikube /usr/local/bin/minikube
 - sudo minikube start --vm-driver=none --bootstrapper=localkube
 script:
-- mvn package
-- 'kubectl apply -f <(sed ''1,$s/initialDelaySeconds: 15/initialDelaySeconds: 90/g''
-  kubernetes.yaml | sed ''1,$s/initialDelaySeconds: 20/initialDelaySeconds: 120/g'')'
+- mvn -q package
+- kubectl apply -f kubernetes.yaml
 - sleep 120
 - kubectl get pods
 - echo `minikube ip`
