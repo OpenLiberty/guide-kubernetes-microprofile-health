@@ -179,7 +179,7 @@ name-deployment-694c7b74f7-lrlf7   0/1       Running   0          1m
 ping-deployment-cf8f564c6-nctcr    1/1       Running   0          1m
 ----
 
-You will notice that one of the two `name` pods is no longer in the ready state. Navigate to `{name-api}`. Observe that your request is still be successful because you have two replicas and one is still healthy.
+ You will notice that one of the two `name` pods is no longer in the ready state. Navigate to `{name-api}`. Observe that your request is still successful because you have two replicas and one is still healthy.
 
 === Observing the effects on the ping microservice
 
