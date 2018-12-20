@@ -185,7 +185,7 @@ ping-deployment-cf8f564c6-nctcr    1/1       Running   0          1m
 
 Wait until the `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You might see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic might still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready. During this process, the readiness probe for the `ping` microservice will also fail. Observe that it's no longer in the ready state either.
 
-First, both `name` pods are no longer be ready because the readiness probe failed.
+ First, both `name` pods are no longer ready because the readiness probe failed.
 
 [source, role="no_copy"]
 ----
