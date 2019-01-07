@@ -128,8 +128,6 @@ You will configure {kube} readiness probes. Readiness probes are responsible for
 determining that your application is ready to accept requests. If it's not ready, traffic 
 won't be routed to the container.
 
-Create the `kubernetes.yaml` file:
-
 [role="code_command hotspot=1-90", subs="quotes"] 
 ---- 
 Create the kubernetes configuration file.
@@ -369,9 +367,9 @@ include::{common-includes}/kube-minikube-teardown.adoc[]
 
 == Great work! You're done!
 
-You have used MicroProfile Health to create an endpoint that reports on your microservice's 
-status. Then, you observed how {kube} uses the `/health` endpoint to keep your 
-microservices running smoothly.
+You have used MicroProfile Health and Open Liberty to create an endpoint that reports on 
+your microservice's status. Then, you observed how {kube} uses the `/health` endpoint to 
+keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
 include::{common-includes}/finish.adoc[]
