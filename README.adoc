@@ -101,7 +101,7 @@ interface.
 
 [role="code_command hotspot=20-50", subs="quotes"] 
 ---- 
-Create `PingHealth` class.
+#Create `PingHealth` class.#
 `ping/src/main/java/io/openliberty/guides/ping/PingHealth.java`
 ---- 
 
@@ -130,7 +130,7 @@ won't be routed to the container.
 
 [role="code_command hotspot=1-90", subs="quotes"] 
 ---- 
-Create the kubernetes configuration file.
+#Create the kubernetes configuration file.#
 `kubernetes.yaml`
 ---- 
 
