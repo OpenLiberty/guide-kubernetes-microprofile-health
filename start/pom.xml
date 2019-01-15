@@ -40,19 +40,21 @@
 
     <dependencyManagement>
         <dependencies>
-           <dependency>
-               <groupId>io.openliberty.features</groupId>
-               <artifactId>features-bom</artifactId>
-               <version>RELEASE</version>
-               <type>pom</type>
-               <scope>import</scope>
-           </dependency>
-           <dependency>
+            <dependency>
+                <groupId>io.openliberty.features</groupId>
+                <artifactId>features-bom</artifactId>
+                <version>RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--Open Liberty features -->
+            <dependency>
                 <groupId>org.eclipse.microprofile.rest.client</groupId>
                 <artifactId>microprofile-rest-client-api</artifactId>
                 <version>1.0.1</version>
                 <scope>provided</scope>
             </dependency>
+            <!-- For tests -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
