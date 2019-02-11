@@ -99,7 +99,7 @@ The `ping` microservice should only be healthy when `name` is available. To add 
 check to the `/health` endpoint, you will create a class implementing the `HealthCheck` 
 interface.
 
-[role="code_command hotspot=20-50", subs="quotes"] 
+[role="code_command hotspot", subs="quotes"] 
 ---- 
 #Create `PingHealth` class.#
 `ping/src/main/java/io/openliberty/guides/ping/PingHealth.java`
@@ -128,7 +128,7 @@ You will configure {kube} readiness probes. Readiness probes are responsible for
 determining that your application is ready to accept requests. If it's not ready, traffic 
 won't be routed to the container.
 
-[role="code_command hotspot=1-90", subs="quotes"] 
+[role="code_command hotspot", subs="quotes"] 
 ---- 
 #Create the kubernetes configuration file.#
 `kubernetes.yaml`
