@@ -57,7 +57,7 @@ containers, you will work with readiness probes. These probes can check certain 
 your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes 
 a health endpoint on your microservices. {kube} polls the endpoint as specified by the 
 probes to react appropriately to any change in the microservice's status. Read the 
-https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices] 
+https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
 guide to learn more about MicroProfile Health.
 
 The two microservices you will work with are called `name` and `ping`. The `name` 
@@ -217,7 +217,7 @@ An endpoint has been provided under the `name` microservice to set it to an unhe
 state in the health check. The unhealthy state will cause the readiness probe to fail. 
 Use the `curl` command to invoke this endpoint by making a POST request to 
 `{name-api}/unhealthy` -- if `curl` is unavailable then use a tool such as 
-https://www.getpostman.com/[Postman].
+https://www.getpostman.com/[Postman^].
 
 [subs="attributes", role=command]
 ```
