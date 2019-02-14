@@ -145,10 +145,10 @@ microservices.
 
 The readiness probes are configured to poll the `/health` endpoint. The readiness probe 
 determines the READY status of the container as seen in the `kubectl get pods` output. The 
-[hotspot=27]`initialDelaySeconds` field defines how long the probe should wait before it 
+[hotspot=27 hotspot=59]`initialDelaySeconds` field defines how long the probe should wait before it 
 starts to poll so the probe does not start making requests before the server has started. 
-The [hotspot=29]`failureThreshold` option defines how many times the probe should fail 
-before the state should be changed from ready to not ready. The [hotspot=28]`periodSeconds` 
+The [hotspot=29 hotspot=61]`failureThreshold` option defines how many times the probe should fail 
+before the state should be changed from ready to not ready. The [hotspot=28 hotspot=60]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
 
 == Deploying the microservices
