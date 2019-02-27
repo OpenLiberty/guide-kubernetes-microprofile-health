@@ -1,7 +1,7 @@
 // INSTRUCTION: Please remove all comments that start INSTRUCTION prior to commit. Most comments should be removed, although not the copyright.
 // INSTRUCTION: The copyright statement must appear at the top of the file
 //
-// Copyright (c) 2018 IBM Corporation and others.
+// Copyright (c) 2018, 2019 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -10,17 +10,18 @@
 //     IBM Corporation
 //
 :projectid: kubernetes-microprofile-health
-:page-layout: guide
+:page-layout: guide-multipane
 :page-duration: 20 minutes
 :page-releasedate: 2018-11-30
 :page-description: Learn how to check the health of microservices on Kubernetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
-:page-tags: ['microservices', 'Kubernetes', 'Docker', 'containers', 'kubectl', 'Minikube', 'MicroProfile', 'mpHealth', 'probe']
+:page-tags: ['Kubernetes', 'Docker', 'MicroProfile']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
 :page-seo-title: Checking the health of microservices using Kubernetes readiness probes
 :page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness probes
+:guide-author: Open Liberty
 = Checking the health of microservices on Kubernetes
 
 [.hidden]
@@ -42,18 +43,34 @@ Learn how to check the health of microservices on Kubernetes by setting up readi
 
 == What you'll learn
 
-You will learn how to create a health check endpoint for your microservices. Then, you will configure {kube} to use this endpoint to keep your microservices running smoothly.
+You will learn how to create a health check endpoint for your microservices. Then, you 
+will configure {kube} to use this endpoint to keep your microservices running smoothly.
 
-MicroProfile Health allows services to report their health, and it publishes the overall health status to a defined endpoint. A service reports `UP` if it is available and reports `DOWN` if it is unavailable. MicroProfile Health reports an individual service status at the endpoint and indicates the overall status as `UP` if all the services are `UP`. A service orchestrator can then use the health statuses to make decisions.
+MicroProfile Health allows services to report their health, and it publishes the overall 
+health status to a defined endpoint. A service reports `UP` if it is available and reports 
+`DOWN` if it is unavailable. MicroProfile Health reports an individual service status at 
+the endpoint and indicates the overall status as `UP` if all the services are `UP`. A 
+service orchestrator can then use the health statuses to make decisions.
 
-{kube} provides liveness and readiness probes that are used to check the health of your containers, you will work with readiness probes. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes a health endpoint on your microservices. {kube} polls the endpoint as specified by the probes to react appropriately to any change in the microservice's status. Read the https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices] guide to learn more about MicroProfile Health.
+{kube} provides liveness and readiness probes that are used to check the health of your 
+containers, you will work with readiness probes. These probes can check certain files in 
+your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes 
+a health endpoint on your microservices. {kube} polls the endpoint as specified by the 
+probes to react appropriately to any change in the microservice's status. Read the 
+https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
+guide to learn more about MicroProfile Health.
 
-The two microservices you will work with are called `name` and `ping`. The `name` microservice displays a brief greeting and the name of the container that it runs in. The `ping` microservice pings the {kube} Service that encapsulates the pod running the `name` microservice. The `ping` microservice demonstrates how communication can be established between pods inside a cluster.
+The two microservices you will work with are called `name` and `ping`. The `name` 
+microservice displays a brief greeting and the name of the container that it runs in. 
+The `ping` microservice pings the {kube} Service that encapsulates the pod running the 
+`name` microservice. The `ping` microservice demonstrates how communication can be 
+established between pods inside a cluster.
 
 // =================================================================================================
 // Prerequisites
 // =================================================================================================
 
+[role=command]
 include::{common-includes}/kube-prereq.adoc[]
 
 
@@ -61,12 +78,14 @@ include::{common-includes}/kube-prereq.adoc[]
 // Getting Started
 // =================================================================================================
 
+[role=command]
 include::{common-includes}/gitclone.adoc[]
 
 // =================================================================================================
 // Starting/Preparing Cluster
 // =================================================================================================
 
+[role=command]
 include::{common-includes}/kube-start.adoc[]
 
 // ================================================================================================================================
@@ -76,50 +95,84 @@ include::{common-includes}/kube-start.adoc[]
 
 Navigate to `start` directory to begin.
 
-The `ping` microservice should only be healthy when `name` is available. To add this check to the `/health` endpoint, you will create a class implementing the `HealthCheck` interface.
+The `ping` microservice should only be healthy when `name` is available. To add this 
+check to the `/health` endpoint, you will create a class implementing the `HealthCheck` 
+interface.
 
-Create the `PingHealth` class in `ping/src/main/java/io/openliberty/guides/ping/PingHealth.java`:
+[role="code_command hotspot", subs="quotes"] 
+---- 
+#Create `PingHealth` class.#
+`ping/src/main/java/io/openliberty/guides/ping/PingHealth.java`
+---- 
 
-[source, Java]
+PingHealth.java
+[source, Java, linenums, role='code_column']
 ----
 include::finish/ping/src/main/java/io/openliberty/guides/ping/PingHealth.java[tags=**;]
 ----
 
-This health check verifies that the `name` microservice is available at `\http://name-service:9080/api`. The `name-service` host name is only accessible from inside the cluster, you can't access it yourself. If it's available, then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the status is `DOWN` the microservice is considered to be unhealthy.
+This health check verifies that the `name` microservice is available at 
+`\http://name-service:9080/api`. The `name-service` host name is only accessible from 
+inside the cluster, you can't access it yourself. If it's available, then it returns an 
+`UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
+status is `DOWN` the microservice is considered to be unhealthy.
 
-The health check for the `name` microservice has already been implemented. It has been setup to become unhealthy for 60 seconds when a specific endpoint is called. This endpoint has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
+The health check for the `name` microservice has already been implemented. It has been 
+setup to become unhealthy for 60 seconds when a specific endpoint is called. This 
+endpoint has been provided for you to observe the results of an unhealthy pod and how 
+{kube} reacts.
 
 == Configuring readiness probes
 
-You will configure {kube} readiness probes. Readiness probes are responsible for determining that your application is ready to accept requests. If it's not ready, traffic won't be routed to the container.
+You will configure {kube} readiness probes. Readiness probes are responsible for 
+determining that your application is ready to accept requests. If it's not ready, traffic 
+won't be routed to the container.
 
-Create the `kubernetes.yaml` file:
+[role="code_command hotspot", subs="quotes"] 
+---- 
+#Create the kubernetes configuration file.#
+`kubernetes.yaml`
+---- 
 
-[source, yaml]
+kubernetes.yaml
+[source, yaml, linenums, role='code_column']
 ----
 include::finish/kubernetes.yaml[tags=**;]
 ----
 
-The readiness probes are configured for the containers running the `name` and `ping` microservices.
+The readiness probes are configured for the containers running the `name` and `ping` 
+microservices.
 
-The readiness probes are configured to poll the `/health` endpoint. The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output. The `initialDelaySeconds` field defines how long the probe should wait before it starts to poll so the probe does not start making requests before the server has started. The `failureThreshold` option defines how many times the probe should fail before the state should be changed from ready to not ready. The `periodSeconds` option defines how often the probe should poll the given endpoint.
+The readiness probes are configured to poll the `/health` endpoint. The readiness probe 
+determines the READY status of the container as seen in the `kubectl get pods` output. The 
+[hotspot=27 hotspot=59]`initialDelaySeconds` field defines how long the probe should wait before it 
+starts to poll so the probe does not start making requests before the server has started. 
+The [hotspot=29 hotspot=61]`failureThreshold` option defines how many times the probe should fail 
+before the state should be changed from ready to not ready. The [hotspot=28 hotspot=60]`periodSeconds` 
+option defines how often the probe should poll the given endpoint.
 
 == Deploying the microservices
 
-To build these microservices, navigate to the `start` directory and run the following command.
+To build these microservices, navigate to the `start` directory and run the following 
+command.
 
+[role=command]
 ```
 mvn package
 ```
 
-When the build succeeds, run the following command to deploy the necessary {kube} resources to serve the applications.
+When the build succeeds, run the following command to deploy the necessary {kube} 
+resources to serve the applications.
 
+[role=command]
 ```
 kubectl apply -f kubernetes.yaml
 ```
 
-Use the following command to view the status of the pods. There will be two `name` pods and one `ping` pod, later you'll observe their behaviour as the `name` pods become unhealthy.
+Use the following command to view the status of the pods. There will be two `name` pods 
+and one `ping` pod, later you'll observe their behaviour as the `name` pods become unhealthy.
 
+[role=command]
 ```
 kubectl get pods
 ```
@@ -132,7 +185,8 @@ name-deployment-694c7b74f7-lrlf7   1/1       Running   0          59s
 ping-deployment-cf8f564c6-nctcr    1/1       Running   0          59s
 ----
 
-Wait until the pods are ready. After the pods are ready, you will make requests to your services.
+Wait until the pods are ready. After the pods are ready, you will make requests to your 
+services.
 
 ****
 [system]#*{win} | {mac}*#
@@ -141,24 +195,38 @@ The default host name for Docker Desktop is `localhost`.
 
 [system]#*{linux}*#
 
-The default host name for minikube is {minikube-ip}. Otherwise it can be found using the `minikube ip` command.
+The default host name for minikube is {minikube-ip}. Otherwise it can be found using the 
+`minikube ip` command.
 ****
 
-Navigate to `{name-api}` and observe a response similar to `Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the IP address or host name of your {kube} cluster. The readiness probe ensures the READY state won't be `1/1` until the container is available to accept requests. Without a readiness probe, you may notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn't fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.
+Navigate to `{name-api}` and observe a response similar to 
+`Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the 
+IP address or host name of your {kube} cluster. The readiness probe ensures the READY 
+state won't be `1/1` until the container is available to accept requests. Without a 
+readiness probe, you may notice an unsuccessful response from the server. This scenario 
+can occur when the container has started, but the application server hasn't fully 
+initialized. With the readiness probe, you can be certain the pod will only accept 
+traffic when the microservice has fully started.
 
-Similarly, navigate to `{ping-api}/name-service` and observe a response with the content `pong`.
+Similarly, navigate to `{ping-api}/name-service` and observe a response with the content 
+`pong`.
 
 == Changing the ready state of the name microservice
 
-An endpoint has been provided under the `name` microservice to set it to an unhealthy state in the health check. The unhealthy state will cause the readiness probe to fail. Use the `curl` command to invoke this endpoint by making a POST request to `{name-api}/unhealthy` -- if `curl` is unavailable then use a tool such as https://www.getpostman.com/[Postman].
+An endpoint has been provided under the `name` microservice to set it to an unhealthy 
+state in the health check. The unhealthy state will cause the readiness probe to fail. 
+Use the `curl` command to invoke this endpoint by making a POST request to 
+`{name-api}/unhealthy` -- if `curl` is unavailable then use a tool such as 
+https://www.getpostman.com/[Postman^].
 
-[subs="attributes"]
+[subs="attributes", role=command]
 ```
 curl -X POST {name-api}/unhealthy
 ```
 
 Run the following command to view the state of the pods:
 
+[role=command]
 ```
 kubectl get pods
 ```
@@ -179,11 +247,20 @@ name-deployment-694c7b74f7-lrlf7   0/1       Running   0          1m
 ping-deployment-cf8f564c6-nctcr    1/1       Running   0          1m
 ----
 
-You will notice that one of the two `name` pods is no longer in the ready state. Navigate to `{name-api}`. Observe that your request will still be successful because you have two replicas and one is still healthy.
+You will notice that one of the two `name` pods is no longer in the ready state. Navigate 
+to `{name-api}`. Observe that your request will still be successful because you have two 
+replicas and one is still healthy.
 
 === Observing the effects on the ping microservice
 
-Wait until the `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`. If you see the same pod name twice, make the request again until you see that the second pod has been made unhealthy. You may see the same pod twice because there's a delay between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of `kubectl get pods`. You will see both pods are no longer ready. During this process, the readiness probe for the `ping` microservice will also fail. Observe it's no longer in the ready state either.
+Wait until the `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`.
+ If you see the same pod name twice, make the request again until you see that the second 
+ pod has been made unhealthy. You may see the same pod twice because there's a delay 
+ between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic 
+ may still be routed to the unhealthy service for approximately 5 seconds. Continue to 
+ observe the output of `kubectl get pods`. You will see both pods are no longer ready. 
+ During this process, the readiness probe for the `ping` microservice will also fail. 
+ Observe it's no longer in the ready state either.
 
 First, both `name` pods will no longer be ready because the readiness probe failed.
 
@@ -195,7 +272,8 @@ name-deployment-694c7b74f7-lrlf7   0/1       Running   0          5m
 ping-deployment-cf8f564c6-nctcr    1/1       Running   0          5m
 ----
 
-Next, the `ping` pod is no longer ready because the readiness probe failed. The probe failed because `name-service` is now unavailable.
+Next, the `ping` pod is no longer ready because the readiness probe failed. The probe 
+failed because `name-service` is now unavailable.
 
 [source, role="no_copy"]
 ----
@@ -230,13 +308,16 @@ ping-deployment-cf8f564c6-nctcr    1/1       Running   0          6m
 
 == Testing the microservices
 
-Run the tests by running the following command and appropriately substituting `[hostname]` for the correct value.
+Run the tests by running the following command and appropriately substituting `[hostname]` 
+for the correct value.
 
+[role=command]
 ```
 mvn verify -Ddockerfile.skip=true -Dcluster.ip=[hostname]
 ```
 
-The tests verify that the health endpoints for the `name` and `ping` microservices respond with HTTP status 200 indicating that they are healthy.
+The tests verify that the health endpoints for the `name` and `ping` microservices 
+respond with HTTP status 200 indicating that they are healthy.
 
 When the tests succeed, you should see output similar to the following in your console.
 
@@ -268,13 +349,15 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 
 == Tearing down the environment
 
-To remove all of the resources created during this guide, run the following command to delete all of the resources that you created.
+To remove all of the resources created during this guide, run the following command to 
+delete all of the resources that you created.
 
+[role=command]
 ```
 kubectl delete -f kubernetes.yaml
 ```
 
-
+[role=command]
 include::{common-includes}/kube-minikube-teardown.adoc[]
 
 
@@ -284,10 +367,12 @@ include::{common-includes}/kube-minikube-teardown.adoc[]
 
 == Great work! You're done!
 
-You have used MicroProfile Health to create an endpoint that reports on your microservice's status. Then, you observed how {kube} uses the `/health` endpoint to keep your microservices running smoothly.
+You have used MicroProfile Health and Open Liberty to create an endpoint that reports on 
+your microservice's status. Then, you observed how {kube} uses the `/health` endpoint to 
+keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
-include::{common-includes}/finish.adoc[]
+include::{common-includes}/attribution.adoc[subs="attributes"]
 
 // DO NO CREATE ANYMORE SECTIONS AT THIS POINT
 // Related guides will be added in automatically here if you included them in ":page-related-guides"
