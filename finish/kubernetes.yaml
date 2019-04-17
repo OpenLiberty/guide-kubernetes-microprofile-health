@@ -18,6 +18,14 @@ spec:
         image: system:1.0-SNAPSHOT
         ports:
         - containerPort: 9080
+        # system probe
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9080
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          failureThreshold: 1
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -39,6 +47,17 @@ spec:
         image: inventory:1.0-SNAPSHOT
         ports:
         - containerPort: 9080
+        env:
+        - name: SYS_APP_HOSTNAME
+          value: system-service
+        # ping probe
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9080
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          failureThreshold: 1
 ---
 apiVersion: v1
 kind: Service

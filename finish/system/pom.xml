@@ -37,6 +37,12 @@
            <type>esa</type>
            <scope>provided</scope>
        </dependency>
+       <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>mpHealth-1.0</artifactId>
+            <type>esa</type>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
