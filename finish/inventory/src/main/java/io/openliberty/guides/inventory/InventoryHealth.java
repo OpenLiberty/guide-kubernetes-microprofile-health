@@ -50,7 +50,11 @@ public class InventoryHealth implements HealthCheck {
     private boolean isSystemServiceReachable() {
         try {
             Client client = ClientBuilder.newClient();
-            client.target("http://" + hostname + ":9080/system/properties").request().post(null);
+            client
+                .target("http://" + hostname + ":9080/system/properties")
+                .request()
+                .post(null);
+
             return true;
         } catch (Exception ex) {
             return false;
