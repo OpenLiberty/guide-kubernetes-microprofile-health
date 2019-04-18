@@ -101,14 +101,14 @@ interface.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
-#Create `Inventory` class.#
+#Create `InventoryHealth` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java`
 ---- 
 
 InventoryHealth.java
 [source, Java, linenums, role='code_column']
 ----
-include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java[tags=**;]
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java[tags=**;!copyright;]
 ----
 
 This health check verifies that the `system` microservice is available at 
