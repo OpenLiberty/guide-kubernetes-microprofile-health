@@ -15,6 +15,7 @@ package io.openliberty.guides.system;
 // CDI
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 // JAX-RS
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -31,5 +32,10 @@ public class SystemResource {
     return Response.ok(System.getProperties())
       .header("X-Pod-Name", System.getenv("HOSTNAME"))
       .build();
-  } 
+  }
+
+  @POST
+  public Response checkProperties() {
+    return Response.ok("System service is available").build();
+  }
 }

@@ -17,6 +17,8 @@ import java.util.Properties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.Health;
@@ -47,9 +49,9 @@ public class InventoryHealth implements HealthCheck {
 
     private boolean isSystemServiceReachable() {
         try {
-            SystemClient client = new SystemClient();
-            Properties props = client.getProperties(hostname);
-            return props != null;
+            Client client = ClientBuilder.newClient();
+            client.target("http://" + hostname + ":9080/system/properties").request().post(null);
+            return true;
         } catch (Exception ex) {
             return false;
         }
