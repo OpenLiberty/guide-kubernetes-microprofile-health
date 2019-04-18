@@ -31,8 +31,8 @@ Learn how to check the health of microservices on Kubernetes by setting up readi
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
-:name-api: http://[hostname]:31000/api/name
-:ping-api: http://[hostname]:32000/api/ping
+:system-api: http://[hostname]:31000/system
+:inventory-api: http://[hostname]:32000/inventory/systems
 :win: Windows
 :mac: Mac
 :linux: Linux
@@ -60,11 +60,11 @@ probes to react appropriately to any change in the microservice's status. Read t
 https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
 guide to learn more about MicroProfile Health.
 
-The two microservices you will work with are called `name` and `ping`. The `name` 
-microservice displays a brief greeting and the name of the container that it runs in. 
-The `ping` microservice pings the {kube} Service that encapsulates the pod running the 
-`name` microservice. The `ping` microservice demonstrates how communication can be 
-established between pods inside a cluster.
+The two microservices you will work with are called `system` and `inventory`. The `system` microservice
+returns the JVM system properties of the running container and it returns the pod's name in the HTTP header
+making replicas easy to distinquish from each other. The `inventory` microservice
+adds the properties from the `system` microservice to the inventory. This demonstrates
+how communication can be established between pods inside a cluster.
 
 // =================================================================================================
 // Prerequisites
@@ -91,33 +91,33 @@ include::{common-includes}/kube-start.adoc[]
 // ================================================================================================================================
 // ================================================================================================================================
 
-== Adding a health check to the ping microservice
+== Adding a health check to the inventory microservice
 
 Navigate to `start` directory to begin.
 
-The `ping` microservice should only be healthy when `name` is available. To add this 
+The `inventory` microservice should only be healthy when `system` is available. To add this 
 check to the `/health` endpoint, you will create a class implementing the `HealthCheck` 
 interface.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
-#Create `PingHealth` class.#
-`ping/src/main/java/io/openliberty/guides/ping/PingHealth.java`
+#Create `Inventory` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java`
 ---- 
 
-PingHealth.java
+InventoryHealth.java
 [source, Java, linenums, role='code_column']
 ----
-include::finish/ping/src/main/java/io/openliberty/guides/ping/PingHealth.java[tags=**;]
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java[tags=**;]
 ----
 
-This health check verifies that the `name` microservice is available at 
-`\http://name-service:9080/api`. The `name-service` host name is only accessible from 
+This health check verifies that the `system` microservice is available at 
+`\http://system-service:9080/`. The `system-service` host name is only accessible from 
 inside the cluster, you can't access it yourself. If it's available, then it returns an 
 `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
 status is `DOWN` the microservice is considered to be unhealthy.
 
-The health check for the `name` microservice has already been implemented. It has been 
+The health check for the `system` microservice has already been implemented. It has been 
 setup to become unhealthy for 60 seconds when a specific endpoint is called. This 
 endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
@@ -140,7 +140,7 @@ kubernetes.yaml
 include::finish/kubernetes.yaml[tags=**;]
 ----
 
-The readiness probes are configured for the containers running the `name` and `ping` 
+The readiness probes are configured for the containers running the `system` and `inventory` 
 microservices.
 
 The readiness probes are configured to poll the `/health` endpoint. The readiness probe 
@@ -169,8 +169,8 @@ resources to serve the applications.
 kubectl apply -f kubernetes.yaml
 ```
 
-Use the following command to view the status of the pods. There will be two `name` pods 
-and one `ping` pod, later you'll observe their behaviour as the `name` pods become unhealthy.
+Use the following command to view the status of the pods. There will be two `system` pods 
+and one `inventory` pod, later you'll observe their behaviour as the `system` pods become unhealthy.
 
 [role=command]
 ```
@@ -179,10 +179,10 @@ kubectl get pods
 
 [source, role="no_copy"]
 ----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-694c7b74f7-hcf4q   1/1       Running   0          59s
-name-deployment-694c7b74f7-lrlf7   1/1       Running   0          59s
-ping-deployment-cf8f564c6-nctcr    1/1       Running   0          59s
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          59s
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          59s
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s
 ----
 
 Wait until the pods are ready. After the pods are ready, you will make requests to your 
@@ -199,8 +199,8 @@ The default host name for minikube is {minikube-ip}. Otherwise it can be found u
 `minikube ip` command.
 ****
 
-Navigate to `{name-api}` and observe a response similar to 
-`Hello! I'm container name-deployment-5f868854bf-2rhdq`. Replace `[hostname]` with the 
+Navigate to `{system-api}/properties` and observe a response
+containing JVM system properties. Replace `[hostname]` with the 
 IP address or host name of your {kube} cluster. The readiness probe ensures the READY 
 state won't be `1/1` until the container is available to accept requests. Without a 
 readiness probe, you may notice an unsuccessful response from the server. This scenario 
@@ -208,20 +208,19 @@ can occur when the container has started, but the application server hasn't full
 initialized. With the readiness probe, you can be certain the pod will only accept 
 traffic when the microservice has fully started.
 
-Similarly, navigate to `{ping-api}/name-service` and observe a response with the content 
-`pong`.
+Similarly, navigate to `{inventory-api}/system-service` and observe that the request is successful.
 
-== Changing the ready state of the name microservice
+== Changing the ready state of the system microservice
 
-An endpoint has been provided under the `name` microservice to set it to an unhealthy 
+An endpoint has been provided under the `system` microservice to set it to an unhealthy 
 state in the health check. The unhealthy state will cause the readiness probe to fail. 
 Use the `curl` command to invoke this endpoint by making a POST request to 
-`{name-api}/unhealthy` -- if `curl` is unavailable then use a tool such as 
+`{system-api}/unhealthy` -- if `curl` is unavailable then use a tool such as 
 https://www.getpostman.com/[Postman^].
 
 [subs="attributes", role=command]
 ```
-curl -X POST {name-api}/unhealthy
+curl -X POST {system-api}/unhealthy
 ```
 
 Run the following command to view the state of the pods:
@@ -233,74 +232,74 @@ kubectl get pods
 
 [source, role="no_copy"]
 ----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-694c7b74f7-hcf4q   1/1       Running   0          59s
-name-deployment-694c7b74f7-lrlf7   1/1       Running   0          59s
-ping-deployment-cf8f564c6-nctcr    1/1       Running   0          59s
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          59s
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          59s
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s
 ----
 
 [source, role="no_copy"]
 ----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-694c7b74f7-hcf4q   1/1       Running   0          1m
-name-deployment-694c7b74f7-lrlf7   0/1       Running   0          1m
-ping-deployment-cf8f564c6-nctcr    1/1       Running   0          1m
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          1m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          1m
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          1m
 ----
 
-You will notice that one of the two `name` pods is no longer in the ready state. Navigate 
-to `{name-api}`. Observe that your request will still be successful because you have two 
+You will notice that one of the two `system` pods is no longer in the ready state. Navigate 
+to `{system-api}/properties`. Observe that your request will still be successful because you have two 
 replicas and one is still healthy.
 
-=== Observing the effects on the ping microservice
+=== Observing the effects on the inventory microservice
 
-Wait until the `name` pod is ready again. Make two POST requests to `{name-api}/unhealthy`.
+Wait until the `system` pod is ready again. Make two POST requests to `{system-api}/unhealthy`.
  If you see the same pod name twice, make the request again until you see that the second 
  pod has been made unhealthy. You may see the same pod twice because there's a delay 
  between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic 
  may still be routed to the unhealthy service for approximately 5 seconds. Continue to 
  observe the output of `kubectl get pods`. You will see both pods are no longer ready. 
- During this process, the readiness probe for the `ping` microservice will also fail. 
+ During this process, the readiness probe for the `inventory` microservice will also fail. 
  Observe it's no longer in the ready state either.
 
-First, both `name` pods will no longer be ready because the readiness probe failed.
+First, both `system` pods will no longer be ready because the readiness probe failed.
 
 [source, role="no_copy"]
 ----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-694c7b74f7-hcf4q   0/1       Running   0          5m
-name-deployment-694c7b74f7-lrlf7   0/1       Running   0          5m
-ping-deployment-cf8f564c6-nctcr    1/1       Running   0          5m
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     0/1       Running   0          5m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          5m
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          5m
 ----
 
-Next, the `ping` pod is no longer ready because the readiness probe failed. The probe 
-failed because `name-service` is now unavailable.
-
-[source, role="no_copy"]
-----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-694c7b74f7-hcf4q   0/1       Running   0          6m
-name-deployment-694c7b74f7-lrlf7   0/1       Running   0          6m
-ping-deployment-cf8f564c6-nctcr    0/1       Running   0          6m
-----
-
-Then, the `name` pods will start to recover.
+Next, the `inventory` pod is no longer ready because the readiness probe failed. The probe 
+failed because `system-service` is now unavailable.
 
 [source, role="no_copy"]
 ----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-694c7b74f7-hcf4q   1/1       Running   0          6m
-name-deployment-694c7b74f7-lrlf7   0/1       Running   0          6m
-ping-deployment-cf8f564c6-nctcr    0/1       Running   0          6m
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     0/1       Running   0          6m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          6m
+inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          6m
+----
+
+Then, the `system` pods will start to recover.
+
+[source, role="no_copy"]
+----
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          6m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          6m
+inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          6m
 ----
 
 Finally, you will see all of the pods have recovered.
 
 [source, role="no_copy"]
 ----
-NAME                               READY     STATUS    RESTARTS   AGE
-name-deployment-694c7b74f7-hcf4q   1/1       Running   0          6m
-name-deployment-694c7b74f7-lrlf7   1/1       Running   0          6m
-ping-deployment-cf8f564c6-nctcr    1/1       Running   0          6m
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          6m
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          6m
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          6m
 ----
 
 // ================================================================================================================================
@@ -316,8 +315,9 @@ for the correct value.
 mvn verify -Ddockerfile.skip=true -Dcluster.ip=[hostname]
 ```
 
-The tests verify that the health endpoints for the `name` and `ping` microservices 
-respond with HTTP status 200 indicating that they are healthy.
+A few tests are included for you to test the basic functionality of the microservices. If a test failure
+occurs, then you might have introduced a bug into the code. To run the tests, wait for all pods to be
+in the ready state before proceeding further.
 
 When the tests succeed, you should see output similar to the following in your console.
 
@@ -326,10 +326,10 @@ When the tests succeed, you should see output similar to the following in your c
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
-Running it.io.openliberty.guides.name.NameEndpointTest
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.39 sec - in it.io.openliberty.guides.name.NameEndpointTest
+Running it.io.openliberty.guides.system.SystemEndpointTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.65 s - in it.io.openliberty.guides.system.SystemEndpointTest
 
-Results :
+Results:
 
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 ----
@@ -339,12 +339,12 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
-Running it.io.openliberty.guides.ping.PingEndpointTest
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.43 sec - in it.io.openliberty.guides.ping.PingEndpointTest
+Running it.io.openliberty.guides.inventory.InventoryEndpointTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.542 s - in it.io.openliberty.guides.inventory.InventoryEndpointTest
 
-Results :
+Results:
 
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ----
 
 == Tearing down the environment
