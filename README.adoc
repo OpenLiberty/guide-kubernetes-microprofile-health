@@ -47,8 +47,8 @@ You will learn how to create a health check endpoint for your microservices. The
 will configure {kube} to use this endpoint to keep your microservices running smoothly.
 
 MicroProfile Health allows services to report their health, and it publishes the overall 
-health status to a defined endpoint. A service reports `UP` if it is available and reports 
-`DOWN` if it is unavailable. MicroProfile Health reports an individual service status at 
+health status to a defined endpoint. If a service reports `UP`, then it's available. If the service reports `DOWN`, then it's unavailable.
+MicroProfile Health reports an individual service status at 
 the endpoint and indicates the overall status as `UP` if all the services are `UP`. A 
 service orchestrator can then use the health statuses to make decisions.
 
@@ -62,7 +62,7 @@ guide to learn more about MicroProfile Health.
 
 The two microservices you will work with are called `system` and `inventory`. The `system` microservice
 returns the JVM system properties of the running container and it returns the pod's name in the HTTP header
-making replicas easy to distinquish from each other. The `inventory` microservice
+making replicas easy to distinguish from each other. The `inventory` microservice
 adds the properties from the `system` microservice to the inventory. This demonstrates
 how communication can be established between pods inside a cluster.
 
@@ -115,10 +115,10 @@ This health check verifies that the `system` microservice is available at
 `\http://system-service:9080/`. The `system-service` host name is only accessible from 
 inside the cluster, you can't access it yourself. If it's available, then it returns an 
 `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
-status is `DOWN` the microservice is considered to be unhealthy.
+status is `DOWN`, the microservice is considered to be unhealthy.
 
 The health check for the `system` microservice has already been implemented. It has been 
-setup to become unhealthy for 60 seconds when a specific endpoint is called. This 
+set up to become unhealthy for 60 seconds when a specific endpoint is called. This 
 endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
 
@@ -170,7 +170,7 @@ kubectl apply -f kubernetes.yaml
 ```
 
 Use the following command to view the status of the pods. There will be two `system` pods 
-and one `inventory` pod, later you'll observe their behaviour as the `system` pods become unhealthy.
+and one `inventory` pod, later you'll observe their behavior as the `system` pods become unhealthy.
 
 [role=command]
 ```
@@ -315,7 +315,7 @@ for the correct value.
 mvn verify -Ddockerfile.skip=true -Dcluster.ip=[hostname]
 ```
 
-A few tests are included for you to test the basic functionality of the microservices. If a test failure
+A few tests are included for you to test the basic functions of the microservices. If a test failure
 occurs, then you might have introduced a bug into the code. To run the tests, wait for all pods to be
 in the ready state before proceeding further.
 
