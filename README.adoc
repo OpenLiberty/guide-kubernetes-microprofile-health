@@ -282,7 +282,7 @@ system-deployment-694c7b74f7-lrlf7     0/1       Running   0          6m
 inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          6m
 ----
 
-Then, the `system` pods will start to recover.
+Then, the `system` pods will start to become healthy again after 60 seconds.
 
 [source, role="no_copy"]
 ----
