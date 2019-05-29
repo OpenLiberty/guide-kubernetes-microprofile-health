@@ -33,9 +33,9 @@ Learn how to check the health of microservices on Kubernetes by setting up readi
 :kube: Kubernetes
 :system-api: http://[hostname]:31000/system
 :inventory-api: http://[hostname]:32000/inventory/systems
-:win: Windows
-:mac: Mac
-:linux: Linux
+:win: WINDOWS
+:mac: MAC
+:linux: LINUX
 
 // =================================================================================================
 // What you'll learn
