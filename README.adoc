@@ -17,7 +17,7 @@
 :page-tags: ['Kubernetes', 'Docker', 'MicroProfile']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
-:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/os-specific
 :source-highlighter: prettify
 :page-seo-title: Checking the health of microservices using Kubernetes readiness probes
 :page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness probes
@@ -188,16 +188,36 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s
 Wait until the pods are ready. After the pods are ready, you will make requests to your 
 services.
 
-****
-[system]#*{win} | {mac}*#
+[.tab_link]
+[.windows_link]
+`*WINDOWS*`
+[.tab_link]
+[.mac_link]
+`*MAC*`
+[.tab_link]
+[.linux_link]
+`*LINUX*`
 
+[.tab_content]
+[.windows_section]
+--
 The default host name for Docker Desktop is `localhost`.
+--
 
-[system]#*{linux}*#
 
+[.tab_content]
+[.mac_section]
+--
+The default host name for Docker Desktop is `localhost`.
+--
+
+
+[.tab_content]
+[.linux_section]
+--
 The default host name for minikube is {minikube-ip}. Otherwise it can be found using the 
 `minikube ip` command.
-****
+--
 
 Navigate to `{system-api}/properties` and observe a response
 containing JVM system properties. Replace `[hostname]` with the 
