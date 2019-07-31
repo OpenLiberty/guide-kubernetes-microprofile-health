@@ -1,36 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: system-deployment
-  labels:
-    app: system
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: system
-  template:
-    metadata:
-      labels:
-        app: system
-    spec:
-      containers:
-      - name: system-container
-        image: system:1.0-SNAPSHOT
-        ports:
-        - containerPort: 9080
-        # system probe
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 9080
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          failureThreshold: 1
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: inventory-deployment
   labels:
     app: inventory
