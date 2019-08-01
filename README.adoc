@@ -53,10 +53,10 @@ the endpoint and indicates the overall status as `UP` if all the services are `U
 service orchestrator can then use the health statuses to make decisions.
 
 {kube} provides liveness and readiness probes that are used to check the health of your 
-containers, you will work with readiness probes. These probes can check certain files in 
-your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes 
-a health endpoint on your microservices. {kube} polls the endpoint as specified by the 
-probes to react appropriately to any change in the microservice's status. Read the 
+containers. These probes can check certain files in your containers, check a TCP socket, 
+or make HTTP requests. MicroProfile Health exposes a readiness and liveness endpoint on 
+your microservices. {kube} polls these endpoints as specified by the probes to react 
+appropriately to any change in the microservice's status. Read the 
 https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
 guide to learn more about MicroProfile Health.
 
@@ -91,24 +91,24 @@ include::{common-includes}/kube-start.adoc[]
 // ================================================================================================================================
 // ================================================================================================================================
 
-== Adding a health check to the inventory microservice
+== Adding health checks to the inventory microservice
 
 Navigate to `start` directory to begin.
 
 The `inventory` microservice should only be healthy when `system` is available. To add this 
-check to the `/health` endpoint, you will create a class implementing the `HealthCheck` 
-interface.
+check to the `/health/ready` endpoint, you will create a class that is annotated with the
+`@Readiness` annotation and implements the `HealthCheck` interface.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
-#Create `InventoryHealth` class.#
-`inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java`
+#Create `InventoryReadinessCheck` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java`
 ---- 
 
-InventoryHealth.java
+InventoryReadinessCheck.java
 [source, Java, linenums, role='code_column']
 ----
-include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java[tags=**;!copyright;]
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java[tags=**;!copyright;]
 ----
 
 This health check verifies that the `system` microservice is available at 
@@ -117,16 +117,32 @@ inside the cluster, you can't access it yourself. If it's available, then it ret
 `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
 status is `DOWN`, the microservice is considered to be unhealthy.
 
-The health check for the `system` microservice has already been implemented. It has been 
-set up to become unhealthy for 60 seconds when a specific endpoint is called. This 
-endpoint has been provided for you to observe the results of an unhealthy pod and how 
+[role="code_command hotspot file=1", subs="quotes"] 
+---- 
+#Create `InventoryLivenessCheck` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
+---- 
+
+InventoryLivenessCheck.java
+[source, Java, linenums, role='code_column']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[tags=**;!copyright;]
+----
+
+This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
+If more than 90% of the maxmimum memory is used, a status of `DOWN` will be returned. 
+
+The health checks for the `system` microservice have already been implemented. The `system`
+microservice has been set up to become unhealthy for 60 seconds when a specific endpoint is called. 
+This endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
 
-== Configuring readiness probes
+== Configuring readiness and liveness probes
 
-You will configure {kube} readiness probes. Readiness probes are responsible for 
+You will configure {kube} readiness and liveness probes. Readiness probes are responsible for 
 determining that your application is ready to accept requests. If it's not ready, traffic 
-won't be routed to the container.
+won't be routed to the container. Liveness probes are responsible for determining when a 
+container needs to be restarted. 
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
