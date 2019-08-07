@@ -12,9 +12,6 @@
 // end::copyright[]
 package io.openliberty.guides.inventory;
 
-import java.net.URL;
-import java.util.Properties;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -25,9 +22,6 @@ import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
-
-import io.openliberty.guides.inventory.client.SystemClient;
 
 @Readiness
 @ApplicationScoped
