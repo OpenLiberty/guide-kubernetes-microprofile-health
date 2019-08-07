@@ -34,7 +34,6 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 5
           failureThreshold: 1
-
 ---
 apiVersion: apps/v1
 kind: Deployment
