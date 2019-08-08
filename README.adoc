@@ -159,18 +159,20 @@ include::finish/kubernetes.yaml[tags=**;]
 The readiness and liveness probes are configured for the containers running the `system` 
 and `inventory` microservices.
 
-The readiness probes are configured to poll the [hotspot=25 hotspot=64]`/health/ready` endpoint. The readiness probe 
+The readiness probes are configured to poll the [hotspot=25 hotspot=66]`/health/ready` endpoint. The readiness probe 
 determines the READY status of the container as seen in the `kubectl get pods` output. The 
-[hotspot=27 hotspot=66]`initialDelaySeconds` field defines how long the probe should wait before it 
+[hotspot=27 hotspot=68]`initialDelaySeconds` field defines how long the probe should wait before it 
 starts to poll so the probe does not start making requests before the server has started. 
-The [hotspot=29 hotspot=68]`failureThreshold` option defines how many times the probe should fail 
-before the state should be changed from ready to not ready. The [hotspot=28 hotspot=67]`periodSeconds` 
+The [hotspot=30 hotspot=71]`failureThreshold` option defines how many times the probe should fail 
+before the state should be changed from ready to not ready. The [hostpot=29 hotspot=70]`timeoutSeconds` 
+option defines how many seconds before the probe times out. The [hotspot=28 hotspot=69]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
 
-The liveness probes are configured to poll the [hotspot=32 hotspot=71]`/health/live` endpoint. 
+The liveness probes are configured to poll the [hotspot=33 hotspot=74]`/health/live` endpoint. 
 The liveness probe determines when a container needs to be restarted. Similar to the readiness
-probes, the liveness probes also define [hotspot=34 hotspot=73]`initialDelaySeconds`, 
-[hotspot=36 hotspot=75]`failureThreshold`, and [hotspot=35 hotspot=74]`periodSeconds`.
+probes, the liveness probes also define [hotspot=35 hotspot=76]`initialDelaySeconds`, 
+[hotspot=38 hotspot=79]`failureThreshold`, [hotspot=37 hotspot=78]`timeoutSeconds`,
+and[hotspot=36 hotspot=77]`periodSeconds`.
 
 == Deploying the microservices
 
