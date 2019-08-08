@@ -19,8 +19,8 @@
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
-:page-seo-title: Checking the health of microservices using Kubernetes readiness and liveness probes
-:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness probes and liveness probes
+:page-seo-title: Checking the health of microservices by using Kubernetes readiness and liveness probes
+:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness and liveness probes
 :guide-author: Open Liberty
 = Checking the health of microservices on Kubernetes
 
@@ -47,14 +47,14 @@ You will learn how to create health check endpoints for your microservices. Then
 will configure {kube} to use these endpoints to keep your microservices running smoothly.
 
 MicroProfile Health allows services to report their health, and it publishes the overall 
-health status to a defined endpoint. If a service reports `UP`, then it's available. If 
+health status to defined endpoints. If a service reports `UP`, then it's available. If 
 the service reports `DOWN`, then it's unavailable. MicroProfile Health reports an individual 
 service status at the endpoint and indicates the overall status as `UP` if all the services 
 are `UP`. A service orchestrator can then use the health statuses to make decisions.
 
 {kube} provides liveness and readiness probes that are used to check the health of your 
 containers. These probes can check certain files in your containers, check a TCP socket, 
-or make HTTP requests. MicroProfile Health exposes a readiness and liveness endpoint on 
+or make HTTP requests. MicroProfile Health exposes readiness and liveness endpoints on 
 your microservices. {kube} polls these endpoints as specified by the probes to react 
 appropriately to any change in the microservice's status. Read the 
 https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
@@ -95,7 +95,7 @@ include::{common-includes}/kube-start.adoc[]
 
 Navigate to `start` directory to begin.
 
-The `inventory` microservice should only be healthy when `system` is available. To add this 
+The `inventory` microservice should be healthy only when `system` is available. To add this 
 check to the `/health/ready` endpoint, you will create a class that is annotated with the
 `@Readiness` annotation and implements the `HealthCheck` interface.
 
@@ -130,10 +130,10 @@ include::finish/inventory/src/main/java/io/openliberty/guides/inventory/Inventor
 ----
 
 This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
-If more than 90% of the maxmimum memory is used, a status of `DOWN` will be returned. 
+If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
 
-The health checks for the `system` microservice have already been implemented. The `system`
-microservice has been set up to become unhealthy for 60 seconds when a specific endpoint is called. 
+The health checks for the `system` microservice were already been implemented. The `system`
+microservice was set up to become unhealthy for 60 seconds when a specific endpoint is called. 
 This endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
 
@@ -169,7 +169,7 @@ option defines how many seconds before the probe times out. The [hotspot=28 hots
 option defines how often the probe should poll the given endpoint.
 
 The liveness probes are configured to poll the [hotspot=33 hotspot=74]`/health/live` endpoint. 
-The liveness probe determines when a container needs to be restarted. Similar to the readiness
+The liveness probes determine when a container needs to be restarted. Similar to the readiness
 probes, the liveness probes also define [hotspot=35 hotspot=76]`initialDelaySeconds`, 
 [hotspot=38 hotspot=79]`failureThreshold`, [hotspot=37 hotspot=78]`timeoutSeconds`,
 and[hotspot=36 hotspot=77]`periodSeconds`.
