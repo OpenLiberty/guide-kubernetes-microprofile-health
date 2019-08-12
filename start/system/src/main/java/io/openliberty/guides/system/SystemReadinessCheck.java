@@ -32,7 +32,7 @@ public class SystemReadinessCheck implements HealthCheck {
         }
 
         return HealthCheckResponse.named("isAlive").down().build();
-	}
+    }
 
     public static void setUnhealthy() {
         aliveAfter = LocalDateTime.now().plusSeconds(ALIVE_DELAY_SECONDS);
