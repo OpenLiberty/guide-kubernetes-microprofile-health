@@ -13,21 +13,21 @@
 :page-layout: guide-multipane
 :page-duration: 20 minutes
 :page-releasedate: 2018-11-30
-:page-description: Learn how to check the health of microservices on Kubernetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
+:page-description: Learn how to check the health of microservices on Kubernetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.
 :page-tags: ['Kubernetes', 'Docker', 'MicroProfile']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
-:page-seo-title: Checking the health of microservices using Kubernetes readiness probes
-:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness probes
+:page-seo-title: Checking the health of microservices by using Kubernetes readiness and liveness probes
+:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness and liveness probes
 :guide-author: Open Liberty
 = Checking the health of microservices on Kubernetes
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to check the health of microservices on Kubernetes by setting up readiness probes to inspect MicroProfile Health Check endpoints.
+Learn how to check the health of microservices on Kubernetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
@@ -43,20 +43,20 @@ Learn how to check the health of microservices on Kubernetes by setting up readi
 
 == What you'll learn
 
-You will learn how to create a health check endpoint for your microservices. Then, you 
-will configure {kube} to use this endpoint to keep your microservices running smoothly.
+You will learn how to create health check endpoints for your microservices. Then, you 
+will configure {kube} to use these endpoints to keep your microservices running smoothly.
 
 MicroProfile Health allows services to report their health, and it publishes the overall 
-health status to a defined endpoint. If a service reports `UP`, then it's available. If the service reports `DOWN`, then it's unavailable.
-MicroProfile Health reports an individual service status at 
-the endpoint and indicates the overall status as `UP` if all the services are `UP`. A 
-service orchestrator can then use the health statuses to make decisions.
+health status to defined endpoints. If a service reports `UP`, then it's available. If 
+the service reports `DOWN`, then it's unavailable. MicroProfile Health reports an individual 
+service status at the endpoint and indicates the overall status as `UP` if all the services 
+are `UP`. A service orchestrator can then use the health statuses to make decisions.
 
 {kube} provides liveness and readiness probes that are used to check the health of your 
-containers, you will work with readiness probes. These probes can check certain files in 
-your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes 
-a health endpoint on your microservices. {kube} polls the endpoint as specified by the 
-probes to react appropriately to any change in the microservice's status. Read the 
+containers. These probes can check certain files in your containers, check a TCP socket, 
+or make HTTP requests. MicroProfile Health exposes readiness and liveness endpoints on 
+your microservices. {kube} polls these endpoints as specified by the probes to react 
+appropriately to any change in the microservice's status. Read the 
 https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
 guide to learn more about MicroProfile Health.
 
@@ -91,24 +91,24 @@ include::{common-includes}/kube-start.adoc[]
 // ================================================================================================================================
 // ================================================================================================================================
 
-== Adding a health check to the inventory microservice
+== Adding health checks to the inventory microservice
 
 Navigate to `start` directory to begin.
 
-The `inventory` microservice should only be healthy when `system` is available. To add this 
-check to the `/health` endpoint, you will create a class implementing the `HealthCheck` 
-interface.
+The `inventory` microservice should be healthy only when `system` is available. To add this 
+check to the `/health/ready` endpoint, you will create a class that is annotated with the
+`@Readiness` annotation and implements the `HealthCheck` interface.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
-#Create `InventoryHealth` class.#
-`inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java`
+#Create `InventoryReadinessCheck` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java`
 ---- 
 
-InventoryHealth.java
+InventoryReadinessCheck.java
 [source, Java, linenums, role='code_column']
 ----
-include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryHealth.java[tags=**;!copyright;]
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java[tags=**;!copyright;]
 ----
 
 This health check verifies that the `system` microservice is available at 
@@ -117,16 +117,32 @@ inside the cluster, you can't access it yourself. If it's available, then it ret
 `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
 status is `DOWN`, the microservice is considered to be unhealthy.
 
-The health check for the `system` microservice has already been implemented. It has been 
-set up to become unhealthy for 60 seconds when a specific endpoint is called. This 
-endpoint has been provided for you to observe the results of an unhealthy pod and how 
+[role="code_command hotspot file=1", subs="quotes"] 
+---- 
+#Create `InventoryLivenessCheck` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
+---- 
+
+InventoryLivenessCheck.java
+[source, Java, linenums, role='code_column']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[tags=**;!copyright;]
+----
+
+This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
+If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
+
+The health checks for the `system` microservice were already been implemented. The `system`
+microservice was set up to become unhealthy for 60 seconds when a specific endpoint is called. 
+This endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
 
-== Configuring readiness probes
+== Configuring readiness and liveness probes
 
-You will configure {kube} readiness probes. Readiness probes are responsible for 
+You will configure {kube} readiness and liveness probes. Readiness probes are responsible for 
 determining that your application is ready to accept requests. If it's not ready, traffic 
-won't be routed to the container.
+won't be routed to the container. Liveness probes are responsible for determining when a 
+container needs to be restarted. 
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
@@ -140,16 +156,23 @@ kubernetes.yaml
 include::finish/kubernetes.yaml[tags=**;]
 ----
 
-The readiness probes are configured for the containers running the `system` and `inventory` 
-microservices.
+The readiness and liveness probes are configured for the containers running the `system` 
+and `inventory` microservices.
 
-The readiness probes are configured to poll the `/health` endpoint. The readiness probe 
+The readiness probes are configured to poll the [hotspot=25 hotspot=66]`/health/ready` endpoint. The readiness probe 
 determines the READY status of the container as seen in the `kubectl get pods` output. The 
-[hotspot=27 hotspot=59]`initialDelaySeconds` field defines how long the probe should wait before it 
+[hotspot=27 hotspot=68]`initialDelaySeconds` field defines how long the probe should wait before it 
 starts to poll so the probe does not start making requests before the server has started. 
-The [hotspot=29 hotspot=61]`failureThreshold` option defines how many times the probe should fail 
-before the state should be changed from ready to not ready. The [hotspot=28 hotspot=60]`periodSeconds` 
+The [hotspot=30 hotspot=71]`failureThreshold` option defines how many times the probe should fail 
+before the state should be changed from ready to not ready. The [hostpot=29 hotspot=70]`timeoutSeconds` 
+option defines how many seconds before the probe times out. The [hotspot=28 hotspot=69]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
+
+The liveness probes are configured to poll the [hotspot=33 hotspot=74]`/health/live` endpoint. 
+The liveness probes determine when a container needs to be restarted. Similar to the readiness
+probes, the liveness probes also define [hotspot=35 hotspot=76]`initialDelaySeconds`, 
+[hotspot=38 hotspot=79]`failureThreshold`, [hotspot=37 hotspot=78]`timeoutSeconds`,
+and [hotspot=36 hotspot=77]`periodSeconds`.
 
 == Deploying the microservices
 
@@ -367,9 +390,9 @@ include::{common-includes}/kube-minikube-teardown.adoc[]
 
 == Great work! You're done!
 
-You have used MicroProfile Health and Open Liberty to create an endpoint that reports on 
-your microservice's status. Then, you observed how {kube} uses the `/health` endpoint to 
-keep your microservices running smoothly.
+You have used MicroProfile Health and Open Liberty to create endpoints that report on 
+your microservice's status. Then, you observed how {kube} uses the `/health/ready` and
+`/health/live` endpoints to keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
 include::{common-includes}/attribution.adoc[subs="attributes"]
