@@ -19,7 +19,7 @@ import javax.ws.rs.Path;
 public class UnhealthyResource {
     @POST
     public String unhealthy() {
-        SystemHealth.setUnhealthy();
+        SystemReadinessCheck.setUnhealthy();
         return System.getenv("HOSTNAME") + " is now unhealthy...\n";
     }
 }
