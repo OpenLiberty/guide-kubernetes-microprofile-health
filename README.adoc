@@ -172,7 +172,7 @@ The liveness probes are configured to poll the [hotspot=33 hotspot=74]`/health/l
 The liveness probes determine when a container needs to be restarted. Similar to the readiness
 probes, the liveness probes also define [hotspot=35 hotspot=76]`initialDelaySeconds`, 
 [hotspot=38 hotspot=79]`failureThreshold`, [hotspot=37 hotspot=78]`timeoutSeconds`,
-and[hotspot=36 hotspot=77]`periodSeconds`.
+and [hotspot=36 hotspot=77]`periodSeconds`.
 
 == Deploying the microservices
 
