@@ -19,13 +19,22 @@ spec:
         image: system:1.0-SNAPSHOT
         ports:
         - containerPort: 9080
-        # system probe
+        # system probes
         readinessProbe:
           httpGet:
-            path: /health
+            path: /health/ready
             port: 9080
-          initialDelaySeconds: 15
-          periodSeconds: 5
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 9080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
           failureThreshold: 1
 ---
 apiVersion: apps/v1
@@ -54,10 +63,19 @@ spec:
         # inventory probe
         readinessProbe:
           httpGet:
-            path: /health
+            path: /health/ready
             port: 9080
-          initialDelaySeconds: 15
-          periodSeconds: 5
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 9080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
           failureThreshold: 1
 ---
 apiVersion: v1
