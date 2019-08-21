@@ -17,7 +17,7 @@
 :page-tags: ['Kubernetes', 'Docker', 'MicroProfile']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
-:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
+:common-includes: ../guides-common/
 :source-highlighter: prettify
 :page-seo-title: Checking the health of microservices by using Kubernetes readiness and liveness probes
 :page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness and liveness probes
@@ -184,7 +184,17 @@ command.
 mvn package
 ```
 
-When the build succeeds, run the following command to deploy the necessary {kube} 
+Next, run the `docker build` commands to build container images for your application:
+[role='command']
+```
+docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.
+```
+
+The `-t` flag in the `docker build` command allows the Docker image to be labeled (tagged) in the `name[:tag]` format. 
+The tag for an image describes the specific image version. If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
+
+When the builds succeed, run the following command to deploy the necessary {kube} 
 resources to serve the applications.
 
 [role=command]
@@ -335,7 +345,7 @@ for the correct value.
 
 [role=command]
 ```
-mvn verify -Ddockerfile.skip=true -Dcluster.ip=[hostname]
+mvn verify -Dcluster.ip=[hostname]
 ```
 
 A few tests are included for you to test the basic functions of the microservices. If a test failure
