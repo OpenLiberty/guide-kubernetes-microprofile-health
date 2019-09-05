@@ -221,12 +221,7 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s
 Wait until the pods are ready. After the pods are ready, you will make requests to your 
 services.
 
-[.tab_link.windows_link]
-`*WINDOWS*`
-[.tab_link.mac_link]
-`*MAC*`
-[.tab_link.linux_link]
-`*LINUX*`
+include::{common-includes}/os-tabs.adoc[]
 
 [.tab_content.windows_section.mac_section]
 --
