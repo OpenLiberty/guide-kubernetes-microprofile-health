@@ -12,26 +12,20 @@
 // end::copyright[]
 package io.openliberty.guides.inventory;
 
-import java.net.URL;
-import java.util.Properties;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.health.Health;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
-import io.openliberty.guides.inventory.client.SystemClient;
-
-@Health
+@Readiness
 @ApplicationScoped
-public class InventoryHealth implements HealthCheck {
+public class InventoryReadinessCheck implements HealthCheck {
     @Inject
     @ConfigProperty(name = "SYS_APP_HOSTNAME")
     private String hostname;

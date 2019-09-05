@@ -15,14 +15,13 @@ package io.openliberty.guides.system;
 import java.time.LocalDateTime;
 
 import javax.enterprise.context.ApplicationScoped;
-
-import org.eclipse.microprofile.health.Health;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 
-@Health
+@Readiness
 @ApplicationScoped
-public class SystemHealth implements HealthCheck {
+public class SystemReadinessCheck implements HealthCheck {
     private static final int ALIVE_DELAY_SECONDS = 60;
     private static LocalDateTime aliveAfter = LocalDateTime.now();
 
