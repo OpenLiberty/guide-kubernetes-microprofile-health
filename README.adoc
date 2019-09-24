@@ -221,16 +221,18 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s
 Wait until the pods are ready. After the pods are ready, you will make requests to your 
 services.
 
-****
-[system]#*{win} | {mac}*#
+include::{common-includes}/os-tabs.adoc[]
 
+[.tab_content.windows_section.mac_section]
+--
 The default host name for Docker Desktop is `localhost`.
+--
 
-[system]#*{linux}*#
-
+[.tab_content.linux_section]
+--
 The default host name for minikube is {minikube-ip}. Otherwise it can be found using the 
 `minikube ip` command.
-****
+--
 
 Navigate to `{system-api}/properties` and observe a response
 containing JVM system properties. Replace `[hostname]` with the 
