@@ -15,7 +15,7 @@ before_script:
   -O minikube
 - chmod +x minikube
 - sudo ln -s $(pwd)/minikube /usr/local/bin/minikube
-- sudo minikube start --memory=4096 --cpus=2 --vm-driver=none --bootstrapper=localkube
+- sudo minikube start --memory=8192 --cpus=4 --vm-driver=none --bootstrapper=localkube
 - chmod +x ../scripts/travisTest.sh
 script: ../scripts/travisTest.sh
 notifications:
