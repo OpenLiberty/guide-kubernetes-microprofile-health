@@ -16,7 +16,7 @@ docker build -t inventory:1.0-SNAPSHOT inventory/.
 
 kubectl apply -f kubernetes.yaml
 
-sleep 480 
+sleep 600 
 
 kubectl get pods
 
