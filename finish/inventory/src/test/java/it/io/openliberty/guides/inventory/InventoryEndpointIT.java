@@ -24,8 +24,7 @@ import javax.json.JsonObject;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.provider.jsrjsonp.JsrJsonpProvider;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -38,9 +37,7 @@ public class InventoryEndpointIT {
     private static String invUrl;
     private static String sysUrl;
     private static String sysKubeService;
-
-    private Client client;
-    private Response response;
+    private static Client client;
 
     @BeforeAll
     public static void oneTimeSetup() {
@@ -51,11 +48,7 @@ public class InventoryEndpointIT {
         sysKubeService = System.getProperty("system.kube.service");
         invUrl = "http://" + clusterIp + ":" + invNodePort + "/inventory/systems/";
         sysUrl = "http://" + clusterIp + ":" + sysNodePort + "/system/properties/";
-    }
 
-    @BeforeEach
-    public void setup() {
-        response = null;
         client = ClientBuilder.newBuilder()
                     .hostnameVerifier(new HostnameVerifier() {
                         public boolean verify(String hostname, SSLSession session) {
@@ -68,8 +61,8 @@ public class InventoryEndpointIT {
         client.target(invUrl + "reset").request().post(null);
     }
 
-    @AfterEach
-    public void teardown() {
+    @AfterAll
+    public static void teardown() {
         client.close();
     }
 
