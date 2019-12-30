@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 
 @Path("unhealthy")
 public class UnhealthyResource {
+    
     @POST
     public String unhealthy() {
         SystemReadinessCheck.setUnhealthy();

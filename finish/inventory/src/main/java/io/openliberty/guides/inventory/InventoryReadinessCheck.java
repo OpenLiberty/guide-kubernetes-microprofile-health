@@ -26,6 +26,7 @@ import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 @Readiness
 @ApplicationScoped
 public class InventoryReadinessCheck implements HealthCheck {
+    
     @Inject
     @ConfigProperty(name = "SYS_APP_HOSTNAME")
     private String hostname;
