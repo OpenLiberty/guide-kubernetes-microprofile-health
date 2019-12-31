@@ -164,7 +164,7 @@ determines the READY status of the container as seen in the `kubectl get pods` o
 [hotspot=27 hotspot=68]`initialDelaySeconds` field defines how long the probe should wait before it 
 starts to poll so the probe does not start making requests before the server has started. 
 The [hotspot=30 hotspot=71]`failureThreshold` option defines how many times the probe should fail 
-before the state should be changed from ready to not ready. The [hostpot=29 hotspot=70]`timeoutSeconds` 
+before the state should be changed from ready to not ready. The [hotspot=29 hotspot=70]`timeoutSeconds` 
 option defines how many seconds before the probe times out. The [hotspot=28 hotspot=69]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
 
