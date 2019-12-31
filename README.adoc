@@ -101,7 +101,7 @@ check to the `/health/ready` endpoint, you will create a class that is annotated
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
-#Create `InventoryReadinessCheck` class.#
+#Create the `InventoryReadinessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java`
 ---- 
 
@@ -119,7 +119,7 @@ status is `DOWN`, the microservice is considered to be unhealthy.
 
 [role="code_command hotspot file=1", subs="quotes"] 
 ---- 
-#Create `InventoryLivenessCheck` class.#
+#Create the `InventoryLivenessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
 ---- 
 
