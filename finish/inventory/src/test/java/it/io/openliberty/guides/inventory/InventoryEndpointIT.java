@@ -85,9 +85,9 @@ public class InventoryEndpointIT {
     }
     // end::testEmptyInventory[]
 
-    // tag::testHostRegistration[]
     @Test
     @Order(2)
+    // tag::testHostRegistration[]
     public void testHostRegistration() {
         this.visitSystemService();
 
@@ -111,9 +111,9 @@ public class InventoryEndpointIT {
     }
     // end::testHostRegistration[]
 
-    // tag::testSystemPropertiesMatch[]
     @Test
     @Order(3)
+    // tag::testSystemPropertiesMatch[]
     public void testSystemPropertiesMatch() {
         Response invResponse = this.getResponse(invUrl);
         Response sysResponse = this.getResponse(sysUrl);
@@ -143,9 +143,9 @@ public class InventoryEndpointIT {
     }
     // end::testSystemPropertiesMatch[]
 
-    // tag::testUnknownHost[]
     @Test
     @Order(4)
+    // tag::testUnknownHost[]
     public void testUnknownHost() {
         Response response = this.getResponse(invUrl);
         this.assertResponse(invUrl, response);
