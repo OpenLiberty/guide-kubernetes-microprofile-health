@@ -101,7 +101,7 @@ check to the `/health/ready` endpoint, you will create a class that is annotated
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
-#Create `InventoryReadinessCheck` class.#
+#Create the `InventoryReadinessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java`
 ---- 
 
@@ -119,7 +119,7 @@ status is `DOWN`, the microservice is considered to be unhealthy.
 
 [role="code_command hotspot file=1", subs="quotes"] 
 ---- 
-#Create `InventoryLivenessCheck` class.#
+#Create the `InventoryLivenessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
 ---- 
 
@@ -164,7 +164,7 @@ determines the READY status of the container as seen in the `kubectl get pods` o
 [hotspot=27 hotspot=68]`initialDelaySeconds` field defines how long the probe should wait before it 
 starts to poll so the probe does not start making requests before the server has started. 
 The [hotspot=30 hotspot=71]`failureThreshold` option defines how many times the probe should fail 
-before the state should be changed from ready to not ready. The [hostpot=29 hotspot=70]`timeoutSeconds` 
+before the state should be changed from ready to not ready. The [hotspot=29 hotspot=70]`timeoutSeconds` 
 option defines how many seconds before the probe times out. The [hotspot=28 hotspot=69]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
 
@@ -347,7 +347,7 @@ for the correct value.
 
 [role=command]
 ```
-mvn verify -Dcluster.ip=[hostname]
+mvn failsafe:integration-test -Dcluster.ip=[hostname]
 ```
 
 A few tests are included for you to test the basic functions of the microservices. If a test failure
@@ -361,8 +361,8 @@ When the tests succeed, you should see output similar to the following in your c
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
-Running it.io.openliberty.guides.system.SystemEndpointTest
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.65 s - in it.io.openliberty.guides.system.SystemEndpointTest
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.65 s - in it.io.openliberty.guides.system.SystemEndpointIT
 
 Results:
 
@@ -374,12 +374,12 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
-Running it.io.openliberty.guides.inventory.InventoryEndpointTest
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.542 s - in it.io.openliberty.guides.inventory.InventoryEndpointTest
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.542 s - in it.io.openliberty.guides.inventory.InventoryEndpointIT
 
 Results:
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 ----
 
 == Tearing down the environment
