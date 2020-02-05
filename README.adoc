@@ -268,14 +268,6 @@ kubectl get pods
 [source, role="no_copy"]
 ----
 NAME                                   READY     STATUS    RESTARTS   AGE
-system-deployment-694c7b74f7-hcf4q     1/1       Running   0          59s
-system-deployment-694c7b74f7-lrlf7     1/1       Running   0          59s
-inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s
-----
-
-[source, role="no_copy"]
-----
-NAME                                   READY     STATUS    RESTARTS   AGE
 system-deployment-694c7b74f7-hcf4q     1/1       Running   0          1m
 system-deployment-694c7b74f7-lrlf7     0/1       Running   0          1m
 inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          1m
@@ -322,9 +314,17 @@ Then, the `system` pods will start to become healthy again after 60 seconds.
 [source, role="no_copy"]
 ----
 NAME                                   READY     STATUS    RESTARTS   AGE
-system-deployment-694c7b74f7-hcf4q     1/1       Running   0          6m
-system-deployment-694c7b74f7-lrlf7     0/1       Running   0          6m
-inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          6m
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          7m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          7m
+inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          7m
+----
+
+[source, role="no_copy"]
+----
+NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          7m
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          7m
+inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          7m
 ----
 
 Finally, you will see all of the pods have recovered.
@@ -332,9 +332,9 @@ Finally, you will see all of the pods have recovered.
 [source, role="no_copy"]
 ----
 NAME                                   READY     STATUS    RESTARTS   AGE
-system-deployment-694c7b74f7-hcf4q     1/1       Running   0          6m
-system-deployment-694c7b74f7-lrlf7     1/1       Running   0          6m
-inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          6m
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          8m
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          8m
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          8m
 ----
 
 // ================================================================================================================================
