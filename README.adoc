@@ -19,8 +19,8 @@
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
-:page-seo-title: Checking the health of microservices by using Kubernetes readiness and liveness probes
-:page-seo-description: A tutorial and example on how to report health status of microservices using MicroProfile Health Check and check them with Kubernetes readiness and liveness probes
+:page-seo-title: Checking the health of Java microservices by using Kubernetes readiness and liveness probes
+:page-seo-description: A tutorial with examples of how to report the health status of Java microservices using Eclipse MicroProfile Health Check endpoints and inspect them with Kubernetes readiness and liveness probes.
 :guide-author: Open Liberty
 = Checking the health of microservices on Kubernetes
 
