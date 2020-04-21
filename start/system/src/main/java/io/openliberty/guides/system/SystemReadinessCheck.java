@@ -29,10 +29,10 @@ public class SystemReadinessCheck implements HealthCheck {
     @Override
     public HealthCheckResponse call() {
         if (isAlive()) {
-            return HealthCheckResponse.named("isAlive").up().build();
+            return HealthCheckResponse.builder().name("isAlive").up();
         }
 
-        return HealthCheckResponse.named("isAlive").down().build();
+        return HealthCheckResponse.builder().name("isAlive").down();
     }
 
     public static void setUnhealthy() {
