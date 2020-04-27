@@ -27,19 +27,20 @@ import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 @ApplicationScoped
 public class InventoryReadinessCheck implements HealthCheck {
     
+    private static final String readinessCheck = InventoryResource.class.getSimpleName() + " Readiness Check";
+
     @Inject
     @ConfigProperty(name = "SYS_APP_HOSTNAME")
     private String hostname;
 
     public HealthCheckResponse call() {
-        HealthCheckResponseBuilder builder = HealthCheckResponse.named(hostname);
         if (isSystemServiceReachable()) {
-            builder = builder.up();
-        } else {
-            builder = builder.down();
-        }
+            return HealthCheckResponse.up(readinessCheck);
 
-        return builder.build();
+        } else {
+            
+            return HealthCheckResponse.down(readinessCheck);
+        }
     }
 
     private boolean isSystemServiceReachable() {
