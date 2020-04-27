@@ -35,7 +35,6 @@ public class InventoryReadinessCheck implements HealthCheck {
     public HealthCheckResponse call() {
         if (isSystemServiceReachable()) {
             return HealthCheckResponse.up(readinessCheck);
-
         } else {
             return HealthCheckResponse.down(readinessCheck);
         }
