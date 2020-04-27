@@ -1,6 +1,6 @@
 // tag::copyright[]
 /*******************************************************************************
- * Copyright (c) 2019 IBM Corporation and others.
+ * Copyright (c) 2019, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,27 +21,25 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
 @Readiness
 @ApplicationScoped
 public class InventoryReadinessCheck implements HealthCheck {
     
+    private static final String readinessCheck = InventoryResource.class.getSimpleName() + " Readiness Check";
+
     @Inject
     @ConfigProperty(name = "SYS_APP_HOSTNAME")
     private String hostname;
 
     public HealthCheckResponse call() {
-        HealthCheckResponseBuilder builder = HealthCheckResponse.named(hostname);
         if (isSystemServiceReachable()) {
-            builder = builder.up();
+            return HealthCheckResponse.up(readinessCheck);
         } else {
-            builder = builder.down();
+            return HealthCheckResponse.down(readinessCheck);
         }
-
-        return builder.build();
     }
-
+    
     private boolean isSystemServiceReachable() {
         try {
             Client client = ClientBuilder.newClient();
