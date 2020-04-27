@@ -21,7 +21,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
 @Readiness
 @ApplicationScoped
@@ -38,11 +37,10 @@ public class InventoryReadinessCheck implements HealthCheck {
             return HealthCheckResponse.up(readinessCheck);
 
         } else {
-            
             return HealthCheckResponse.down(readinessCheck);
         }
     }
-
+    
     private boolean isSystemServiceReachable() {
         try {
             Client client = ClientBuilder.newClient();
