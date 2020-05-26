@@ -184,6 +184,9 @@ command.
 mvn package
 ```
 
+[role='command']
+include::{common-includes}/ol-kernel-docker-pull.adoc[]
+
 Next, run the `docker build` commands to build container images for your application:
 [role='command']
 ```
