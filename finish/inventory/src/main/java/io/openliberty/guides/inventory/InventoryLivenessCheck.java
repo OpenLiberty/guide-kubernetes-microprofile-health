@@ -31,7 +31,8 @@ public class InventoryLivenessCheck implements HealthCheck {
       long memUsed = memBean.getHeapMemoryUsage().getUsed();
       long memMax = memBean.getHeapMemoryUsage().getMax();
 
-      return HealthCheckResponse.named(InventoryResource.class.getSimpleName() + " Liveness Check")
+      return HealthCheckResponse.named(InventoryResource.class.getSimpleName() 
+                                      + " Liveness Check")
                                 .withData("memory used", memUsed)
                                 .withData("memory max", memMax)
                                 .state(memUsed < memMax * 0.9).build();
