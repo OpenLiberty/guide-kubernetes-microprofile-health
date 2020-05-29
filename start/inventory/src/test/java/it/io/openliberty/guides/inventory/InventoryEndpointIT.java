@@ -157,7 +157,6 @@ public class InventoryEndpointIT {
         assertEquals(404, badResponse.getStatus(),
             "BadResponse expected status: 404. Response code not as expected.");
 
-       
         String stringObj = badResponse.readEntity(String.class);
         boolean isError = stringObj.contains("error");
 
