@@ -14,4 +14,6 @@ cat inventory/pom.xml system/pom.xml
 sed -i "s;FROM openliberty/open-liberty:kernel-java8-openj9-ubi;FROM "$DOCKER_USERNAME"/olguides:"$BUILD";g" inventory/Dockerfile system/Dockerfile
 cat inventory/Dockerfile system/Dockerfile
 
+docker pull $DOCKER_USERNAME"/olguides:"$BUILD
+
 ../scripts/testApp.sh
