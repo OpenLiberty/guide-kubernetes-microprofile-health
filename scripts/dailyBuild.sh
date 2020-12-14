@@ -8,6 +8,8 @@ while getopts t:d:b:u: flag; do
     esac
 done
 
+echo "Testing daily build image"
+
 sed -i "\#<artifactId>liberty-maven-plugin</artifactId>#a<configuration><install><runtimeUrl>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/"$DATE"/"$DRIVER"</runtimeUrl></install></configuration>" inventory/pom.xml system/pom.xml
 cat inventory/pom.xml system/pom.xml
 
@@ -17,3 +19,18 @@ cat inventory/Dockerfile system/Dockerfile
 docker pull $DOCKER_USERNAME"/olguides:"$BUILD
 
 sudo ../scripts/testApp.sh
+
+kubectl delete -f kubernetes.yaml
+eval $(minikube docker-env -u)
+minikube stop
+minikube delete
+
+echo "Testing daily Docker image"
+
+sed -i "s;FROM openliberty/open-liberty:kernel-java8-openj9-ubi;FROM openliberty/daily:latest;g" system/Dockerfile inventory/Dockerfile
+
+cat Dockerfile
+
+docker pull "openliberty/daily:latest"
+
+../scripts/testApp.sh
