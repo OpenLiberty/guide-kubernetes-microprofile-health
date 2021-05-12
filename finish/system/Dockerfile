@@ -1,4 +1,4 @@
-FROM openliberty/open-liberty:kernel-java8-openj9-ubi
+FROM openliberty/open-liberty:full-java11-openj9-ubi
 
 LABEL \
   org.opencontainers.image.authors="Your Name" \
