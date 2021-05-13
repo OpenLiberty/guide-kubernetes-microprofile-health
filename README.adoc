@@ -1,7 +1,4 @@
-// INSTRUCTION: Please remove all comments that start INSTRUCTION prior to commit. Most comments should be removed, although not the copyright.
-// INSTRUCTION: The copyright statement must appear at the top of the file
-//
-// Copyright (c) 2018, 2019 IBM Corporation and others.
+// Copyright (c) 2018, 2021 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -87,9 +84,6 @@ include::{common-includes}/gitclone.adoc[]
 
 [role=command]
 include::{common-includes}/kube-start.adoc[]
-
-// ================================================================================================================================
-// ================================================================================================================================
 
 == Adding health checks to the inventory microservice
 
@@ -195,7 +189,8 @@ docker build -t inventory:1.0-SNAPSHOT inventory/.
 ```
 
 The `-t` flag in the `docker build` command allows the Docker image to be labeled (tagged) in the `name[:tag]` format. 
-The tag for an image describes the specific image version. If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
+The tag for an image describes the specific image version. 
+If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
 
 When the builds succeed, run the following command to deploy the necessary {kube} 
 resources to serve the applications.
@@ -339,9 +334,6 @@ system-deployment-694c7b74f7-hcf4q     1/1       Running   0          8m
 system-deployment-694c7b74f7-lrlf7     1/1       Running   0          8m
 inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          8m
 ----
-
-// ================================================================================================================================
-// ================================================================================================================================
 
 == Testing the microservices
 
