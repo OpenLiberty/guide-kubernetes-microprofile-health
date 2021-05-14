@@ -9,7 +9,10 @@ set -euxo pipefail
 
 # Test app
 
-mvn -q package
+mvn -Dhttp.keepAlive=false \
+    -Dmaven.wagon.http.pool=false \
+    -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
+    -q package
 
 docker pull openliberty/open-liberty:full-java11-openj9-ubi
 
@@ -24,7 +27,10 @@ kubectl get pods
 
 minikube ip
 
-mvn failsafe:integration-test -Ddockerfile.skip=true -Dcluster.ip="$(minikube ip)"
+mvn -Dhttp.keepAlive=false \
+    -Dmaven.wagon.http.pool=false \
+    -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
+    failsafe:integration-test -Ddockerfile.skip=true -Dcluster.ip="$(minikube ip)"
 mvn failsafe:verify
 
 kubectl logs "$(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep system | head -1)"
