@@ -9,7 +9,7 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
- // end::copyright[]
+// end::copyright[]
 package io.openliberty.guides.system;
 
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 public class SystemReadinessCheck implements HealthCheck {
 
     private static final int ALIVE_DELAY_SECONDS = 60;
-    private static final String READINESS_CHECK = SystemResource.class.getSimpleName() 
+    private static final String READINESS_CHECK = SystemResource.class.getSimpleName()
                                                  + " Readiness Check";
     private static LocalDateTime aliveAfter = LocalDateTime.now();
 
