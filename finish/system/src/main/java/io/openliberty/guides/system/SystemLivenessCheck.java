@@ -36,6 +36,6 @@ public class SystemLivenessCheck implements HealthCheck {
                                             .withData("memory used", memUsed)
                                             .withData("memory max", memMax)
                                             .status(memUsed < memMax * 0.9).build();
-	}
+    }
 }
 // end::SystemHealth[]

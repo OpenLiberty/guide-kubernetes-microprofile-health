@@ -25,17 +25,17 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 @ApplicationScoped
 public class SystemLivenessCheck implements HealthCheck {
 
-	@Override
+    @Override
 	public HealthCheckResponse call() {
 	MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
 	long memUsed = memBean.getHeapMemoryUsage().getUsed();
 	long memMax = memBean.getHeapMemoryUsage().getMax();
 
 	return HealthCheckResponse.named(SystemResource.class
-								.getSimpleName())
-								.withData("memory used", memUsed)
-								.withData("memory max", memMax)
-								.status(memUsed < memMax * 0.9).build();
-	}
+					.getSimpleName())
+					.withData("memory used", memUsed)
+					.withData("memory max", memMax)
+					.status(memUsed < memMax * 0.9).build();
+}
 }
 // end::SystemHealth[]
