@@ -1,6 +1,6 @@
 // tag::copyright[]
 /*******************************************************************************
- * Copyright (c) 2019, 2020 IBM Corporation and others.
+ * Copyright (c) 2019, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
- // end::copyright[]
+// end::copyright[]
 package io.openliberty.guides.system;
 
 import java.time.LocalDateTime;
@@ -22,19 +22,19 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 @Readiness
 @ApplicationScoped
 public class SystemReadinessCheck implements HealthCheck {
-    
+
     private static final int ALIVE_DELAY_SECONDS = 60;
-    private static final String readinessCheck = SystemResource.class.getSimpleName() 
+    private static final String READINESS_CHECK = SystemResource.class.getSimpleName()
                                                  + " Readiness Check";
     private static LocalDateTime aliveAfter = LocalDateTime.now();
 
     @Override
     public HealthCheckResponse call() {
         if (isAlive()) {
-            return HealthCheckResponse.up(readinessCheck);
+            return HealthCheckResponse.up(READINESS_CHECK);
         }
 
-        return HealthCheckResponse.down(readinessCheck);
+        return HealthCheckResponse.down(READINESS_CHECK);
     }
 
     public static void setUnhealthy() {
