@@ -219,6 +219,9 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s
 Wait until the pods are ready. After the pods are ready, you will make requests to your 
 services.
 
+// Static guide instruction
+ifndef::cloud-hosted[]
+
 include::{common-includes}/os-tabs.adoc[]
 
 [.tab_content.windows_section.mac_section]
@@ -242,6 +245,32 @@ initialized. With the readiness probe, you can be certain the pod will only acce
 traffic when the microservice has fully started.
 
 Similarly, navigate to `{inventory-api}/system-service` and observe that the request is successful.
+endif::[]
+
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+Make a request to the system service to see the JVM system properties with the following command:
+
+```
+curl http://$(minikube ip):31000/system/properties
+```
+{: codeblock}
+
+The readiness probe ensures the READY state won't be `1/1`
+until the container is available to accept requests.
+Without a readiness probe, you may notice an unsuccessful response from the server.
+This scenario can occur when the container has started,
+but the application server hasn't fully initialized.
+With the readiness probe, you can be certain the pod will only accept traffic
+when the microservice has fully started.
+
+Similarly, access the inventory service and observe the successful request with the following command:
+
+```
+curl http://$(minikube ip):32000/inventory/systems/system-service
+```
+{: codeblock}
+endif::[]
 
 == Changing the ready state of the system microservice
 
