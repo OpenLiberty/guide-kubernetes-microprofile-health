@@ -100,9 +100,9 @@ check to the `/health/ready` endpoint, you will create a class that is annotated
 ---- 
 
 InventoryReadinessCheck.java
-[source, Java, linenums, role='code_column']
+[source, Java, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java[tags=**;!copyright;]
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java[]
 ----
 
 This health check verifies that the `system` microservice is available at 
@@ -118,9 +118,9 @@ status is `DOWN`, the microservice is considered to be unhealthy.
 ---- 
 
 InventoryLivenessCheck.java
-[source, Java, linenums, role='code_column']
+[source, Java, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[tags=**;!copyright;]
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[]
 ----
 
 This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
