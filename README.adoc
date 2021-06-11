@@ -147,7 +147,7 @@ container needs to be restarted.
 kubernetes.yaml
 [source, yaml, linenums, role='code_column']
 ----
-include::finish/kubernetes.yaml[tags=**;]
+include::finish/kubernetes.yaml
 ----
 
 The readiness and liveness probes are configured for the containers running the `system` 

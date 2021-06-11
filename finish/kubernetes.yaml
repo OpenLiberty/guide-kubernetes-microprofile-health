@@ -113,7 +113,7 @@ spec:
           # end::period4[]
           # tag::timeout4[]
           timeoutSeconds: 3
-          # tag::timeout4[]
+          # end::timeout4[]
           # tag::threshold4[]
           failureThreshold: 1
           # end::threshold4[]
