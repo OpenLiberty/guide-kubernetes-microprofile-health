@@ -133,10 +133,10 @@ This endpoint has been provided for you to observe the results of an unhealthy p
 
 == Configuring readiness and liveness probes
 
-You will configure {kube} readiness and liveness probes. Readiness probes are responsible for 
-determining that your application is ready to accept requests. If it's not ready, traffic 
-won't be routed to the container. Liveness probes are responsible for determining when a 
-container needs to be restarted. 
+You will configure {kube} readiness and liveness probes.
+Readiness probes are responsible for determining that your application is ready to accept requests.
+If it's not ready, traffic won't be routed to the container.
+Liveness probes are responsible for determining when a container needs to be restarted. 
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
@@ -295,7 +295,7 @@ ifdef::cloud-hosted[]
 An endpoint has been provided under the `system` microservice to set it to an unhealthy 
 state in the health check. The unhealthy state will cause the readiness probe to fail.
 Use the `curl` command to invoke this endpoint by making a POST request to the
-`/system/properties/unhealthy` URL.
+`/system/properties/unhealthy` endpoint.
 
 ```
 curl -X POST http://$(minikube ip):31000/system/properties/unhealthy
@@ -328,7 +328,7 @@ endif::[]
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 You will notice that one of the two `system` pods is no longer in the ready state.
-Make a request to the `http://$(minikube ip):31000/system/properties` URL with the following command:
+Make a request to the `/system/properties` endpoint with the following command:
 
 ```
 curl http://$(minikube ip):31000/system/properties
@@ -357,7 +357,7 @@ endif::[]
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 Wait until the `system` pod is ready again.
-Make two POST requests to `system/properties/unhealthy` endpoint with the following command:
+Make two POST requests to `/system/properties/unhealthy` endpoint with the following command:
 
 ```
 curl -X POST http://$(minikube ip):31000/system/properties/unhealthy
