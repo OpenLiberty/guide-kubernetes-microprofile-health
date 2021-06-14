@@ -298,7 +298,7 @@ Use the `curl` command to invoke this endpoint by making a POST request to the
 `{system-api}/unhealthy` URL.
 
 ```
-curl -X POST {system-api}/unhealthy
+curl -X POST http://$(minikube ip):31000/system/properties/unhealthy
 ```
 {: codeblock}
 endif::[]
@@ -328,10 +328,10 @@ endif::[]
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 You will notice that one of the two `system` pods is no longer in the ready state.
-Make a request to the `{system-api}/properties` URL with the following command:
+Make a request to the `http://$(minikube ip):31000/system/properties` URL with the following command:
 
 ```
-curl {system-api}/properties
+curl http://$(minikube ip):31000/system/properties
 ```
 {: codeblock}
 
@@ -357,10 +357,10 @@ endif::[]
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 Wait until the `system` pod is ready again.
-Make two POST requests to `{system-api}/unhealthy` with the following command:
+Make two POST requests to `system/properties/unhealthy` endpoint with the following command:
 
 ```
-curl -X POST {system-api}/unhealthy
+curl -X POST http://$(minikube ip):31000/system/properties/unhealthy
 ```
 {: codeblock}
 
