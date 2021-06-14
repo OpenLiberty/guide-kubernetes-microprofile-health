@@ -276,6 +276,8 @@ endif::[]
 
 == Changing the ready state of the system microservice
 
+// Static guide instruction
+ifndef::cloud-hosted[]
 An endpoint has been provided under the `system` microservice to set it to an unhealthy 
 state in the health check. The unhealthy state will cause the readiness probe to fail. 
 Use the `curl` command to invoke this endpoint by making a POST request to 
@@ -286,6 +288,20 @@ https://www.getpostman.com/[Postman^].
 ```
 curl -X POST {system-api}/unhealthy
 ```
+endif::[]
+
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+An endpoint has been provided under the `system` microservice to set it to an unhealthy 
+state in the health check. The unhealthy state will cause the readiness probe to fail.
+Use the `curl` command to invoke this endpoint by making a POST request to the
+`{system-api}/unhealthy` URL.
+
+```
+curl -X POST {system-api}/unhealthy
+```
+{: codeblock}
+endif::[]
 
 Run the following command to view the state of the pods:
 
@@ -302,20 +318,67 @@ system-deployment-694c7b74f7-lrlf7     0/1       Running   0          1m
 inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          1m
 ----
 
+// Static guide instruction
+ifndef::cloud-hosted[]
 You will notice that one of the two `system` pods is no longer in the ready state. Navigate 
 to `{system-api}/properties`. Observe that your request will still be successful because you have two 
 replicas and one is still healthy.
+endif::[]
+
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+You will notice that one of the two `system` pods is no longer in the ready state.
+Make a request to the `{system-api}/properties` URL with the following command:
+
+```
+curl {system-api}/properties
+```
+{: codeblock}
+
+Observe that your request will still be successful because you have two replicas and one is still healthy.
+endif::[]
 
 === Observing the effects on the inventory microservice
 
-Wait until the `system` pod is ready again. Make two POST requests to `{system-api}/unhealthy`.
- If you see the same pod name twice, make the request again until you see that the second 
- pod has been made unhealthy. You may see the same pod twice because there's a delay 
- between a pod becoming unhealthy and the readiness probe noticing it. Therefore, traffic 
- may still be routed to the unhealthy service for approximately 5 seconds. Continue to 
- observe the output of `kubectl get pods`. You will see both pods are no longer ready. 
- During this process, the readiness probe for the `inventory` microservice will also fail. 
- Observe it's no longer in the ready state either.
+// Static guide instruction
+ifndef::cloud-hosted[]
+Wait until the `system` pod is ready again.
+Make two POST requests to `{system-api}/unhealthy`.
+If you see the same pod name twice, make the request again until you see that the second 
+pod has been made unhealthy. You may see the same pod twice because there's a delay 
+between a pod becoming unhealthy and the readiness probe noticing it.
+Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds.
+Continue to observe the output of `kubectl get pods`.
+You will see both pods are no longer ready. 
+During this process, the readiness probe for the `inventory` microservice will also fail. 
+Observe it's no longer in the ready state either.
+endif::[]
+
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+Wait until the `system` pod is ready again.
+Make two POST requests to `{system-api}/unhealthy` with the following command:
+
+```
+curl -X POST {system-api}/unhealthy
+```
+{: codeblock}
+
+If you see the same pod name twice, make the request again until you see that the second 
+pod has been made unhealthy. You may see the same pod twice because there's a delay 
+between a pod becoming unhealthy and the readiness probe noticing it.
+Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds.
+Continue to observe the output of `kubectl get pods`.
+
+```
+kubectl get pods
+```
+{: codeblock}
+
+You will see both pods are no longer ready. 
+During this process, the readiness probe for the `inventory` microservice will also fail. 
+Observe it's no longer in the ready state either.
+endif::[]
 
 First, both `system` pods will no longer be ready because the readiness probe failed.
 
