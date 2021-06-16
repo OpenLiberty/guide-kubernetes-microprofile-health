@@ -79,11 +79,19 @@ include::{common-includes}/kube-prereq.adoc[]
 include::{common-includes}/gitclone.adoc[]
 
 // =================================================================================================
-// Starting/Preparing Cluster
+// Staring and preparing your cluster for deployment
 // =================================================================================================
-
-[role=command]
+// Static guide instruction
+ifndef::cloud-hosted[]
+[role='command']
 include::{common-includes}/kube-start.adoc[]
+endif::[]
+
+// =================================================================================================
+// Logging into your cluster
+// =================================================================================================
+[role='command']
+include::{common-includes}/skills-network-kube-setup.adoc[]
 
 == Adding health checks to the inventory microservice
 
