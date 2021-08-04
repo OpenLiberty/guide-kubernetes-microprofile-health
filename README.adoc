@@ -215,11 +215,12 @@ docker push us.icr.io/$NAMESPACE_NAME/system:1.0-SNAPSHOT
 {: codeblock}
 
 Update the image names so that the images in your IBM Cloud container registry are used,
+the image pull policy is on `Always`,
 and remove the **nodePort** fields so that the ports can be automatically generated:
 
 ```
-sed -i 's=system:1.0-SNAPSHOT=us.icr.io/'"$NAMESPACE_NAME"'/system:1.0-SNAPSHOT=g' kubernetes.yaml
-sed -i 's=inventory:1.0-SNAPSHOT=us.icr.io/'"$NAMESPACE_NAME"'/inventory:1.0-SNAPSHOT=g' kubernetes.yaml
+sed -i 's=system:1.0-SNAPSHOT=us.icr.io/'"$NAMESPACE_NAME"'/system:1.0-SNAPSHOT=g\n        imagePullPolicy: Always=g' kubernetes.yaml
+sed -i 's=inventory:1.0-SNAPSHOT=us.icr.io/'"$NAMESPACE_NAME"'/inventory:1.0-SNAPSHOT=g\n        imagePullPolicy: Always=g' kubernetes.yaml
 sed -i 's=nodePort: 31000==g' kubernetes.yaml
 sed -i 's=nodePort: 32000==g' kubernetes.yaml
 ```
