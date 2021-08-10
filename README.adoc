@@ -284,42 +284,30 @@ endif::[]
 
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
-In this execise, you need to access the services by using Kubernetes API.
-Run the following command to start a proxy to the Kubernetes API server:
+To make requests to the services, you need to set up port forwarding.
+Run the following commands to set up port forwarding to access the **system** service.
 
 ```
-kubectl proxy
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+kubectl port-forward svc/system-service $SYSTEM_NODEPORT:9080
 ```
 {: codeblock}
 
 Open another command-line session by selecting **Terminal** > **New Terminal** from the menu of the IDE.
-Run the following commands to store the proxy path of the **system** and **inventory** services.
+Run the following commands to set up port forwarding to access the **inventory** service.
 
 ```
-NAMESPACE_NAME=`bx cr namespace-list | grep sn-labs- | sed 's/ //g'`
-SYSTEM_PROXY=localhost:8001/api/v1/namespaces/$NAMESPACE_NAME/services/system-service/proxy
-INVENTORY_PROXY=localhost:8001/api/v1/namespaces/$NAMESPACE_NAME/services/inventory-service/proxy
-```
-{: codeblock}
-
-Run the following echo commands to verify the variables:
-
-```
-echo $SYSTEM_PROXY && echo $INVENTORY_PROXY
+INVENTORY_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services inventory-service`
+kubectl port-forward svc/inventory-service $INVENTORY_NODEPORT:9080
 ```
 {: codeblock}
 
-The output appears similar to the following:
-
-```
-localhost:8001/api/v1/namespaces/sn-labs-yourname/services/system-service/proxy
-localhost:8001/api/v1/namespaces/sn-labs-yourname/services/inventory-service/proxy
-```
-
+Open another command-line session by selecting **Terminal** > **New Terminal** from the menu of the IDE.
 Make a request to the system service to see the JVM system properties with the following command:
 
 ```
-curl http://$SYSTEM_PROXY/system/properties | jq
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+curl -s http://localhost:$SYSTEM_NODEPORT/system/properties | jq
 ```
 {: codeblock}
 
@@ -334,7 +322,8 @@ when the microservice has fully started.
 Similarly, access the inventory service and observe the successful request with the following command:
 
 ```
-curl http://$INVENTORY_PROXY/inventory/systems/system-service | jq
+INVENTORY_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services inventory-service`
+curl -s http://localhost:$INVENTORY_NODEPORT/inventory/systems/system-service | jq
 ```
 {: codeblock}
 endif::[]
@@ -360,10 +349,11 @@ ifdef::cloud-hosted[]
 An endpoint has been provided under the `system` microservice to set it to an unhealthy 
 state in the health check. The unhealthy state will cause the readiness probe to fail.
 Use the `curl` command to invoke this endpoint by making a POST request to the
-`/system/properties/unhealthy` endpoint.
+`/system/unhealthy` endpoint.
 
 ```
-curl -X POST http://$SYSTEM_PROXY/system/properties/unhealthy
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+curl -X POST http://localhost:$SYSTEM_NODEPORT/system/unhealthy
 ```
 {: codeblock}
 endif::[]
@@ -396,7 +386,8 @@ You will notice that one of the two `system` pods is no longer in the ready stat
 Make a request to the `/system/properties` endpoint with the following command:
 
 ```
-curl http://$SYSTEM_PROXY/system/properties | jqproperties
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+curl -s http://localhost:$SYSTEM_NODEPORT/system/properties | jq
 ```
 {: codeblock}
 
@@ -422,19 +413,42 @@ endif::[]
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 Wait until the `system` pod is ready again.
-Make two POST requests to `/system/properties/unhealthy` endpoint with the following command:
+Make two POST requests to `/system/unhealthy` endpoint of the two **system-service** pods.
 
+Go to the terminal where you started the port forwarding of the **system-service** service.
+Press **CTRL+C** to stop the port forwarding. Run following commands to start the first pod.
 ```
-curl -X POST http://$SYSTEM_PROXY/system/properties/unhealthy
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+SYSTEM_POD=`kubectl get pods -o=name | grep system | head -1`
+kubectl port-forward $SYSTEM_POD $SYSTEM_NODEPORT:9080
 ```
 {: codeblock}
 
-If you see the same pod name twice, make the request again until you see that the second 
-pod has been made unhealthy. You may see the same pod twice because there's a delay 
-between a pod becoming unhealthy and the readiness probe noticing it.
-Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds.
-Continue to observe the output of `kubectl get pods`.
+On a terminal, run the following POST requests to make the first pod to not ready. 
+```
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+curl -X POST http://localhost:$SYSTEM_NODEPORT/system/unhealthy
+```
+{: codeblock}
 
+
+Go back to the terminal where you started the port forwarding the first pod of the **system-service** service.
+Press **CTRL+C** to stop the port forwarding. Run following commands to start the second pod.
+```
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+SYSTEM_POD=`kubectl get pods -o=name | grep system | tail -1`
+kubectl port-forward $SYSTEM_POD $SYSTEM_NODEPORT:9080
+```
+{: codeblock}
+
+On a terminal, run the following POST requests to make the second pod to not ready. 
+```
+SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
+curl -X POST http://localhost:$SYSTEM_NODEPORT/system/unhealthy
+```
+{: codeblock}
+
+Observe the output of `kubectl get pods`.
 ```
 kubectl get pods
 ```
