@@ -536,7 +536,6 @@ Run the integration tests by using the following command:
 ```
 mvn failsafe:integration-test \
     -Dsystem.service.root=localhost:$SYSTEM_NODEPORT \
-    -Dsystem.context.root=/dev \
     -Dinventory.service.root=localhost:$INVENTORY_NODEPORT
 ```
 {: codeblock}
