@@ -41,6 +41,7 @@ public class InventoryEndpointIT {
 
     @BeforeAll
     public static void oneTimeSetup() {
+
         String systemRootPath = System.getProperty("system.service.root");
         String inventoryRootPath = System.getProperty("inventory.service.root");
 
