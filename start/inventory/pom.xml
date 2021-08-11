@@ -15,6 +15,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <!-- Default test properties -->
+        <system.kube.service>system-service</system.kube.service>
         <system.service.root>localhost:31000</system.service.root>
         <inventory.service.root>localhost:32000</inventory.service.root>
         <!-- Liberty configuration -->
