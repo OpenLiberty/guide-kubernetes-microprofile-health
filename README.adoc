@@ -582,7 +582,7 @@ Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 // Cloud-hosted guide instruction
 ifdef::cloud-hosted[]
 Go back to the terminals where you started the port forwarding the **system** service and 
-the **inventory** service. Press **CTRL+C** to stop the port forwarding.
+the **inventory** service. Press **CTRL+C** to stop the port forwardings.
 endif::[]
 
 To remove all of the resources created during this guide, run the following command to 
