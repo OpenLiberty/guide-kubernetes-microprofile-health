@@ -42,13 +42,12 @@ public class InventoryEndpointIT {
     @BeforeAll
     public static void oneTimeSetup() {
         
-        String contextRoot = System.getProperty("system.context.root");
         String systemRootPath = System.getProperty("system.service.root");
         String inventoryRootPath = System.getProperty("inventory.service.root");
         
         sysKubeService = System.getProperty("system.kube.service");
         invUrl = "http://" + inventoryRootPath + "/inventory/systems/";
-        sysUrl = "http://" + systemRootPath + contextRoot + "/system/properties/";
+        sysUrl = "http://" + systemRootPath + "/system/properties/";
         
         client = ClientBuilder.newBuilder()
                     .hostnameVerifier(new HostnameVerifier() {
