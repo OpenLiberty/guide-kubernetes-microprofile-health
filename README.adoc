@@ -408,7 +408,7 @@ endif::[]
 // Static guide instruction
 ifndef::cloud-hosted[]
 Wait until the `system` pod is ready again.
-Make two POST requests to `{system-api}/unhealthy`.
+Make two requests to `{system-api}/unhealthy`.
 If you see the same pod name twice, make the request again until you see that the second 
 pod has been made unhealthy. You may see the same pod twice because there's a delay 
 between a pod becoming unhealthy and the readiness probe noticing it.
