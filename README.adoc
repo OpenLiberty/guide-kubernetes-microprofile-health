@@ -328,7 +328,7 @@ endif::[]
 
 // Static guide instruction
 ifndef::cloud-hosted[]
-An endpoint has been provided under the `system` microservice to set it to an unhealthy 
+An `unhealthy` endpoint has been provided under the `system` microservice to set it to an unhealthy 
 state in the health check. The unhealthy state will cause the readiness probe to fail.
 
 //[.tab_link.windows_link]
