@@ -329,15 +329,10 @@ endif::[]
 // Static guide instruction
 ifndef::cloud-hosted[]
 An endpoint has been provided under the `system` microservice to set it to an unhealthy 
-state in the health check. The unhealthy state will cause the readiness probe to fail. 
-Use the `curl` command to invoke this endpoint by making a POST request to 
-`{system-api}/unhealthy` -- if `curl` is unavailable then use a tool such as 
-https://www.getpostman.com/[Postman^].
-
-[subs="attributes", role=command]
-```
-curl -X POST {system-api}/unhealthy
-```
+state in the health check. The unhealthy state will cause the readiness probe to fail.
+The endpoint should be implemented by a POST request.
+For the reason of simplicity, the endpoint is implemented by a GET request. 
+Navigate to `{system-api}/unhealthy` to invoke this endpoint.
 endif::[]
 
 // Cloud hosted guide instruction
