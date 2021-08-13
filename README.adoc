@@ -332,7 +332,28 @@ An endpoint has been provided under the `system` microservice to set it to an un
 state in the health check. The unhealthy state will cause the readiness probe to fail.
 The endpoint should be implemented by a POST request.
 For the reason of simplicity, the endpoint is implemented by a GET request. 
-Navigate to `{system-api}/unhealthy` to invoke this endpoint.
+
+[.tab_link.windows_link]
+`*WINDOWS*`
+[.tab_link.mac_link]
+`*MAC*`
+[.tab_link.linux_link]
+`*LINUX*`
+
+[.tab_content.windows_section]
+--
+Navigate to `{system-api}/unhealthy` to invoke the unhealthy endpoint.
+--
+
+[.tab_content.mac_section.linux_section]
+--
+Run the following **curl** command to invoke the unhealthy endpoint:
+
+[subs="attributes", role=command]
+```
+curl http://[hostname]:31000/system/unhealthy
+```
+--
 endif::[]
 
 // Cloud hosted guide instruction
