@@ -414,9 +414,9 @@ endif::[]
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 Wait until the **system-service** pod is ready again.
-Make two requests to the **/system/unhealthy** endpoint of the **system** service.
+Make several requests to the **/system/unhealthy** endpoint of the **system** service
+until you see two pods are unhealthy.
 ```
-curl http://$SYSTEM_PROXY/system/unhealthy
 curl http://$SYSTEM_PROXY/system/unhealthy
 ```
 {: codeblock}
