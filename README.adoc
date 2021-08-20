@@ -489,7 +489,7 @@ for the correct value.
 
 [role=command]
 ```
-mvn failsafe:integration-test -Dcluster.ip=[hostname]
+mvn failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
 ```
 endif::[]
 
