@@ -79,7 +79,7 @@ include::{common-includes}/kube-prereq.adoc[]
 include::{common-includes}/gitclone.adoc[]
 
 // =================================================================================================
-// Staring and preparing your cluster for deployment
+// Starting and preparing your cluster for deployment
 // =================================================================================================
 // Static guide instruction
 ifndef::cloud-hosted[]
@@ -171,7 +171,7 @@ option defines how many seconds before the probe times out. The [hotspot=period1
 option defines how often the probe should poll the given endpoint.
 
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
-The liveness probes determine when a container needs to be restarted.
+The liveness probes determine whether a container needs to be restarted.
 Similar to the readiness probes, the liveness probes also define
 [hotspot=delay2 hotspot=delay4]`initialDelaySeconds`,
 [hotspot=threshold2 hotspot=threshold4]`failureThreshold`,
@@ -214,9 +214,8 @@ docker push us.icr.io/$NAMESPACE_NAME/system:1.0-SNAPSHOT
 ```
 {: codeblock}
 
-Update the image names so that the images in your IBM Cloud container registry are used,
-the image pull policy is on **Always**,
-and remove the **nodePort** fields so that the ports can be automatically generated:
+Update the image names so that the images in your IBM Cloud container registry are used.
+Set the image pull policy to **Always** and remove the **nodePort** fields so that the ports are automatically generated:
 
 ```
 sed -i 's=system:1.0-SNAPSHOT=us.icr.io/'"$NAMESPACE_NAME"'/system:1.0-SNAPSHOT\n        imagePullPolicy: Always=g' kubernetes.yaml
@@ -311,10 +310,10 @@ curl -s http://localhost:$SYSTEM_NODEPORT/system/properties | jq
 The readiness probe ensures the READY state won't be `1/1`
 until the container is available to accept requests.
 Without a readiness probe, you may notice an unsuccessful response from the server.
-This scenario can occur when the container has started,
-but the application server hasn't fully initialized.
-With the readiness probe, you can be certain the pod will only accept traffic
-when the microservice has fully started.
+This scenario can occur when the container is started,
+but the application server isn't fully initialized.
+With the readiness probe, you can be certain the pod accepts traffic
+only when the microservice is fully started.
 
 Similarly, access the inventory service and observe the successful request with the following command:
 ```
@@ -342,8 +341,8 @@ endif::[]
 
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
-An endpoint has been provided under the **system** microservice to set it to an unhealthy 
-state in the health check. The unhealthy state will cause the readiness probe to fail.
+An endpoint is provided under the **system** microservice that sets it to an unhealthy
+state in the health check. The unhealthy state causes the readiness probe to fail.
 Use the following **curl** command to make a POST request to the **/system/unhealthy** endpoint.
 ```
 SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
@@ -371,7 +370,7 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          1m
 ifndef::cloud-hosted[]
 You will notice that one of the two `system` pods is no longer in the ready state.
 Navigate to `{system-api}/properties`.
-Observe that your request will still be successful because you have two replicas and one is still healthy.
+Your request is successful because you have two replicas and one is still healthy.
 endif::[]
 
 // Cloud hosted guide instruction
@@ -384,7 +383,7 @@ curl -s http://localhost:$SYSTEM_NODEPORT/system/properties | jq
 ```
 {: codeblock}
 
-Observe that your request will still be successful because you have two replicas and one is still healthy.
+Your request is successful because you have two replicas and one is still healthy.
 endif::[]
 
 === Observing the effects on the inventory microservice
@@ -394,13 +393,13 @@ ifndef::cloud-hosted[]
 Wait until the `system` pod is ready again.
 Make two POST requests to `{system-api}/unhealthy`.
 If you see the same pod name twice, make the request again until you see that the second 
-pod has been made unhealthy. You may see the same pod twice because there's a delay 
+pod becomes unhealthy. You may see the same pod twice because there's a delay 
 between a pod becoming unhealthy and the readiness probe noticing it.
-Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds.
+Therefore, traffic might still be routed to the unhealthy service for approximately 5 seconds.
 Continue to observe the output of `kubectl get pods`.
 You will see both pods are no longer ready. 
 During this process, the readiness probe for the `inventory` microservice will also fail. 
-Observe it's no longer in the ready state either.
+Observe that it's no longer in the ready state either.
 endif::[]
 
 // Cloud hosted guide instruction
@@ -418,7 +417,7 @@ kubectl port-forward $SYSTEM_POD $SYSTEM_NODEPORT:9080
 ```
 {: codeblock}
 
-On a terminal, run the following POST request to make the first pod to not ready state. 
+From a terminal, run the following POST request to change the first pod to a not-ready state.
 ```
 SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
 curl -X POST http://localhost:$SYSTEM_NODEPORT/system/unhealthy
@@ -435,7 +434,7 @@ kubectl port-forward $SYSTEM_POD $SYSTEM_NODEPORT:9080
 ```
 {: codeblock}
 
-On a terminal, run the following POST requests to make the second pod to not ready state. 
+From a terminal, run the following POST request to change the first pod to a not-ready state.
 ```
 SYSTEM_NODEPORT=`kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services system-service`
 curl -X POST http://localhost:$SYSTEM_NODEPORT/system/unhealthy
@@ -450,7 +449,7 @@ kubectl get pods
 
 You will see both pods are no longer ready. 
 During this process, the readiness probe for the **inventory** microservice will also fail. 
-Observe it's no longer in the ready state either.
+Observe that it's no longer in the ready state either.
 endif::[]
 
 First, both `system` pods will no longer be ready because the readiness probe failed.
@@ -549,7 +548,7 @@ mvn failsafe:integration-test \
 endif::[]
 
 A few tests are included for you to test the basic functions of the microservices.
-If a test failure occurs, then you might have introduced a bug into the code.
+If a test fails, then you might have introduced a bug into the code.
 To run the tests, wait for all pods to be in the ready state before proceeding further.
 
 When the tests succeed, you should see output similar to the following in your console.
@@ -584,8 +583,9 @@ Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 
 // Cloud-hosted guide instruction
 ifdef::cloud-hosted[]
-Go back to the terminals where you started the port forwarding the **system** service and 
-the **inventory** service. Press **CTRL+C** to stop the port forwardings.
+Go back to the terminals where you started the port forwarding for the
+**system** service and the **inventory** service.
+Press **CTRL+C** to stop the port forwardings.
 endif::[]
 
 To remove all of the resources created during this guide, run the following command to 
