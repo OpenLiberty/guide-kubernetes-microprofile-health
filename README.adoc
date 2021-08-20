@@ -142,9 +142,9 @@ This endpoint has been provided for you to observe the results of an unhealthy p
 == Configuring readiness and liveness probes
 
 You will configure {kube} readiness and liveness probes.
-Readiness probes are responsible for determining that your application is ready to accept requests.
+Readiness probes determine whether your application is ready to accept requests.
 If it's not ready, traffic won't be routed to the container.
-Liveness probes are responsible for determining when a container needs to be restarted. 
+Liveness probes determine whether a container needs to be restarted.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
@@ -162,11 +162,11 @@ The readiness and liveness probes are configured for the containers running the 
 and `inventory` microservices.
 
 The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`/health/ready` endpoint.
-The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output.
-The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines how long the probe should wait before it 
+The readiness probe determines the READY status of the container, as seen in the `kubectl get pods` output.
+The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines how long the probe waits before it 
 starts to poll so the probe does not start making requests before the server has started. 
-The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option defines how many times the probe should fail 
-before the state should be changed from ready to not ready. The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` 
+The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option defines how many times the probe fails 
+before the state changes from ready to not ready. The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` 
 option defines how many seconds before the probe times out. The [hotspot=period1 hotspot=period3]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
 
@@ -273,7 +273,7 @@ Navigate to `{system-api}/properties` and observe a response
 containing JVM system properties. Replace `[hostname]` with the 
 IP address or host name of your {kube} cluster. The readiness probe ensures the READY 
 state won't be `1/1` until the container is available to accept requests. Without a 
-readiness probe, you may notice an unsuccessful response from the server. This scenario 
+readiness probe, you might notice an unsuccessful response from the server. This scenario 
 can occur when the container has started, but the application server hasn't fully 
 initialized. With the readiness probe, you can be certain the pod will only accept 
 traffic when the microservice has fully started.
@@ -323,7 +323,7 @@ curl -s http://$SYSTEM_PROXY/system/properties | jq
 
 The readiness probe ensures the READY state won't be `1/1`
 until the container is available to accept requests.
-Without a readiness probe, you may notice an unsuccessful response from the server.
+Without a readiness probe, you might notice an unsuccessful response from the server.
 This scenario can occur when the container is started,
 but the application server isn't fully initialized.
 With the readiness probe, you can be certain the pod accepts traffic only
@@ -339,12 +339,12 @@ endif::[]
 == Changing the ready state of the system microservice
 
 An `unhealthy` endpoint has been provided under the `system` microservice to set it to an unhealthy 
-state. The unhealthy state will cause the readiness probe to fail.
-A request to the `unhealthy` endpoint will put the service in an unhealthy state as a simulation.
+state. The unhealthy state causes the readiness probe to fail.
+A request to the `unhealthy` endpoint puts the service in an unhealthy state as a simulation.
 
 // Static guide instruction
 ifndef::cloud-hosted[]
-Navigate to `{system-api}/unhealthy` to invoke the unhealthy endpoint.
+Navigate to `{system-api}/unhealthy` to invoke the unhealthy endpoint by running the following curl command:
 [subs="attributes", role=command]
 ```
 curl http://[hostname]:31000/system/unhealthy
@@ -401,8 +401,8 @@ ifndef::cloud-hosted[]
 Wait until the `system` pod is ready again.
 Make two requests to `{system-api}/unhealthy`.
 If you see the same pod name twice, make the request again until you see that the second 
-pod has been made unhealthy. You may see the same pod twice because there's a delay 
-between a pod becoming unhealthy and the readiness probe noticing it.
+pod has been made unhealthy. You might see the same pod twice due to a delay between 
+when a pod becomes unhealthy and when the readiness probe notices it.
 Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds.
 Continue to observe the output of `kubectl get pods`.
 You will see both pods are no longer ready. 
@@ -515,7 +515,7 @@ endif::[]
 
 A few tests are included for you to test the basic functions of the microservices.
 If a test fails, then you might have introduced a bug into the code.
-To run the tests, wait for all pods to be in the ready state before proceeding further.
+Wait for all pods to be in the ready state before you run the tests.
 
 When the tests succeed, you should see output similar to the following in your console.
 
