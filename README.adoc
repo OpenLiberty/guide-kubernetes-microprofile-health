@@ -403,7 +403,7 @@ Make two requests to `{system-api}/unhealthy`.
 If you see the same pod name twice, make the request again until you see that the second 
 pod has been made unhealthy. You might see the same pod twice due to a delay between 
 when a pod becomes unhealthy and when the readiness probe notices it.
-Therefore, traffic may still be routed to the unhealthy service for approximately 5 seconds.
+Therefore, traffic might still be routed to the unhealthy service for approximately 5 seconds.
 Continue to observe the output of `kubectl get pods`.
 You will see both pods are no longer ready. 
 During this process, the readiness probe for the `inventory` microservice will also fail. 
