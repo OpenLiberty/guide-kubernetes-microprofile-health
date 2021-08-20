@@ -142,9 +142,9 @@ This endpoint has been provided for you to observe the results of an unhealthy p
 == Configuring readiness and liveness probes
 
 You will configure {kube} readiness and liveness probes.
-Readiness probes are responsible for determining that your application is ready to accept requests.
+Readiness probes determine whether your application is ready to accept requests.
 If it's not ready, traffic won't be routed to the container.
-Liveness probes are responsible for determining when a container needs to be restarted. 
+Liveness probes determine whether a container needs to be restarted.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
@@ -162,13 +162,15 @@ The readiness and liveness probes are configured for the containers running the 
 and `inventory` microservices.
 
 The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`/health/ready` endpoint.
-The readiness probe determines the READY status of the container as seen in the `kubectl get pods` output.
-The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines how long the probe should wait before it 
-starts to poll so the probe does not start making requests before the server has started. 
-The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option defines how many times the probe should fail 
-before the state should be changed from ready to not ready. The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` 
-option defines how many seconds before the probe times out. The [hotspot=period1 hotspot=period3]`periodSeconds` 
-option defines how often the probe should poll the given endpoint.
+The readiness probe determines the READY status of the container, as seen in the `kubectl get pods` output.
+The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines how long the probe waits before it 
+starts to poll so the probe does not start making requests before the server has started.
+The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option option defines
+how many times the probe fails before the state changes from ready to not ready.
+The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` option defines
+how many seconds before the probe times out.
+The [hotspot=period1 hotspot=period3]`periodSeconds` option defines
+how often the probe should poll the given endpoint.
 
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
 The liveness probes determine whether a container needs to be restarted.
@@ -309,7 +311,7 @@ curl -s http://localhost:$SYSTEM_NODEPORT/system/properties | jq
 
 The readiness probe ensures the READY state won't be `1/1`
 until the container is available to accept requests.
-Without a readiness probe, you may notice an unsuccessful response from the server.
+Without a readiness probe, you might notice an unsuccessful response from the server.
 This scenario can occur when the container is started,
 but the application server isn't fully initialized.
 With the readiness probe, you can be certain the pod accepts traffic
@@ -549,7 +551,7 @@ endif::[]
 
 A few tests are included for you to test the basic functions of the microservices.
 If a test fails, then you might have introduced a bug into the code.
-To run the tests, wait for all pods to be in the ready state before proceeding further.
+Wait for all pods to be in the ready state before you run the tests.
 
 When the tests succeed, you should see output similar to the following in your console.
 
