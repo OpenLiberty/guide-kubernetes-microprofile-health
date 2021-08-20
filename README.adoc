@@ -379,7 +379,7 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          1m
 ifndef::cloud-hosted[]
 You will notice that one of the two `system` pods is no longer in the ready state.
 Navigate to `{system-api}/properties`.
-Observe that your request will still be successful because you have two replicas and one is still healthy.
+Your request is successful because you have two replicas and one is still healthy.
 endif::[]
 
 // Cloud hosted guide instruction
@@ -391,7 +391,7 @@ curl -s http://$SYSTEM_PROXY/system/properties | jq
 ```
 {: codeblock}
 
-Observe that your request will still be successful because you have two replicas and one is still healthy.
+Your request is successful because you have two replicas and one is still healthy.
 endif::[]
 
 === Observing the effects on the inventory microservice
@@ -400,8 +400,8 @@ endif::[]
 ifndef::cloud-hosted[]
 Wait until the `system` pod is ready again.
 Make two requests to `{system-api}/unhealthy`.
-If you see the same pod name twice, make the request again until you see that the second 
-pod has been made unhealthy. You might see the same pod twice due to a delay between 
+If you see the same pod name twice, repeat the request until you see that the second pod is unhealthy. 
+You might see the same pod twice due to a delay between 
 when a pod becomes unhealthy and when the readiness probe notices it.
 Therefore, traffic might still be routed to the unhealthy service for approximately 5 seconds.
 Continue to observe the output of `kubectl get pods`.
