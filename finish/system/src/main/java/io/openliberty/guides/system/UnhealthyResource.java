@@ -9,7 +9,7 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
- // end::copyright[]
+// end::copyright[]
 package io.openliberty.guides.system;
 
 import javax.ws.rs.GET;
@@ -17,7 +17,6 @@ import javax.ws.rs.Path;
 
 @Path("unhealthy")
 public class UnhealthyResource {
-    
     @GET
     public String unhealthy() {
         SystemReadinessCheck.setUnhealthy();
