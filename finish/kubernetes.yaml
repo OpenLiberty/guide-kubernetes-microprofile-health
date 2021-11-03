@@ -65,12 +65,12 @@ spec:
             # tag::delay5[]
             initialDelaySeconds: 60
             # end::delay5[]
-            # tag::timeout3[]
+            # tag::timeout6[]
             timeoutSeconds: 3
-            # end::timeout3[]
-            # tag::threshold3[]
+            # end::timeout6[]
+            # tag::threshold5[]
             failureThreshold: 1
-            # end::threshold3[]
+            # end::threshold5[]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -147,9 +147,9 @@ spec:
           # tag::timeout5[]
           timeoutSeconds: 3
           # end::timeout5[]
-          # tag::threshold5[]
+          # tag::threshold6[]
           failureThreshold: 1
-          # end::threshold5[]
+          # end::threshold6[]
 ---
 apiVersion: v1
 kind: Service

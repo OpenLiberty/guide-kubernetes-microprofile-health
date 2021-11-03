@@ -173,8 +173,8 @@ option defines how often the probe should poll the given endpoint.
 The startup probes are configured to poll the [hotspot=start1 hotspot=start2]`/health/started` endpoint.
 The startup probe determines whether or not a container has started. Similar to the readiness probes, the startup
 probes also define [hotspot=delay5 hotspot=delay6]`initialDelaySeconds`, 
-[hotspot=threshold3 hotspot=threshold5]`failureThreshold`,
-[hotspot=timeout3 hotspot=timeout5]`timeoutSeconds`,
+[hotspot=threshold5 hotspot=threshold6]`failureThreshold`,
+[hotspot=timeout5 hotspot=timeout6]`timeoutSeconds`,
 and [hotspot=period3 hotspot=period5]`periodSeconds`.
 
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
