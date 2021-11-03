@@ -49,9 +49,9 @@ the service reports `DOWN`, then it's unavailable. MicroProfile Health reports a
 service status at the endpoint and indicates the overall status as `UP` if all the services 
 are `UP`. A service orchestrator can then use the health statuses to make decisions.
 
-{kube} provides liveness and readiness probes that are used to check the health of your 
+{kube} provides liveness, startup and readiness probes that are used to check the health of your 
 containers. These probes can check certain files in your containers, check a TCP socket, 
-or make HTTP requests. MicroProfile Health exposes readiness and liveness endpoints on 
+or make HTTP requests. MicroProfile Health exposes readiness, startup and liveness endpoints on 
 your microservices. {kube} polls these endpoints as specified by the probes to react 
 appropriately to any change in the microservice's status. Read the 
 https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
@@ -141,10 +141,10 @@ This endpoint has been provided for you to observe the results of an unhealthy p
 
 == Configuring readiness and liveness probes
 
-You will configure {kube} readiness and liveness probes.
+You will configure {kube} readiness, startup and liveness probes.
 Readiness probes determine whether your application is ready to accept requests.
-If it's not ready, traffic won't be routed to the container.
-Liveness probes determine whether a container needs to be restarted.
+If it's not ready, traffic won't be routed to the container. Startup probes determines
+whether your application has started or not. Liveness probes determine whether a container needs to be restarted.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
@@ -158,7 +158,7 @@ kubernetes.yaml
 include::finish/kubernetes.yaml[]
 ----
 
-The readiness and liveness probes are configured for the containers running the `system` 
+The readiness, startup and liveness probes are configured for the containers running the `system` 
 and `inventory` microservices.
 
 The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`/health/ready` endpoint.
@@ -170,9 +170,16 @@ before the state changes from ready to not ready. The [hotspot=timeout1 hotspot=
 option defines how many seconds before the probe times out. The [hotspot=period1 hotspot=period3]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
 
+The startup probes are configured to poll the [hotspot=start1 hotspot=start2]`/health/started` endpoint.
+The startup probe determines whether or not a container has started. Similar to the readiness probes, the startup
+probes also define [hotspot=delay3 hotspot=delay5]`initialDelaySeconds`, 
+[hotspot=threshold3 hotspot=threshold5]`failureThreshold`,
+[hotspot=timeout3 hotspot=timeout5]`timeoutSeconds`,
+and [hotspot=period3 hotspot=period5]`periodSeconds`.
+
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
 The liveness probes determine whether a container needs to be restarted.
-Similar to the readiness probes, the liveness probes also define
+Similar to the other probes, the liveness probes also define
 [hotspot=delay2 hotspot=delay4]`initialDelaySeconds`,
 [hotspot=threshold2 hotspot=threshold4]`failureThreshold`,
 [hotspot=timeout2 hotspot=timeout4]`timeoutSeconds`,
@@ -574,7 +581,7 @@ endif::[]
 == Great work! You're done!
 
 You have used MicroProfile Health and Open Liberty to create endpoints that report on 
-your microservice's status. Then, you observed how {kube} uses the `/health/ready` and
+your microservice's status. Then, you observed how {kube} uses the `/health/ready`, `/health/started` and
 `/health/live` endpoints to keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
