@@ -11,7 +11,7 @@
  *******************************************************************************/
 // end::copyright[]
 // tag::InventoryStartupCheck[]
-package io.openliberty.guides.system;
+package io.openliberty.guides.inventory;
 
 import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
@@ -26,14 +26,17 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 @ApplicationScoped
 public class InventoryStartupCheck implements HealthCheck {
 
+    private static final String STARTUP_CHECK = InventoryResource.class.getSimpleName()
+                                               + " Startup Check";
+
     @Override
     public HealthCheckResponse call() {
         OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean)
         ManagementFactory.getOperatingSystemMXBean();
         if (bean.getSystemCpuLoad() < 0.90) {
-           return HealthCheckResponse.up("startupCpuUsage");
+           return HealthCheckResponse.up(STARTUP_CHECK);
         } else {
-           return HealthCheckResponse.down("startupCpuUsage");
+           return HealthCheckResponse.down(STARTUP_CHECK);
         }
     }
 }

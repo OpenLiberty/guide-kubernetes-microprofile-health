@@ -131,6 +131,9 @@ InventoryStartupCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java[]
 ----
 
+This startup check verifies that the cpu memory usage is below 90% of the maximum memory.
+If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
+
 [role="code_command hotspot file=2", subs="quotes"] 
 ---- 
 #Create the `InventoryLivenessCheck` class.#
