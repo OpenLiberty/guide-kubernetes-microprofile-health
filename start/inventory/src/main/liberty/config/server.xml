@@ -5,7 +5,7 @@
     <feature>cdi-2.0</feature>
     <feature>mpConfig-2.0</feature>
     <feature>jsonp-1.1</feature>
-    <feature>mpHealth-3.0</feature>
+    <feature>mpHealth-3.1</feature>
   </featureManager>
 
   <variable name="default.http.port" defaultValue="9080"/>

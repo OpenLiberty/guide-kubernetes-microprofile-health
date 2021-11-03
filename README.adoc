@@ -121,6 +121,18 @@ status is `DOWN`, the microservice is considered to be unhealthy.
 
 [role="code_command hotspot file=1", subs="quotes"] 
 ---- 
+#Create the `InventoryStartupCheck` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java`
+---- 
+
+InventoryStartupCheck.java
+[source, Java, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java[]
+----
+
+[role="code_command hotspot file=2", subs="quotes"] 
+---- 
 #Create the `InventoryLivenessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
 ---- 
