@@ -28,7 +28,7 @@ public class SystemStartupCheck implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {
-        OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) 
+        OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean)
         ManagementFactory.getOperatingSystemMXBean();
         if (bean.getSystemCpuLoad() < 0.90) {
            return HealthCheckResponse.up("startupCpuUsage");
