@@ -62,9 +62,7 @@ spec:
             path: /health/started
             # end::start1[]
             port: 9080
-            # tag::delay5[]
-            initialDelaySeconds: 60
-            # end::delay5[]
+            
             
 ---
 apiVersion: apps/v1
