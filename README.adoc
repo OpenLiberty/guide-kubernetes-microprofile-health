@@ -154,7 +154,7 @@ microservice was set up to become unhealthy for 60 seconds when a specific endpo
 This endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
 
-== Configuring readiness and liveness probes
+== Configuring readiness, startup and liveness probes
 
 You will configure {kube} readiness, startup and liveness probes.
 Readiness probes determine whether your application is ready to accept requests.
@@ -186,11 +186,7 @@ option defines how many seconds before the probe times out. The [hotspot=period1
 option defines how often the probe should poll the given endpoint.
 
 The startup probes are configured to poll the [hotspot=start1 hotspot=start2]`/health/started` endpoint.
-The startup probe determines whether or not a container has started. Similar to the readiness probes, the startup
-probes also define [hotspot=delay5 hotspot=delay6]`initialDelaySeconds`, 
-[hotspot=threshold5 hotspot=threshold6]`failureThreshold`,
-[hotspot=timeout5 hotspot=timeout6]`timeoutSeconds`,
-and [hotspot=period3 hotspot=period5]`periodSeconds`.
+The startup probe determines whether or not a container has started.
 
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
 The liveness probes determine whether a container needs to be restarted.
