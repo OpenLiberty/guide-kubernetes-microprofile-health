@@ -44,10 +44,6 @@ spec:
             path: /health/started
             # end::start1[]
             port: 9080
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 1
         livenessProbe:
           httpGet:
             # tag::live1[]
@@ -116,12 +112,6 @@ spec:
             path: /health/started
             # tag::start2[]
             port: 9080
-          # tag::delay6[]
-          initialDelaySeconds: 60
-          # end::delay6[]
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 1
         livenessProbe:
           httpGet:
             # tag::live2[]
