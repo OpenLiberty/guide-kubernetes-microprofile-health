@@ -38,6 +38,16 @@ spec:
           # tag::threshold1[]
           failureThreshold: 1
           # end::threshold1[]
+        startupProbe:
+          httpGet:
+            # tag::start1[]
+            path: /health/started
+            # end::start1[]
+            port: 9080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 1
         livenessProbe:
           httpGet:
             # tag::live1[]
@@ -56,16 +66,7 @@ spec:
           # tag::threshold2[]
           failureThreshold: 1
           # end::threshold2[]
-        startupProbe:
-          httpGet:
-            # tag::start1[]
-            path: /health/started
-            # end::start1[]
-            port: 9080
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 1
+        
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -109,6 +110,18 @@ spec:
           # tag::threshold3[]
           failureThreshold: 1
           # end::threshold3[]
+        startupProbe:
+          httpGet:
+            # tag::start2[]
+            path: /health/started
+            # tag::start2[]
+            port: 9080
+          # tag::delay6[]
+          initialDelaySeconds: 60
+          # end::delay6[]
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 1
         livenessProbe:
           httpGet:
             # tag::live2[]
@@ -127,18 +140,7 @@ spec:
           # tag::threshold4[]
           failureThreshold: 1
           # end::threshold4[]
-        startupProbe:
-          httpGet:
-            # tag::start2[]
-            path: /health/started
-            # tag::start2[]
-            port: 9080
-          # tag::delay6[]
-          initialDelaySeconds: 60
-          # end::delay6[]
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 1
+        
 ---
 apiVersion: v1
 kind: Service
