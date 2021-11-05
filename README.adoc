@@ -49,9 +49,9 @@ the service reports `DOWN`, then it's unavailable. MicroProfile Health reports a
 service status at the endpoint and indicates the overall status as `UP` if all the services 
 are `UP`. A service orchestrator can then use the health statuses to make decisions.
 
-{kube} provides liveness, startup and readiness probes that are used to check the health of your 
+{kube} provides startup, liveness, and readiness probes that are used to check the health of your 
 containers. These probes can check certain files in your containers, check a TCP socket, 
-or make HTTP requests. MicroProfile Health exposes readiness, startup and liveness endpoints on 
+or make HTTP requests. MicroProfile Health exposes startup, liveness and readiness endpoints on 
 your microservices. {kube} polls these endpoints as specified by the probes to react 
 appropriately to any change in the microservice's status. Read the 
 https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
@@ -99,7 +99,10 @@ Navigate to `start` directory to begin.
 
 The `inventory` microservice should be healthy only when `system` is available. To add this 
 check to the `/health/ready` endpoint, you will create a class that is annotated with the
-`@Readiness` annotation and implements the `HealthCheck` interface.
+`@Readiness` annotation and implements the `HealthCheck` interface. 
+A Health Check for readiness allows third party services to know if the application is ready to process requests or not.
+The @Readiness annotation must be applied on a HealthCheck implementation to define a readiness check procedure, otherwise, this annotation is ignored.
+
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
@@ -131,6 +134,9 @@ InventoryStartupCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java[]
 ----
 
+A Health check for startup allows applications to define startup probes that are used for initial verification of the application before the liveness probe takes over. 
+This is useful for applications which require additional startup time on their first initialization.
+The @Startup annotation must be applied on a HealthCheck implementation to define a startup check procedure, otherwise, this annotation is ignored.
 This startup check verifies that the cpu memory usage is below 90% of the maximum memory.
 If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
 
@@ -146,6 +152,12 @@ InventoryLivenessCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[]
 ----
 
+
+
+A Health Check for liveness allows third party services to determine if the application is running. 
+This means that if this procedure fails the application can be discarded (terminated, shutdown).
+The @Liveness annotation must be applied on a HealthCheck implementation to define a Liveness 
+check procedure, otherwise, this annotation is ignored.
 This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
 If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
 
@@ -154,12 +166,11 @@ microservice was set up to become unhealthy for 60 seconds when a specific endpo
 This endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
 
-== Configuring readiness, startup and liveness probes
+== Configuring startup, liveness and readiness probes
 
-You will configure {kube} readiness, startup and liveness probes.
-Readiness probes determine whether your application is ready to accept requests.
-If it's not ready, traffic won't be routed to the container. Startup probes determines
+You will configure {kube} startup, liveness and readiness probes. Startup probes determines
 whether your application has started or not. Liveness probes determine whether a container needs to be restarted.
+Readiness probes determine whether your application is ready to accept requests. If it's not ready, traffic won't be routed to the container.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
@@ -173,28 +184,25 @@ kubernetes.yaml
 include::finish/kubernetes.yaml[]
 ----
 
-The readiness, startup and liveness probes are configured for the containers running the `system` 
+The startup, liveness and readiness probes are configured for the containers running the `system` 
 and `inventory` microservices.
-
-The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`/health/ready` endpoint.
-The readiness probe determines the READY status of the container, as seen in the `kubectl get pods` output.
-The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines how long the probe waits before it 
-starts to poll so the probe does not start making requests before the server has started. 
-The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option defines how many times the probe fails 
-before the state changes from ready to not ready. The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` 
-option defines how many seconds before the probe times out. The [hotspot=period1 hotspot=period3]`periodSeconds` 
-option defines how often the probe should poll the given endpoint.
 
 The startup probes are configured to poll the [hotspot=start1 hotspot=start2]`/health/started` endpoint.
 The startup probe determines whether or not a container has started.
 
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
 The liveness probes determine whether a container needs to be restarted.
-Similar to the other probes, the liveness probes also define
-[hotspot=delay2 hotspot=delay4]`initialDelaySeconds`,
-[hotspot=threshold2 hotspot=threshold4]`failureThreshold`,
-[hotspot=timeout2 hotspot=timeout4]`timeoutSeconds`,
-and [hotspot=period2 hotspot=period4]`periodSeconds`.
+The [hotspot=threshold2 hotspot=threshold4]`failureThreshold` option defines how many times the probe fails 
+before the state changes from ready to not ready. The [hotspot=delay2 hotspot=delay4]`initialDelaySeconds` field defines how long the probe waits before it 
+starts to poll so the probe does not start making requests before the server has started. The [hotspot=timeout2 hotspot=timeout4]`timeoutSeconds` 
+option defines how many seconds before the probe times out. The [hotspot=period2 hotspot=period4]`periodSeconds` 
+option defines how often the probe should poll the given endpoint.
+
+The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`/health/ready` endpoint.
+The readiness probe determines the READY status of the container, as seen in the `kubectl get pods` output.
+Similar to the liveness probes, the readiness probes also define [hotspot=delay1 hotspot=delay3]`initialDelaySeconds`,
+[hotspot=threshold1 hotspot=threshold3]`failureThreshold`, [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds`,
+and [hotspot=period1 hotspot=period3]`periodSeconds`.
 
 == Deploying the microservices
 
