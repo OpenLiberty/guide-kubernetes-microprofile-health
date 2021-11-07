@@ -20,24 +20,6 @@ spec:
         ports:
         - containerPort: 9080
         # system probes
-        readinessProbe:
-          httpGet:
-            # tag::ready1[]
-            path: /health/ready
-            # end::ready1[]
-            port: 9080
-          # tag::delay1[]
-          initialDelaySeconds: 30
-          # end::delay1[]
-          # tag::period1[]
-          periodSeconds: 10
-          # end::period1[]
-          # tag::timeout1[]
-          timeoutSeconds: 3
-          # end::timeout1[]
-          # tag::threshold1[]
-          failureThreshold: 1
-          # end::threshold1[]
         startupProbe:
           httpGet:
             # tag::start1[]
@@ -62,6 +44,24 @@ spec:
           # tag::threshold2[]
           failureThreshold: 1
           # end::threshold2[]
+          readinessProbe:
+          httpGet:
+            # tag::ready1[]
+            path: /health/ready
+            # end::ready1[]
+            port: 9080
+          # tag::delay1[]
+          initialDelaySeconds: 30
+          # end::delay1[]
+          # tag::period1[]
+          periodSeconds: 10
+          # end::period1[]
+          # tag::timeout1[]
+          timeoutSeconds: 3
+          # end::timeout1[]
+          # tag::threshold1[]
+          failureThreshold: 1
+          # end::threshold1[]
         
 ---
 apiVersion: apps/v1
