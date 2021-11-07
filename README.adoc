@@ -97,6 +97,24 @@ include::{common-includes}/skills-network-kube-setup.adoc[]
 
 Navigate to `start` directory to begin.
 
+[role="code_command hotspot file=1", subs="quotes"] 
+---- 
+#Create the `InventoryStartupCheck` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java`
+---- 
+
+InventoryStartupCheck.java
+[source, Java, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java[]
+----
+
+A Health check for startup allows applications to define startup probes that are used for initial verification of the application before the liveness probe takes over. 
+This is useful for applications which require additional startup time on their first initialization.
+The @Startup annotation must be applied on a HealthCheck implementation to define a startup check procedure, otherwise, this annotation is ignored.
+This startup check verifies that the cpu memory usage is below 95% of the maximum memory.
+If more than 95% of the maximum memory is used, a status of `DOWN` will be returned. 
+
 The `inventory` microservice should be healthy only when `system` is available. To add this 
 check to the `/health/ready` endpoint, you will create a class that is annotated with the
 `@Readiness` annotation and implements the `HealthCheck` interface. 
@@ -121,24 +139,6 @@ This health check verifies that the `system` microservice is available at
 inside the cluster, you can't access it yourself. If it's available, then it returns an 
 `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
 status is `DOWN`, the microservice is considered to be unhealthy.
-
-[role="code_command hotspot file=1", subs="quotes"] 
----- 
-#Create the `InventoryStartupCheck` class.#
-`inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java`
----- 
-
-InventoryStartupCheck.java
-[source, Java, linenums, role='code_column hide_tags=copyright']
-----
-include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java[]
-----
-
-A Health check for startup allows applications to define startup probes that are used for initial verification of the application before the liveness probe takes over. 
-This is useful for applications which require additional startup time on their first initialization.
-The @Startup annotation must be applied on a HealthCheck implementation to define a startup check procedure, otherwise, this annotation is ignored.
-This startup check verifies that the cpu memory usage is below 90% of the maximum memory.
-If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
 
 [role="code_command hotspot file=2", subs="quotes"] 
 ---- 
@@ -600,8 +600,8 @@ endif::[]
 == Great work! You're done!
 
 You have used MicroProfile Health and Open Liberty to create endpoints that report on 
-your microservice's status. Then, you observed how {kube} uses the `/health/ready`, `/health/started` and
-`/health/live` endpoints to keep your microservices running smoothly.
+your microservice's status. Then, you observed how {kube} uses the `/health/started`,
+`/health/live`, and `/health/ready` endpoints to keep your microservices running smoothly.
 
 // Include the below from the guides-common repo to tell users how they can contribute to the guide
 include::{common-includes}/attribution.adoc[subs="attributes"]
