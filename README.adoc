@@ -97,7 +97,7 @@ include::{common-includes}/skills-network-kube-setup.adoc[]
 
 Navigate to `start` directory to begin.
 
-[role="code_command hotspot", subs="quotes"] 
+[role="code_command hotspot file=0", subs="quotes"] 
 ---- 
 #Create the `InventoryStartupCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java`
