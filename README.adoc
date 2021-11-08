@@ -97,7 +97,7 @@ include::{common-includes}/skills-network-kube-setup.adoc[]
 
 Navigate to `start` directory to begin.
 
-[role="code_command hotspot file=0", subs="quotes"] 
+[role="code_command hotspot", subs="quotes"] 
 ---- 
 #Create the `InventoryStartupCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java`
@@ -115,7 +115,7 @@ The `@Startup` annotation must be applied on a HealthCheck implementation to def
 This startup check verifies that the cpu memory usage is below 95% of the maximum memory.
 If more than 95% of the maximum memory is used, a status of `DOWN` will be returned. 
 
-[role="code_command hotspot file=1", subs="quotes"] 
+[role="code_command hotspot", subs="quotes"] 
 ---- 
 #Create the `InventoryLivenessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
@@ -140,7 +140,7 @@ check to the `/health/ready` endpoint, you will create a class that is annotated
 A Health Check for readiness allows third party services to know if the application is ready to process requests or not.
 The `@Readiness` annotation must be applied on a HealthCheck implementation to define a readiness check procedure, otherwise, this annotation is ignored.
 
-[role="code_command hotspot file=2", subs="quotes"] 
+[role="code_command hotspot", subs="quotes"] 
 ---- 
 #Create the `InventoryReadinessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java`
