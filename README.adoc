@@ -192,17 +192,17 @@ The startup probe determines whether or not a container has started.
 
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
 The liveness probes determine whether a container needs to be restarted.
-The [hotspot=threshold2 hotspot=threshold4]`failureThreshold` option defines how many times the probe fails 
-before the state changes from ready to not ready. The [hotspot=delay2 hotspot=delay4]`initialDelaySeconds` field defines how long the probe waits before it 
-starts to poll so the probe does not start making requests before the server has started. The [hotspot=timeout2 hotspot=timeout4]`timeoutSeconds` 
-option defines how many seconds before the probe times out. The [hotspot=period2 hotspot=period4]`periodSeconds` 
+The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option defines how many times the probe fails 
+before the state changes from ready to not ready. The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines how long the probe waits before it 
+starts to poll so the probe does not start making requests before the server has started. The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` 
+option defines how many seconds before the probe times out. The [hotspot=period1 hotspot=period3]`periodSeconds` 
 option defines how often the probe should poll the given endpoint.
 
 The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`/health/ready` endpoint.
 The readiness probe determines the READY status of the container, as seen in the `kubectl get pods` output.
-Similar to the liveness probes, the readiness probes also define [hotspot=delay1 hotspot=delay3]`initialDelaySeconds`,
-[hotspot=threshold1 hotspot=threshold3]`failureThreshold`, [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds`,
-and [hotspot=period1 hotspot=period3]`periodSeconds`.
+Similar to the liveness probes, the readiness probes also define [hotspot=delay2 hotspot=delay4]`initialDelaySeconds`,
+[hotspot=threshold2 hotspot=threshold4]`failureThreshold`, [hotspot=timeout2 hotspot=timeout4]`timeoutSeconds`,
+and [hotspot=period2 hotspot=period4]`periodSeconds`.
 
 == Deploying the microservices
 
