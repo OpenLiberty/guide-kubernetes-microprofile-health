@@ -115,12 +115,6 @@ The `@Startup` annotation must be applied on a HealthCheck implementation to def
 This startup check verifies that the cpu memory usage is below 95% of the maximum memory.
 If more than 95% of the maximum memory is used, a status of `DOWN` will be returned. 
 
-The `inventory` microservice should be healthy only when `system` is available. To add this 
-check to the `/health/ready` endpoint, you will create a class that is annotated with the
-`@Readiness` annotation and implements the `HealthCheck` interface. 
-A Health Check for readiness allows third party services to know if the application is ready to process requests or not.
-The `@Readiness` annotation must be applied on a HealthCheck implementation to define a readiness check procedure, otherwise, this annotation is ignored.
-
 [role="code_command hotspot file=1", subs="quotes"] 
 ---- 
 #Create the `InventoryLivenessCheck` class.#
@@ -139,6 +133,12 @@ The `@Liveness` annotation must be applied on a HealthCheck implementation to de
 check procedure, otherwise, this annotation is ignored.
 This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
 If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
+
+The `inventory` microservice should be healthy only when `system` is available. To add this 
+check to the `/health/ready` endpoint, you will create a class that is annotated with the
+`@Readiness` annotation and implements the `HealthCheck` interface. 
+A Health Check for readiness allows third party services to know if the application is ready to process requests or not.
+The `@Readiness` annotation must be applied on a HealthCheck implementation to define a readiness check procedure, otherwise, this annotation is ignored.
 
 [role="code_command hotspot file=2", subs="quotes"] 
 ---- 
