@@ -202,7 +202,7 @@ The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`
 The readiness probe determines the READY status of the container, as seen in the `kubectl get pods` output.
 Similar to the liveness probes, the readiness probes also define [hotspot=delay2 hotspot=delay4]`initialDelaySeconds`,
 [hotspot=period2 hotspot=period4]`periodSeconds`, [hotspot=timeout2 hotspot=timeout4]`timeoutSeconds`,
-and hotspot=threshold2 hotspot=threshold4]`failureThreshold`.
+and [hotspot=threshold2 hotspot=threshold4]`failureThreshold`.
 
 == Deploying the microservices
 
