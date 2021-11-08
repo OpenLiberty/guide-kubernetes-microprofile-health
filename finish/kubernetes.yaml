@@ -88,10 +88,11 @@ spec:
           value: system-service
         # inventory probe
         startupProbe:
-          #tag::start2[]
-          path: /health/started
-          #end::start2[]
-          port: 9080
+          httpGet:
+            #tag::start2[]
+            path: /health/started
+            #end::start2[]
+            port: 9080
         livenessProbe:
           httpGet:
             # tag::live2[]
