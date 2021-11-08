@@ -24,7 +24,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to check the health of microservices on Kubernetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.
+Learn how to check the health of microservices on Kubernetes by setting up startup, liveness and readiness probes to inspect MicroProfile Health Check endpoints.
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
@@ -109,7 +109,7 @@ InventoryStartupCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java[]
 ----
 
-A Health check for startup allows applications to define startup probes that are used for initial verification of the application before the liveness probe takes over. 
+A health check for startup allows applications to define startup probes that are used for initial verification of the application before the liveness probe takes over. 
 This is useful for applications which require additional startup time on their first initialization.
 The `@Startup` annotation must be applied on a HealthCheck implementation to define a startup check procedure, otherwise, this annotation is ignored.
 This startup check verifies that the cpu memory usage is below 95% of the maximum memory.
@@ -119,10 +119,28 @@ The `inventory` microservice should be healthy only when `system` is available. 
 check to the `/health/ready` endpoint, you will create a class that is annotated with the
 `@Readiness` annotation and implements the `HealthCheck` interface. 
 A Health Check for readiness allows third party services to know if the application is ready to process requests or not.
-The @Readiness annotation must be applied on a HealthCheck implementation to define a readiness check procedure, otherwise, this annotation is ignored.
-
+The `@Readiness` annotation must be applied on a HealthCheck implementation to define a readiness check procedure, otherwise, this annotation is ignored.
 
 [role="code_command hotspot file=1", subs="quotes"] 
+---- 
+#Create the `InventoryLivenessCheck` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
+---- 
+
+InventoryLivenessCheck.java
+[source, Java, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[]
+----
+
+A health Check for liveness allows third party services to determine if the application is running. 
+This means that if this procedure fails the application can be discarded (terminated, shutdown).
+The `@Liveness` annotation must be applied on a HealthCheck implementation to define a Liveness 
+check procedure, otherwise, this annotation is ignored.
+This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
+If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
+
+[role="code_command hotspot file=2", subs="quotes"] 
 ---- 
 #Create the `InventoryReadinessCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java`
@@ -139,27 +157,6 @@ This health check verifies that the `system` microservice is available at
 inside the cluster, you can't access it yourself. If it's available, then it returns an 
 `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
 status is `DOWN`, the microservice is considered to be unhealthy.
-
-[role="code_command hotspot file=2", subs="quotes"] 
----- 
-#Create the `InventoryLivenessCheck` class.#
-`inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java`
----- 
-
-InventoryLivenessCheck.java
-[source, Java, linenums, role='code_column hide_tags=copyright']
-----
-include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[]
-----
-
-
-
-A Health Check for liveness allows third party services to determine if the application is running. 
-This means that if this procedure fails the application can be discarded (terminated, shutdown).
-The @Liveness annotation must be applied on a HealthCheck implementation to define a Liveness 
-check procedure, otherwise, this annotation is ignored.
-This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
-If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
 
 The health checks for the `system` microservice were already been implemented. The `system`
 microservice was set up to become unhealthy for 60 seconds when a specific endpoint is called. 
