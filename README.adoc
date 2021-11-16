@@ -189,7 +189,7 @@ mvn package
 ```
 
 [role='command']
-include::{common-includes}/ol-full-docker-pull.adoc[]
+include::{common-includes}/ol-icr-full-docker-pull.adoc[]
 
 Next, run the `docker build` commands to build container images for your application:
 [role='command']
