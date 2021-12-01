@@ -33,7 +33,7 @@ public class InventoryStartupCheck implements HealthCheck {
         long cpuUsed = bean.getSystemCpuLoad();
         
         return HealthCheckResponse.named(SystemResource.class
-                                            .getSimpleName() + " Liveness Check")
+                                            .getSimpleName() + " Startup Check")
                                             .withData("cpu used", cpuUsed)
                                             .status(cpuUsed < 0.95).build();
     }
