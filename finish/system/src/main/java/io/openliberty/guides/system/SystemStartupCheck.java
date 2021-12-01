@@ -33,7 +33,7 @@ public class SystemStartupCheck implements HealthCheck {
         double cpuUsed = bean.getSystemCpuLoad();
         return HealthCheckResponse.named(SystemResource.class
                                             .getSimpleName() + " Startup Check")
-                                            .withData("cpu used", cpuUsed)
+                                            .withData("cpu used", String.valueOf(cpuUsed))
                                             .status(cpuUsed < 0.95).build();
     }
 }
