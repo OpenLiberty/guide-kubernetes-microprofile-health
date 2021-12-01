@@ -26,19 +26,16 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 @ApplicationScoped
 public class SystemStartupCheck implements HealthCheck {
 
-    private static final String STARTUP_CHECK = SystemResource.class.getSimpleName()
-                                               + " Startup Check";
-
     @Override
     public HealthCheckResponse call() {
         OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean)
         ManagementFactory.getOperatingSystemMXBean();
         long cpuUsed = bean.getSystemCpuLoad();
-        if (cpuUsed < 0.95) {
-           return HealthCheckResponse.up(STARTUP_CHECK).withData("cpu used", cpuUsed);
-        } else {
-           return HealthCheckResponse.down(STARTUP_CHECK).withData("cpu used", cpuUsed);
-        }
+        
+        return HealthCheckResponse.named(SystemResource.class
+                                            .getSimpleName() + " Liveness Check")
+                                            .withData("cpu used", cpuUsed)
+                                            .status(cpuUsed < 0.95).build();
     }
 }
 
