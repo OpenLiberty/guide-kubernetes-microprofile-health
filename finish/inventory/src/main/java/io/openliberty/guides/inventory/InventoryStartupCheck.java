@@ -31,7 +31,6 @@ public class InventoryStartupCheck implements HealthCheck {
         OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean)
         ManagementFactory.getOperatingSystemMXBean();
         long cpuUsed = bean.getSystemCpuLoad();
-        
         return HealthCheckResponse.named(SystemResource.class
                                             .getSimpleName() + " Startup Check")
                                             .withData("cpu used", cpuUsed)
