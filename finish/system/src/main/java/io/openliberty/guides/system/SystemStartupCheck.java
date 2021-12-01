@@ -30,7 +30,7 @@ public class SystemStartupCheck implements HealthCheck {
     public HealthCheckResponse call() {
         OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean)
         ManagementFactory.getOperatingSystemMXBean();
-        long cpuUsed = bean.getSystemCpuLoad();
+        double cpuUsed = bean.getSystemCpuLoad();
         return HealthCheckResponse.named(SystemResource.class
                                             .getSimpleName() + " Startup Check")
                                             .withData("cpu used", cpuUsed)
