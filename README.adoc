@@ -130,17 +130,17 @@ include::finish/inventory/src/main/java/io/openliberty/guides/inventory/Inventor
 ----
 
 A health Check for liveness allows third party services to determine if the application is running. 
-This means that if this procedure fails the application can be discarded (terminated, shutdown).
-The `@Liveness` annotation must be applied on a HealthCheck implementation to define a Liveness 
-check procedure, otherwise, this annotation is ignored.
+If this procedure fails, the application can be stopped.
+The `@Liveness` annotation must be applied on a HealthCheck implementation to define a Liveness
+check procedure. Otherwise, this annotation is ignored.
 This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
 If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
 
-The `inventory` microservice should be healthy only when `system` is available. To add this 
-check to the `/health/ready` endpoint, you will create a class that is annotated with the
-`@Readiness` annotation and implements the `HealthCheck` interface. 
-A Health Check for readiness allows third party services to know if the application is ready to process requests or not.
-The `@Readiness` annotation must be applied on a HealthCheck implementation to define a readiness check procedure, otherwise, this annotation is ignored.
+The `inventory` microservice is healthy only when the `system` microservice is available.
+To add this check to the `/health/ready` endpoint, create a class that is annotated with the
+`@Readiness` annotation and implements the `HealthCheck` interface.
+A Health Check for readiness allows third party services to know whether the application is ready to process requests.
+The `@Readiness` annotation must be applied on a HealthCheck implementation to define a readiness check procedure. Otherwise, this annotation is ignored.
 
 [role="code_command hotspot file=2", subs="quotes"] 
 ---- 
@@ -154,11 +154,10 @@ InventoryReadinessCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java[]
 ----
 
-This health check verifies that the `system` microservice is available at 
-`\http://system-service:9080/`. The `system-service` host name is only accessible from 
-inside the cluster, you can't access it yourself. If it's available, then it returns an 
-`UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the 
-status is `DOWN`, the microservice is considered to be unhealthy.
+This health check verifies that the `system` microservice is available at `\http://system-service:9080/`. 
+The `system-service` host name is accessible only from inside the cluster; you can't access it yourself.
+If it's available, then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status.
+When the status is `DOWN`, the microservice is considered to be unhealthy.
 
 The health checks for the `system` microservice were already been implemented. The `system`
 microservice was set up to become unhealthy for 60 seconds when a specific endpoint is called. 
@@ -167,9 +166,10 @@ This endpoint has been provided for you to observe the results of an unhealthy p
 
 == Configuring startup, liveness and readiness probes
 
-You will configure {kube} startup, liveness and readiness probes. Startup probes determines
-whether your application has started or not. Liveness probes determine whether a container needs to be restarted.
-Readiness probes determine whether your application is ready to accept requests. If it's not ready, traffic won't be routed to the container.
+You will configure {kube} startup, liveness and readiness probes. 
+Startup probes determine whether your application is fully initialized.
+Liveness probes determine whether a container needs to be restarted.
+Readiness probes determine whether your application is ready to accept requests. If it's not ready, no traffic is routed to the container.
 
 [role="code_command hotspot", subs="quotes"] 
 ---- 
