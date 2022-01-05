@@ -51,7 +51,7 @@ are `UP`. A service orchestrator can then use the health statuses to make decisi
 
 {kube} provides startup, liveness, and readiness probes that are used to check the health of your 
 containers. These probes can check certain files in your containers, check a TCP socket, 
-or make HTTP requests. MicroProfile Health exposes startup, liveness and readiness endpoints on 
+or make HTTP requests. MicroProfile Health exposes startup, liveness, and readiness endpoints on 
 your microservices. {kube} polls these endpoints as specified by the probes to react 
 appropriately to any change in the microservice's status. Read the 
 https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices^] 
@@ -109,11 +109,13 @@ InventoryStartupCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java[]
 ----
 
-A health check for startup allows applications to define startup probes that are used for initial verification of the application before the liveness probe takes over. 
-This is useful for applications which require additional startup time on their first initialization.
-The `@Startup` annotation must be applied on a HealthCheck implementation to define a startup check procedure, otherwise, this annotation is ignored.
+A health check for startup allows applications to define startup probes that verify 
+whether deployed application is fully initialized before the liveness probe takes over.
+This check is useful for applications that require additional startup time on their first initialization.
+The `@Startup` annotation must be applied on a HealthCheck implementation to define a startup check procedure. 
+Otherwise, this annotation is ignored.
 This startup check verifies that the cpu memory usage is below 95% of the maximum memory.
-If more than 95% of the maximum memory is used, a status of `DOWN` will be returned. 
+If more than 95% of the maximum memory is used, a status of `DOWN` is returned. 
 
 [role="code_command hotspot file=1", subs="quotes"] 
 ---- 
@@ -181,18 +183,19 @@ kubernetes.yaml
 include::finish/kubernetes.yaml[]
 ----
 
-The startup, liveness and readiness probes are configured for the containers running the `system` 
+The startup, liveness and readiness probes are configured for the containers that are running the `system`
 and `inventory` microservices.
 
 The startup probes are configured to poll the [hotspot=start1 hotspot=start2]`/health/started` endpoint.
-The startup probe determines whether or not a container has started.
+The startup probe determines whether a container is started.
 
 The liveness probes are configured to poll the [hotspot=live1 hotspot=live2]`/health/live` endpoint.
 The liveness probes determine whether a container needs to be restarted.
-The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines how long the probe waits before it 
-starts to poll so the probe does not start making requests before the server has started.  The [hotspot=period1 hotspot=period3]`periodSeconds` 
-option defines how often the probe should poll the given endpoint. The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` 
-option defines how many seconds before the probe times out. The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option defines how many times the probe fails 
+The [hotspot=delay1 hotspot=delay3]`initialDelaySeconds` field defines the duration that the probe waits 
+before it starts to poll so that it does not make requests before the server is started.
+The [hotspot=period1 hotspot=period3]`periodSeconds` option defines how often the probe polls the given endpoint.
+The [hotspot=timeout1 hotspot=timeout3]`timeoutSeconds` option defines how many seconds before the probe times out.
+The [hotspot=threshold1 hotspot=threshold3]`failureThreshold` option defines how many times the probe fails
 before the state changes from ready to not ready.
 
 The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`/health/ready` endpoint.
