@@ -114,8 +114,8 @@ whether deployed application is fully initialized before the liveness probe take
 This check is useful for applications that require additional startup time on their first initialization.
 The `@Startup` annotation must be applied on a HealthCheck implementation to define a startup check procedure. 
 Otherwise, this annotation is ignored.
-This startup check verifies that the cpu memory usage is below 95% of the maximum memory.
-If more than 95% of the maximum memory is used, a status of `DOWN` is returned. 
+This startup check verifies that the cpu usage is below 95%.
+If more than 95% of the cpu is used, a status of `DOWN` is returned. 
 
 [role="code_command hotspot file=1", subs="quotes"] 
 ---- 
@@ -134,7 +134,7 @@ If this procedure fails, the application can be stopped.
 The `@Liveness` annotation must be applied on a HealthCheck implementation to define a Liveness
 check procedure. Otherwise, this annotation is ignored.
 This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
-If more than 90% of the maximum memory is used, a status of `DOWN` will be returned. 
+If more than 90% of the maximum memory is used, a status of `DOWN` is returned. 
 
 The `inventory` microservice is healthy only when the `system` microservice is available.
 To add this check to the `/health/ready` endpoint, create a class that is annotated with the
