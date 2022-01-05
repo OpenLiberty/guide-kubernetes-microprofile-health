@@ -24,7 +24,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to check the health of microservices on Kubernetes by setting up startup, liveness and readiness probes to inspect MicroProfile Health Check endpoints.
+Learn how to check the health of microservices on Kubernetes by setting up startup, liveness, and readiness probes to inspect MicroProfile Health Check endpoints.
 
 :minikube-ip: 192.168.99.100
 :kube: Kubernetes
@@ -164,9 +164,9 @@ microservice was set up to become unhealthy for 60 seconds when a specific endpo
 This endpoint has been provided for you to observe the results of an unhealthy pod and how 
 {kube} reacts.
 
-== Configuring startup, liveness and readiness probes
+== Configuring startup, liveness, and readiness probes
 
-You will configure {kube} startup, liveness and readiness probes. 
+You will configure {kube} startup, liveness, and readiness probes. 
 Startup probes determine whether your application is fully initialized.
 Liveness probes determine whether a container needs to be restarted.
 Readiness probes determine whether your application is ready to accept requests. If it's not ready, no traffic is routed to the container.
@@ -183,7 +183,7 @@ kubernetes.yaml
 include::finish/kubernetes.yaml[]
 ----
 
-The startup, liveness and readiness probes are configured for the containers that are running the `system`
+The startup, liveness, and readiness probes are configured for the containers that are running the `system`
 and `inventory` microservices.
 
 The startup probes are configured to poll the [hotspot=start1 hotspot=start2]`/health/started` endpoint.
