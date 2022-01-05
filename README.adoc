@@ -113,8 +113,7 @@ A health check for startup allows applications to define startup probes that ver
 whether deployed application is fully initialized before the liveness probe takes over.
 This check is useful for applications that require additional startup time on their first initialization.
 The `@Startup` annotation must be applied on a HealthCheck implementation to define a startup check procedure. 
-Otherwise, this annotation is ignored.
-This startup check verifies that the cpu usage is below 95%.
+Otherwise, this annotation is ignored. This startup check verifies that the cpu usage is below 95%.
 If more than 95% of the cpu is used, a status of `DOWN` is returned. 
 
 [role="code_command hotspot file=1", subs="quotes"] 
