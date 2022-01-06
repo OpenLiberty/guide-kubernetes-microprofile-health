@@ -97,7 +97,7 @@ include::{common-includes}/skills-network-kube-setup.adoc[]
 
 Navigate to `start` directory to begin.
 
-[role="code_command hotspot", subs="quotes"] 
+[role="code_command hotspot file=0", subs="quotes"] 
 ---- 
 #Create the `InventoryStartupCheck` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java`
@@ -112,7 +112,7 @@ include::finish/inventory/src/main/java/io/openliberty/guides/inventory/Inventor
 A health check for startup allows applications to define startup probes that verify 
 whether deployed application is fully initialized before the liveness probe takes over.
 This check is useful for applications that require additional startup time on their first initialization.
-The `@Startup` annotation must be applied on a HealthCheck implementation to define a startup check procedure. 
+The [hotspot=Startup file=0]`@Startup` annotation must be applied on a HealthCheck implementation to define a startup check procedure. 
 Otherwise, this annotation is ignored. This startup check verifies that the cpu usage is below 95%.
 If more than 95% of the cpu is used, a status of `DOWN` is returned. 
 
@@ -130,14 +130,14 @@ include::finish/inventory/src/main/java/io/openliberty/guides/inventory/Inventor
 
 A health check for liveness allows third party services to determine whether the application is running.
 If this procedure fails, the application can be stopped.
-The `@Liveness` annotation must be applied on a HealthCheck implementation to define a Liveness
+The [hotspot=Liveness file=1]`@Liveness` annotation must be applied on a HealthCheck implementation to define a Liveness
 check procedure. Otherwise, this annotation is ignored.
 This liveness check verifies that the heap memory usage is below 90% of the maximum memory.
 If more than 90% of the maximum memory is used, a status of `DOWN` is returned. 
 
 The `inventory` microservice is healthy only when the `system` microservice is available.
 To add this check to the `/health/ready` endpoint, create a class that is annotated with the
-`@Readiness` annotation and implements the `HealthCheck` interface.
+[hotspot=Readiness file=2]`@Readiness` annotation and implements the `HealthCheck` interface.
 A Health Check for readiness allows third party services to know whether the application is ready to process requests.
 The `@Readiness` annotation must be applied on a HealthCheck implementation to define a readiness check procedure. Otherwise, this annotation is ignored.
 
