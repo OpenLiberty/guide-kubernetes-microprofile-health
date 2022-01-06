@@ -24,7 +24,7 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 
 // tag::Readiness[]
 @Readiness
-// tag::Readiness[]
+// end::Readiness[]
 @ApplicationScoped
 public class InventoryReadinessCheck implements HealthCheck {
 
