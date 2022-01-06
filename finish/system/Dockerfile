@@ -1,4 +1,4 @@
-FROM openliberty/open-liberty:full-java11-openj9-ubi
+FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi
 
 LABEL \
   org.opencontainers.image.authors="Your Name" \

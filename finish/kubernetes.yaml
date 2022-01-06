@@ -20,14 +20,20 @@ spec:
         ports:
         - containerPort: 9080
         # system probes
-        readinessProbe:
+        startupProbe:
           httpGet:
-            # tag::ready1[]
-            path: /health/ready
-            # end::ready1[]
+            # tag::start1[]
+            path: /health/started
+            # end::start1[]
+            port: 9080
+        livenessProbe:
+          httpGet:
+            # tag::live1[]
+            path: /health/live
+            # end::live1[]
             port: 9080
           # tag::delay1[]
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           # end::delay1[]
           # tag::period1[]
           periodSeconds: 10
@@ -38,14 +44,14 @@ spec:
           # tag::threshold1[]
           failureThreshold: 1
           # end::threshold1[]
-        livenessProbe:
+        readinessProbe:
           httpGet:
-            # tag::live1[]
-            path: /health/live
-            # end::live1[]
+            # tag::ready1[]
+            path: /health/ready
+            # end::ready1[]
             port: 9080
           # tag::delay2[]
-          initialDelaySeconds: 60
+          initialDelaySeconds: 30
           # end::delay2[]
           # tag::period2[]
           periodSeconds: 10
@@ -81,14 +87,20 @@ spec:
         - name: SYS_APP_HOSTNAME
           value: system-service
         # inventory probe
-        readinessProbe:
+        startupProbe:
           httpGet:
-            # tag::ready2[]
-            path: /health/ready
-            # end::ready2[]
+            #tag::start2[]
+            path: /health/started
+            #end::start2[]
+            port: 9080
+        livenessProbe:
+          httpGet:
+            # tag::live2[]
+            path: /health/live
+            # end::live2[]
             port: 9080
           # tag::delay3[]
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           # end::delay3[]
           # tag::period3[]
           periodSeconds: 10
@@ -99,14 +111,14 @@ spec:
           # tag::threshold3[]
           failureThreshold: 1
           # end::threshold3[]
-        livenessProbe:
+        readinessProbe:
           httpGet:
-            # tag::live2[]
-            path: /health/live
-            # end::live2[]
+            # tag::ready2[]
+            path: /health/ready
+            # end::ready2[]
             port: 9080
           # tag::delay4[]
-          initialDelaySeconds: 60
+          initialDelaySeconds: 30
           # end::delay4[]
           # tag::period4[]
           periodSeconds: 10
