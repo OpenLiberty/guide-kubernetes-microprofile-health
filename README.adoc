@@ -128,7 +128,7 @@ InventoryLivenessCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[]
 ----
 
-A health Check for liveness allows third party services to determine if the application is running. 
+A health check for liveness allows third party services to determine whether the application is running.
 If this procedure fails, the application can be stopped.
 The `@Liveness` annotation must be applied on a HealthCheck implementation to define a Liveness
 check procedure. Otherwise, this annotation is ignored.
