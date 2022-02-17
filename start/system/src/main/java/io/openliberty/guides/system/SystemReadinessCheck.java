@@ -29,10 +29,12 @@ public class SystemReadinessCheck implements HealthCheck {
     @Override
     public HealthCheckResponse call() {
         if (isAlive()) {
-            return HealthCheckResponse.up(SystemResource.class.getSimpleName() + "Readiness Check");
+            return HealthCheckResponse.up(SystemResource.class.getSimpleName()
+                                          + "Readiness Check");
         }
 
-        return HealthCheckResponse.down(SystemResource.class.getSimpleName() + "Readiness Check");
+        return HealthCheckResponse.down(SystemResource.class.getSimpleName()
+                                        + "Readiness Check");
     }
 
     public static void setUnhealthy() {
