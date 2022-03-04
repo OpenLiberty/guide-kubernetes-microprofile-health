@@ -455,7 +455,7 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 
 // Cloud-hosted guide instruction
 ifdef::cloud-hosted[]
-Press **CTRL+C** to stop the proxy server that was started at step 7.
+Press **CTRL+C** to stop the proxy server that was started at step 6 ***Deploying the microservices***.
 endif::[]
 
 To remove all of the resources created during this guide, run the following command to delete all of the resources that you created.
