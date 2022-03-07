@@ -34,7 +34,6 @@ public class InventoryStartupCheck implements HealthCheck {
         String cpuUsage = String.valueOf(cpuUsed);
         return HealthCheckResponse.named(InventoryResource.class
                                             .getSimpleName() + " Startup Check")
-                                            .withData("cpu used", cpuUsage)
                                             .status(cpuUsed < 0.95).build();
     }
 }

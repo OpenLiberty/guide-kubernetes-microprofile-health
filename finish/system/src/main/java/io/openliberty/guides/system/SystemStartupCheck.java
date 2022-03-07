@@ -34,7 +34,6 @@ public class SystemStartupCheck implements HealthCheck {
         String cpuUsage = String.valueOf(cpuUsed);
         return HealthCheckResponse.named(SystemResource.class
                                             .getSimpleName() + " Startup Check")
-                                            .withData("cpu used", cpuUsage)
                                             .status(cpuUsed < 0.95).build();
     }
 }
