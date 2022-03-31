@@ -16,7 +16,7 @@ package io.openliberty.guides.system;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.Liveness;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
