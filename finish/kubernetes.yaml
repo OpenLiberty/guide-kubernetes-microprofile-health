@@ -89,9 +89,9 @@ spec:
         # inventory probe
         startupProbe:
           httpGet:
-            #tag::start2[]
+            # tag::start2[]
             path: /health/started
-            #end::start2[]
+            # end::start2[]
             port: 9080
         livenessProbe:
           httpGet:
