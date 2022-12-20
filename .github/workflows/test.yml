@@ -54,8 +54,7 @@ jobs:
       - run: unset _JAVA_OPTIONS
       - name: Run tests
         run: |
-          sudo ../scripts/startMinikube.sh
-          sudo ../scripts/testApp.sh
+          ../scripts/testApp.sh
       - name: Post tests
         if: always()
         run: docker images
