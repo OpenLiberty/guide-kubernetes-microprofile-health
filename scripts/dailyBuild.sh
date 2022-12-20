@@ -17,6 +17,14 @@ cat inventory/pom.xml system/pom.xml
 sed -i "s;FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi;FROM $DOCKER_USERNAME/olguides:$BUILD;g" inventory/Dockerfile system/Dockerfile
 cat inventory/Dockerfile system/Dockerfile
 
-sudo ../scripts/startMinikube.sh
-sudo ../scripts/testApp.sh
-sudo ../scripts/stopMinikube.sh
+#../scripts/startMinikube.sh
+minikube start
+minikube status
+#kubectl cluster-info
+#kubectl get services --all-namespaces
+#kubectl config view
+eval "$(minikube docker-env)"
+sudo -u runner ../scripts/testApp.sh
+# sudo ../scripts/stopMinikube.sh
+eval "$(minikube docker-env -u)"
+minikube stop
