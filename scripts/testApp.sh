@@ -9,6 +9,14 @@ set -euxo pipefail
 
 # Test app
 
+#../scripts/startMinikube.sh
+minikube start
+minikube status
+#kubectl cluster-info
+#kubectl get services --all-namespaces
+#kubectl config view
+eval "$(minikube docker-env)"
+
 mvn -ntp -Dhttp.keepAlive=false \
     -Dmaven.wagon.http.pool=false \
     -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
@@ -42,3 +50,7 @@ kubectl logs "$(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{
 kubectl logs "$(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep system | tail -1)"
 
 kubectl logs "$(kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}' | grep inventory)"
+
+# sudo ../scripts/stopMinikube.sh
+eval "$(minikube docker-env -u)"
+minikube stop
