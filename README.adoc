@@ -1,4 +1,4 @@
-// Copyright (c) 2018, 2023 IBM Corporation and others.
+// Copyright (c) 2018, 2024 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -11,7 +11,7 @@
 :page-duration: 20 minutes
 :page-releasedate: 2018-11-30
 :page-description: Learn how to check the health of microservices on Kubernetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.
-:page-tags: ['Kubernetes', 'Docker', 'MicroProfile']
+:page-tags: ['kubernetes', 'docker', 'microprofile']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['microprofile-health', 'kubernetes-intro']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/prod
@@ -118,7 +118,7 @@ InventoryReadinessCheck.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java[]
 ----
 
-This health check verifies that the `system` microservice is available at `\http://system-service:9080/`. The `system-service` host name is accessible only from inside the cluster; you can't access it yourself. If it's available, then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the status is `DOWN`, the microservice is considered to be unhealthy.
+This health check verifies that the `system` microservice is available at `\http://system-service:9090/`. The `system-service` host name is accessible only from inside the cluster; you can't access it yourself. If it's available, then it returns an `UP` status. Similarly, if it's unavailable then it returns a `DOWN` status. When the status is `DOWN`, the microservice is considered to be unhealthy.
 
 The health checks for the `system` microservice were already been implemented. The `system` microservice was set up to become unhealthy for 60 seconds when a specific endpoint is called. This endpoint has been provided for you to observe the results of an unhealthy pod and how {kube} reacts.
 
