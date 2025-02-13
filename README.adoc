@@ -1,4 +1,4 @@
-// Copyright (c) 2018, 2024 IBM Corporation and others.
+// Copyright (c) 2018, 2025 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -150,10 +150,19 @@ The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`
 
 To build these microservices, navigate to the `start` directory and run the following command.
 
+ifndef::cloud-hosted[]
 [role=command]
 ```
 mvn package
 ```
+endif::[]
+
+ifdef::cloud-hosted[]
+```bash
+cd /home/project/guide-kubernetes-microprofile-health/start
+mvn package
+```
+endif::[]
 
 [role='command']
 
