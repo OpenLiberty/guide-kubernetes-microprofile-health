@@ -426,7 +426,7 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          8m
 
 // Static guide instruction
 ifndef::cloud-hosted[]
-Run the tests by running the following command and appropriately substituting `[hostname]` for the correct value.
+Run the tests by running the following command:
 
 include::{common-includes}/os-tabs.adoc[]
 
@@ -434,7 +434,7 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role='command']
 ```
-mvnw.cmd failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
+mvnw.cmd failsafe:integration-test -Dsystem.service.root=localhost:31000 -Dinventory.service.root=localhost:32000
 ```
 --
 
@@ -442,7 +442,7 @@ mvnw.cmd failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinve
 --
 [role='command']
 ```
-./mvnw failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
+./mvnw failsafe:integration-test -Dsystem.service.root=localhost:31000 -Dinventory.service.root=localhost:32000
 ```
 --
 
@@ -450,7 +450,7 @@ mvnw.cmd failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinve
 --
 [role='command']
 ```
-./mvnw failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
+./mvnw failsafe:integration-test -Dsystem.service.root=`minikube ip`:31000 -Dinventory.service.root=`minikube ip`:32000
 ```
 --
 endif::[]
