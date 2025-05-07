@@ -434,7 +434,6 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role='command']
 ```
-cd start 
 mvnw.cmd failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
 ```
 --
@@ -443,7 +442,6 @@ mvnw.cmd failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinve
 --
 [role='command']
 ```
-cd start
 ./mvnw failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
 ```
 --
@@ -452,7 +450,6 @@ cd start
 --
 [role='command']
 ```
-cd start
 ./mvnw failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
 ```
 --
