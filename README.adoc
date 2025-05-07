@@ -450,7 +450,7 @@ mvnw.cmd failsafe:integration-test -Dsystem.service.root=localhost:31000 -Dinven
 --
 [role='command']
 ```
-./mvnw failsafe:integration-test -Dsystem.service.root=`minikube ip`:31000 -Dinventory.service.root=`minikube ip`:32000
+./mvnw failsafe:integration-test -Dsystem.service.root=$(minikube ip):31000 -Dinventory.service.root=$(minikube ip):32000
 ```
 --
 endif::[]
