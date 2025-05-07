@@ -8,6 +8,7 @@ set -euxo pipefail
 ##############################################################################
 
 # Test app
+./mvnw -version
 
 #../scripts/startMinikube.sh
 minikube start
