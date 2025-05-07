@@ -151,16 +151,37 @@ The readiness probes are configured to poll the [hotspot=ready1 hotspot=ready2]`
 To build these microservices, navigate to the `start` directory and run the following command.
 
 ifndef::cloud-hosted[]
-[role=command]
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.windows_section]
+--
+[role='command']
 ```
-mvn package
+mvnw.cmd package
 ```
+--
+
+[.tab_content.mac_section]
+--
+[role='command']
+```
+./mvnw package
+```
+--
+
+[.tab_content.linux_section]
+--
+[role='command']
+```
+./mvnw package
+```
+--
 endif::[]
 
 ifdef::cloud-hosted[]
 ```bash
 cd /home/project/guide-kubernetes-microprofile-health/start
-mvn package
+./mvnw package
 ```
 endif::[]
 
@@ -407,10 +428,34 @@ inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          8m
 ifndef::cloud-hosted[]
 Run the tests by running the following command and appropriately substituting `[hostname]` for the correct value.
 
-[role=command]
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.windows_section]
+--
+[role='command']
 ```
-mvn failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
+cd start 
+mvnw.cmd failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
 ```
+--
+
+[.tab_content.mac_section]
+--
+[role='command']
+```
+cd start
+./mvnw failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
+```
+--
+
+[.tab_content.linux_section]
+--
+[role='command']
+```
+cd start
+./mvnw failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000
+```
+--
 endif::[]
 
 // Cloud hosted guide instruction
@@ -424,7 +469,7 @@ INVENTORY_PROXY=localhost:8001/api/v1/namespaces/$SN_ICR_NAMESPACE/services/inve
 
 Run the integration tests by using the following command:
 ```bash
-mvn failsafe:integration-test \
+./mvnw failsafe:integration-test \
     -Dsystem.service.root=$SYSTEM_PROXY \
     -Dinventory.service.root=$INVENTORY_PROXY
 ```
